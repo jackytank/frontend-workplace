@@ -2,63 +2,11 @@
     "users": [
         {
             "id": 1,
-            "firstName": "Jack",
-            "lastName": "Sparrow",
-            "age": 33
-        },
-        {
-            "id": 2,
-            "firstName": "Elizabeth",
-            "lastName": "Swann",
-            "age": 28
-        },
-        {
-            "id": 3,
-            "firstName": "Will",
-            "lastName": "Turner",
-            "age": 30
-        },
-        {
-            "id": 4,
-            "firstName": "Hector",
-            "lastName": "Barbossa",
-            "age": 55
-        },
-        {
-            "id": 5,
-            "firstName": "Joshamee",
-            "lastName": "Gibbs",
-            "age": 58
-        },
-        {
-            "id": 6,
-            "firstName": "Angelica",
-            "lastName": "",
-            "age": 29
-        },
-        {
-            "id": 7,
-            "firstName": "James",
-            "lastName": "Norrinton",
-            "age": 38
-        },
-        {
-            "id": 8,
-            "firstName": "Tia",
-            "lastName": "Dalma",
-            "age": 45
-        },
-        {
-            "id": 9,
-            "firstName": "Cutler",
-            "lastName": "Beckett",
-            "age": 50
-        },
-        {
-            "id": 10,
-            "firstName": "Philip",
-            "lastName": "Swift",
-            "age": 25
+            "username": "John",
+            "password": "123456",
+            "firstName": "John",
+            "lastName": "Wick",
+            "age": 22
         }
     ]
 }
