@@ -1,35 +1,52 @@
-import { Outlet, useLoaderData, Form, redirect, NavLink, useNavigation } from "react-router-dom";
+import { Outlet, useLoaderData, Form, redirect, NavLink, useNavigation, useSubmit } from "react-router-dom";
 import { getContacts, createContact } from "../contacts";
+import { useEffect } from "react";
 
 
 
 const Root = () => {
-    const { contacts } = useLoaderData() as { contacts: Contact[]; };
+    const { contacts, q } = useLoaderData() as RootLoaderReturnType;
     const navigation = useNavigation();
+    const submit = useSubmit();
+
+    const searchFormOnChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
+        submit(event.currentTarget.form);
+    };
+
+    const searching =
+        navigation.location &&
+        new URLSearchParams(navigation.location.search).has("q");
+
+    useEffect(() => {
+        (document.getElementById('q') as HTMLInputElement).value = q as string;
+    }, [q]);
 
     return (
         <>
             <div id="sidebar">
                 <h1>React Router Contacts</h1>
                 <div>
-                    <form id='search-form' role='search'>
+                    <Form id='search-form' role='search'>
                         <input
                             id='q'
+                            className={searching ? 'loading' : ''}
                             aria-label='Search contact'
                             placeholder='Search...'
                             type='search'
                             name='q'
+                            defaultValue={q as string}
+                            onChange={searchFormOnChangeHandler}
                         />
                         <div
                             id='search-spinner'
                             aria-hidden
-                            hidden={true}
+                            hidden={!searching}
                         />
                         <div
                             className='sr-only'
                             aria-live='polite'
                         />
-                    </form>
+                    </Form>
                     <Form method="post">
                         <button type='submit'>New</button>
                     </Form>
@@ -80,9 +97,11 @@ const Root = () => {
     );
 };
 
-export async function loader(): Promise<{ contacts: Contact[]; }> {
-    const contacts: Contact[] = await getContacts(undefined);
-    return { contacts };
+export async function loader({ request }: { request: Request; }): Promise<RootLoaderReturnType> {
+    const url = new URL(request.url);
+    const q: string | null = url.searchParams.get('q');
+    const contacts = await getContacts(q as string);
+    return { contacts, q };
 }
 
 export async function action(): Promise<Response> {

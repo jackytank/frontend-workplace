@@ -23,3 +23,8 @@ interface Contact {
 interface ParamsType {
     contactId: string;
 }
+
+interface RootLoaderReturnType {
+    contacts: Contact[],
+    q: string | null;
+}
