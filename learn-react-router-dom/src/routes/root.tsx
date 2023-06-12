@@ -10,7 +10,10 @@ const Root = () => {
     const submit = useSubmit();
 
     const searchFormOnChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-        submit(event.currentTarget.form);
+        const isFirstSearch = (q == null);
+        submit(event.currentTarget.form, {
+            replace: !isFirstSearch
+        });
     };
 
     const searching =

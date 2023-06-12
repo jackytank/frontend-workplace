@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Form, useLoaderData, redirect } from "react-router-dom";
-import { getContact } from "../contacts";
+import { Form, useLoaderData, redirect, useFetcher } from "react-router-dom";
+import { getContact, updateContact } from "../contacts";
 
 const Contact = () => {
     const { contact } = useLoaderData() as { contact: ContactType; };
@@ -60,9 +60,14 @@ const Contact = () => {
 };
 
 const Favorite: FC<ContactProps> = ({ contact }) => {
-    const favorite = contact.favorite;
+    const fetcher = useFetcher();
+    let favorite: boolean = contact.favorite;
+    if (fetcher.formData) {
+        favorite = fetcher.formData.get("favorite") === "true";
+    }
+
     return (
-        <Form method="post">
+        <fetcher.Form method="post">
             <button
                 name="favorite"
                 value={favorite ? "false" : "true"}
@@ -74,17 +79,31 @@ const Favorite: FC<ContactProps> = ({ contact }) => {
             >
                 {favorite ? "★" : "☆"}
             </button>
-        </Form>
+        </fetcher.Form>
     );
 };
 
-interface ContactParam {
+interface Param {
     contactId: string;
+    favorite: boolean;
 }
 
-export const loader = async ({ params }: { params: ContactParam; }): Promise<{ contact: Contact | null; }> => {
+export const loader = async ({ params }: { params: Param; }): Promise<{ contact: Contact | null; }> => {
     const contact: Contact | null = await getContact(params.contactId);
+    if (!contact) {
+        throw new Response("", {
+            status: 404,
+            statusText: "Not Found"
+        });
+    }
     return { contact };
+};
+
+export const action = async ({ request, params }: { request: Request, params: Param; }) => {
+    const formData = await request.formData();
+    return updateContact(params.contactId, {
+        favorite: formData.get("favorite") === 'true'
+    });
 };
 
 export default Contact;
