@@ -1,4 +1,4 @@
-import { Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { Action, Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { cartApi } from "../../api/cart-api";
 import { AxiosResponse } from 'axios';
 import { toastInfo } from "../../utils/toastify";
@@ -25,7 +25,7 @@ const intitialState: ICartState = {
     isLoading: true,
 };
 
-export const fetchCartItems = () => (dispatch: Dispatch<any>) => {
+export const fetchCartItems = () => (dispatch: Dispatch<Action>) => {
     void cartApi.getALl().then((res: AxiosResponse<ICartItem[]>) => {
         if (res?.data) {
             console.log(res.data);
@@ -34,7 +34,7 @@ export const fetchCartItems = () => (dispatch: Dispatch<any>) => {
     });
 };
 
-export const removeCartItems = (cartId: number) => (dispatch: Dispatch<any>) => {
+export const removeCartItems = (cartId: number) => (dispatch: Dispatch<Action>) => {
     void cartApi.removeOne(cartId).then((res: AxiosResponse<unknown[]>) => {
         if (res.status === 200) {
             toastInfo('Cart successfully removed!');
