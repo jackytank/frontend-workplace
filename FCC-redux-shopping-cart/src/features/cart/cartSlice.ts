@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface CartItem {
+export interface CartItem {
     id: number;
-    name: string;
+    title: string;
     price: number;
-    quantity: number;
+    img: string;
+    amount: number;
 }
 
-interface CartState {
+export interface CartState {
     cartItems: CartItem[];
     amount: number;
     total: number;
@@ -22,7 +23,7 @@ const intitialState: CartState = {
 };
 
 const cartSlice = createSlice({
-    name: 'jCart',
+    name: 'cartSlice',
     initialState: intitialState,
     reducers: {},
 });
