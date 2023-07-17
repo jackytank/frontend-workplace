@@ -1,0 +1,88 @@
+{
+  "cartItems": [
+    {
+      "id": "rec1JZlfCIBOPdcT2",
+      "title": "Kẹo dẻo",
+      "price": "399.99",
+      "img": "https://i1.sndcdn.com/artworks-Qc0z11dMnmnhWWgA-tJ3DTw-t500x500.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recB6qcHPxb62YJ75",
+      "title": "Kẹo dảklăk",
+      "price": "499.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recdRxBsE14Rr2VuJ",
+      "title": "Kẹo pay pỏng",
+      "price": "699.99",
+      "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT98tBJCWjHmupMou0AYV-_pgKdLw_w60AVEQ&usqp=CAU",
+      "amount": 1
+    },
+    {
+      "id": "recwTo160XST3PIoW",
+      "title": "Kẹo đồng",
+      "price": "599.99 ",
+      "img": "https://bepbanh.com/data/files/phvn.jpg",
+      "amount": 1
+    },
+{
+      "id": "rec5R5kV6kYJACD2L",
+      "title": "Kẹo dẻo nhiều màu sắc",
+      "price": "299.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recJ7fHbKTQD6Vn2k",
+      "title": "Kẹo thạch trái cây",
+      "price": "199.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recNSAZ4mXjxBJxh4",
+      "title": "Kẹo socola",
+      "price": "99.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recnPFrB7hLr1WuGy",
+      "title": "Kẹo caramen",
+      "price": "149.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recyz1v9WpX3xvCNB",
+      "title": "Kẹo đường cát",
+      "price": "249.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "reciZyvXU8eR5G3F1",
+      "title": "Kẹo dẻo nhiều hương vị",
+      "price": "399.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recbXKzY7Gzjz6W3Y",
+      "title": "Kẹo đường đen",
+      "price": "299.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    },
+    {
+      "id": "recs4J2QWnX8gRfKv",
+      "title": "Kẹo mứt dừa",
+      "price": "349.99",
+      "img": "https://media.loveitopcdn.com/7157/keo.jpg",
+      "amount": 1
+    }
+  ]
+}
