@@ -17,9 +17,19 @@ const errorHandler = (error: AxiosError) => {
 
 };
 
-axiosClient.interceptors.request.use((config) => {
-    return config;
-});
+axiosClient.interceptors.request.use(
+    (config) => {
+        return new Promise((resolve) => {
+            // store.dispatch(setLoading(true));
+            setTimeout(() => {
+                resolve(config);
+            }, 500);
+        });
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 axiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
