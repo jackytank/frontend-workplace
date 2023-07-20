@@ -35,14 +35,16 @@ const employeeSlice = createSlice({
     extraReducers: (builder: ActionReducerMapBuilder<EmployeeState>) => {
         builder
             .addCase(getEmployeeList.pending, (state) => {
+                console.log('pending state');
                 state.isLoading = true;
             })
             .addCase(getEmployeeList.fulfilled, (state, action) => {
-                console.log(action);
+                console.log('fulfilled state');
                 state.isLoading = false;
                 state.employeeList = action.payload as EmployeeModelApi[];
             })
             .addCase(getEmployeeList.rejected, (state) => {
+                console.log('rejected');
                 state.isLoading = false;
             });
     }
