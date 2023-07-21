@@ -1,34 +1,5 @@
 {
-  "employeeDetails":[
-    {
-      "email": "wayne.enterprise@gmail.com",
-      "hccId": "WAYNE8273",
-      "ldap": "testldap",
-      "legalEntityHireDate": "2020-08-15T13:10:20.000Z",
-      "name": "Bruce Wayne",
-      "branchCode": "IOT001",
-      "branchName": "IoT",
-      "locationCode": "HCM",
-      "locationName": "Ho Chi Minh City",
-      "coeCoreTeamCode": "FSD",
-      "coeCoreTeamName": "Fullstack Dotnet",
-      "coeCoreTeamStatus": 1,
-      "coeCoreTeamSubLeaderName": "Nguyen Tuan Leader",
-      "coeCoreTeamSubLeaderEmail": "leader.tuan@gmail.com",
-      "coeCoreTeamSubLeaderHccId": "HCCTUAN01",
-      "centerOfExcellenceCode": "AWC",
-      "centerOfExcellenceName": "AWS Cloud App Engineering",
-      "businessUnitCode": "DEA-CMS",
-      "businessUnitName": "DEA Delivery Leaders, CEPS",
-      "businessUnitDescription": "DEA description",
-      "businessUnitManager": "Matt Evonavich",
-
-
-
-
-    }
-  ],
-  "employees":[
+  "employees": [
     {
       "id": 1,
       "created": "2022-06-25T10:30:25.000Z",
