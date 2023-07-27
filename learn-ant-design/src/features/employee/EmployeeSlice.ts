@@ -28,6 +28,9 @@ const employeeSlice = createSlice({
         setEmployeeList: (state, action: PayloadAction<EmployeeModelApi[]>) => {
             state.employeeList = action.payload;
         },
+        deleteEmployee: (state, action: PayloadAction<number>) => {
+            state.employeeList = state.employeeList.filter((employee) => employee.id !== action.payload);
+        },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         }
@@ -50,4 +53,5 @@ const employeeSlice = createSlice({
     }
 });
 
+export const { setEmployeeList, deleteEmployee, setLoading } = employeeSlice.actions;
 export default employeeSlice.reducer;

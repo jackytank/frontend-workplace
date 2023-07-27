@@ -18,4 +18,5 @@ const commonSlice = createSlice({
     }
 });
 
+export const { setLoading } = commonSlice.actions;
 export default commonSlice.reducer;

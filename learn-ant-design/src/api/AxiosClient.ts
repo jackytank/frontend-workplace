@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toastError } from "../utils/toastify";
+import { setLoading } from "../features/common/CommonSlice";
+import { store } from "../Store";
 
 const REACT_APP_API_URL = 'http://localhost:3000/api/v1/employees';
 
@@ -20,10 +22,11 @@ const errorHandler = (error: AxiosError) => {
 axiosClient.interceptors.request.use(
     (config) => {
         return new Promise((resolve) => {
-            // store.dispatch(setLoading(true));
+            store.dispatch(setLoading(true));
+            // simulate latency
             setTimeout(() => {
                 resolve(config);
-            }, 500);
+            }, 750);
         });
     },
     (error) => {
@@ -33,6 +36,7 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
+        store.dispatch(setLoading(false));
         return response;
     },
     (error: AxiosError) => {

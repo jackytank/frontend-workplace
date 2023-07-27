@@ -1,11 +1,11 @@
-import { Spin, Table } from "antd";
+import { Card, Spin, Table } from "antd";
 import { EmployeeReturnCols } from "./EmployeeReturnCols";
 import { RootState, useAppDispatch, useAppSelector } from "../../Store";
 import { useEffect, useMemo } from "react";
 import { getEmployeeList } from "../../features/employee/EmployeeSlice";
 
 const EmployeeList = () => {
-  const { employeeList, isLoading } = useAppSelector((store: RootState) => store.employee);
+  const { employeeList } = useAppSelector((store: RootState) => store.employee);
   const dispatch = useAppDispatch();
 
   const dataSource = useMemo(() => employeeList.map((e) => ({ ...e, key: e.id })), [employeeList]);
@@ -18,11 +18,12 @@ const EmployeeList = () => {
 
   return (
     <>
-      {isLoading
-        ? <Spin tip="loading">
-          <Table columns={EmployeeReturnCols()} dataSource={dataSource} />
-        </Spin>
-        : <Table columns={EmployeeReturnCols()} dataSource={dataSource} />}
+      <Card title="Employee List">
+        <Table
+          columns={EmployeeReturnCols()}
+          dataSource={dataSource}
+          scroll={{ y: 250 }} />
+      </Card>
     </>
   );
 };
