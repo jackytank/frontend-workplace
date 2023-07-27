@@ -22,7 +22,6 @@ export interface EmployeeModelApi {
 }
 
 export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
-  const [opem, setOpem] = useState<boolean>(false);
   const { isLoading } = useSelector((store: RootState) => store.common);
   return [
     {
@@ -68,16 +67,16 @@ export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
           title="Confirm"
           description="Are you sure to delete this employee?"
           okButtonProps={{ loading: isLoading }}
-          onCancel={() => {
-            toastInfo("Cancel delete employee!");
-          }}
           onConfirm={() => {
             void employeeApi.removeOne(record.id).then((res) => {
-              if (res.data) {
+              if (res.status === 200) {
                 store.dispatch(deleteEmployee(record.id));
                 toastInfo("Delete employee successfully!");
               }
             });
+          }}
+          onCancel={() => {
+            toastInfo("Cancel delete employee!");
           }}
         >
           <Button type="primary">Delete</Button>

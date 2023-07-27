@@ -3,7 +3,7 @@ import { toastError } from "../utils/toastify";
 import { setLoading } from "../features/common/CommonSlice";
 import { store } from "../Store";
 
-const REACT_APP_API_URL = 'http://localhost:3000/api/v1/employees';
+const REACT_APP_API_URL = 'http://localhost:3000/employees';
 
 const axiosClient = axios.create({
     baseURL: REACT_APP_API_URL,
