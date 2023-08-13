@@ -1,4 +1,4 @@
-import { Action, Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface TodoState {
     id: number;
@@ -12,9 +12,9 @@ const initialState: TodoState[] = [
     { id: 3, title: 'todo 3', completed: false },
 ];
 
-const addTodo = () => (dispatch: Dispatch<Action>)=>{
-    return null;
-};
+// const addTodo = () => (dispatch: Dispatch<Action>)=>{
+//     return null;
+// };
 
 const todoSlice = createSlice({
     name: 'todo',

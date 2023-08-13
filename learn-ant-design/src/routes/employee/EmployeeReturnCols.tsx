@@ -1,11 +1,5 @@
-import { Button, Popconfirm } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { RootState, store } from "../../Store";
-import { useSelector } from "react-redux";
-import { toastInfo } from "../../utils/toastify";
-import { employeeApi } from "../../api/EmployeeApi";
-import { deleteEmployee } from "../../features/employee/EmployeeSlice";
 
 export interface EmployeeModelApi {
   id: number;
@@ -21,7 +15,7 @@ export interface EmployeeModelApi {
 }
 
 export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
-  const { isLoading } = useSelector((store: RootState) => store.common);
+  // const { isLoading } = useSelector((store: RootState) => store.common);
   return [
     {
       title: "ID",

@@ -38,7 +38,7 @@ const EmployeeList = () => {
             throw err;
           });
         });
-        Promise.all(promises).then(res => {
+        Promise.all(promises).then(() => {
           toastInfo("Bulk delete employees successfully!");
         }).catch(() => {
           toastError("Bulk delete employees failed!");
@@ -56,7 +56,7 @@ const EmployeeList = () => {
 
   const rowSelection: TableRowSelection<EmployeeModelApi> = {
     selectedRowKeys: selectedRows.map((e) => e.id),
-    onChange: (selectedRowKeys, selectedRows, info) => {
+    onChange: (_selectedRowKeys, selectedRows) => {
       handleRowSelectionChange(selectedRows);
     },
     getCheckboxProps: (record) => ({
