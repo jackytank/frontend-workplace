@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import './index.css';
+import './Main.css';
 import ErrorPage from './ErrorPage.tsx';
 import Index from './routes/Index.tsx';
 import Root from './routes/Root.tsx';
 import About from './routes/About.tsx';
-import EmployeeList from './routes/employee/EmployeeList.tsx';
-import EmployeeDetail from './routes/employee/EmployeeDetail.tsx';
+import EmployeeList from './routes/employee/employee-list/EmployeeList.tsx';
+import EmployeeDetail from './routes/employee/employee-detail/EmployeeDetail.tsx';
 import { Provider } from 'react-redux';
 import { store } from './Store.ts';
 
@@ -25,7 +25,7 @@ const router = createBrowserRouter([{
         },
         {
           path: 'employees/list',
-          element: <EmployeeList />
+          element: <EmployeeList />,
         },
         {
           path: 'employees/detail',

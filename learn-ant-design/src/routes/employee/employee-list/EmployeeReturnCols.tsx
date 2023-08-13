@@ -1,18 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-
-export interface EmployeeModelApi {
-  id: number;
-  created: string;
-  createdBy: string;
-  updated: string | null;
-  updatedBy: string | null;
-  email: string;
-  hccId: string;
-  ldap: string;
-  legalEntityHireDate: string;
-  name: string;
-}
+import { Tag } from "antd";
+import { EmployeeModelApi, EmployeeStatus, EmployeeStatusColorMap } from "../EmployeeTypes";
 
 export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
   // const { isLoading } = useSelector((store: RootState) => store.common);
@@ -20,7 +9,7 @@ export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
     {
       title: "ID",
       dataIndex: 'id',
-      width: "5%"
+      width: "6%"
     },
     {
       title: "HCCID",
@@ -50,6 +39,20 @@ export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
       render: (value: string) => {
         return dayjs(value).format("DD-MM-YYYY");
       },
+    },
+    {
+      title: "Status",
+      width: "10%",
+      dataIndex: 'status',
+      render: (value: EmployeeStatus) => {
+        const statusText = EmployeeStatus[value];
+        const statusColor = EmployeeStatusColorMap[value];
+        return (
+          <Tag color={statusColor}>
+            {statusText}
+          </Tag>
+        );
+      }
     },
     // {
     //   title: "",

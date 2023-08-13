@@ -1,7 +1,6 @@
-import { ActionReducerMapBuilder, PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { EmployeeModelApi } from "../../routes/employee/EmployeeReturnCols";
+import { Action, Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { employeeApi } from "../../api/EmployeeApi";
-import { AxiosResponse } from "axios";
+import { EmployeeModelApi } from "../../routes/employee/EmployeeTypes";
 
 interface EmployeeState {
     employeeList: EmployeeModelApi[];
@@ -13,13 +12,16 @@ const initialState: EmployeeState = {
     isLoading: false
 };
 
-export const getEmployeeList = createAsyncThunk('employee/getEmployeeList', () => {
-    return employeeApi.getAll().then((res: AxiosResponse<EmployeeModelApi[]>) => {
-        if (res.status === 200) {
-            return res.data;
-        }
-    });
-});
+export const getEmployeeList = (
+    query?: string
+) => async (dispatch: Dispatch<Action>) => {
+    const response = await employeeApi.getAll(query);
+    if (response.status === 200) {
+        const data = response.data as EmployeeModelApi[];
+        const modifiedData = data.map((item) => ({ ...item, status: Math.floor(Math.random() * 3) }));
+        dispatch(setEmployeeList(modifiedData as EmployeeModelApi[]));
+    }
+};
 
 const employeeSlice = createSlice({
     name: 'employee',
@@ -35,22 +37,22 @@ const employeeSlice = createSlice({
             state.isLoading = action.payload;
         }
     },
-    extraReducers: (builder: ActionReducerMapBuilder<EmployeeState>) => {
-        builder
-            .addCase(getEmployeeList.pending, (state) => {
-                console.log('pending state');
-                state.isLoading = true;
-            })
-            .addCase(getEmployeeList.fulfilled, (state, action) => {
-                console.log('fulfilled state');
-                state.isLoading = false;
-                state.employeeList = action.payload as EmployeeModelApi[];
-            })
-            .addCase(getEmployeeList.rejected, (state) => {
-                console.log('rejected');
-                state.isLoading = false;
-            });
-    }
+    // extraReducers: (builder: ActionReducerMapBuilder<EmployeeState>) => {
+    //     builder
+    //         .addCase(getEmployeeList.pending, (state) => {
+    //             console.log('pending state');
+    //             state.isLoading = true;
+    //         })
+    //         .addCase(getEmployeeList.fulfilled, (state, action) => {
+    //             console.log('fulfilled state');
+    //             state.isLoading = false;
+    //             state.employeeList = action.payload as EmployeeModelApi[];
+    //         })
+    //         .addCase(getEmployeeList.rejected, (state) => {
+    //             console.log('rejected');
+    //             state.isLoading = false;
+    //         });
+    // }
 });
 
 export const { setEmployeeList, deleteEmployee, setLoading } = employeeSlice.actions;

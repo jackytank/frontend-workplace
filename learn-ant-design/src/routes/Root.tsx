@@ -1,14 +1,14 @@
-import { DesktopOutlined, UserOutlined, TeamOutlined, InsuranceTwoTone, UsergroupAddOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { DesktopOutlined, UserOutlined, TeamOutlined, TwitterCircleFilled, UsergroupAddOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Layout, Menu, MenuProps, Spin, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
-import { toastInfo } from "../utils/toastify";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.min.css';
 import { useSelector } from "react-redux";
 import { RootState } from "../Store";
+import { toastInfo } from "../utils/toastify";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -53,7 +53,7 @@ const Root = () => {
                 <Layout style={{ minHeight: '100vh' }}>
                     <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                         <div className="demo-logo-vertical">
-                            <InsuranceTwoTone style={{ fontSize: '70px', margin: '15px auto', display: 'block' }} />
+                            <TwitterCircleFilled style={{ fontSize: '60px', margin: '15px auto', display: 'block', color: 'DodgerBlue' }} />
                         </div>
                         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
                     </Sider>

@@ -1,17 +1,19 @@
 import { Button, Card, Modal, Table } from "antd";
-import { EmployeeModelApi, EmployeeReturnCols } from "./EmployeeReturnCols";
-import { RootState, useAppDispatch, useAppSelector } from "../../Store";
+import { EmployeeReturnCols } from "./EmployeeReturnCols";
+import { RootState, store, useAppDispatch, useAppSelector } from "../../../Store";
 import { useEffect, useState } from "react";
-import { deleteEmployee, getEmployeeList } from "../../features/employee/EmployeeSlice";
-import { employeeApi } from "../../api/EmployeeApi";
-import { toastError, toastInfo } from "../../utils/toastify";
+import { deleteEmployee, getEmployeeList } from "../../../features/employee/EmployeeSlice";
+import { employeeApi } from "../../../api/EmployeeApi";
 import { TableRowSelection } from "antd/es/table/interface";
+import { EmployeeModelApi } from "../EmployeeTypes";
+import EmployeeSearchForm from "./EmployeeSearchForm";
+import { toastError, toastInfo } from "../../../utils/toastify";
 
 const EmployeeList = () => {
   const dispatch = useAppDispatch();
   const { employeeList } = useAppSelector((store: RootState) => store.employee);
   const { isLoading } = useAppSelector((store: RootState) => store.common);
-  const dataSource = employeeList.map((e) => ({ ...e, key: e.id }));
+  const dataSource = employeeList.map((e) => ({ ...e, key: e.hccId }));
   const [selectedRows, setSelectedRows] = useState<EmployeeModelApi[]>([]);
 
   const handleRowSelectionChange = (selectedRows: EmployeeModelApi[]) => {
@@ -49,13 +51,12 @@ const EmployeeList = () => {
     });
   };
 
-
   useEffect(() => {
     void dispatch(getEmployeeList());
   }, [dispatch]);
 
   const rowSelection: TableRowSelection<EmployeeModelApi> = {
-    selectedRowKeys: selectedRows.map((e) => e.id),
+    selectedRowKeys: selectedRows.map((e) => e.hccId),
     onChange: (_selectedRowKeys, selectedRows) => {
       handleRowSelectionChange(selectedRows);
     },
@@ -79,6 +80,7 @@ const EmployeeList = () => {
   return (
     <>
       <Card title="Employee List">
+        <EmployeeSearchForm />
         <Table
           rowSelection={rowSelection}
           columns={EmployeeReturnCols()}

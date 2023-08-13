@@ -1,10 +1,15 @@
 import { Config } from "../Config";
-import { EmployeeModelApi } from "../routes/employee/EmployeeReturnCols";
+import { EmployeeModelApi } from "../routes/employee/EmployeeTypes";
 import axiosClient from "./AxiosClient";
 
 const employeeApi = {
-    getAll: () => {
-        return axiosClient.get(Config.API_PATH.EMPLOYEE);
+    getAll: (
+        query?: string,
+    ) => {
+        return axiosClient.get(
+            Config.API_PATH.EMPLOYEE
+            + '?'
+            + `search=${query ?? ''}`);
     },
     getOne: (id: number) => {
         return axiosClient.get(`${Config.API_PATH.EMPLOYEE}/${id}`);
