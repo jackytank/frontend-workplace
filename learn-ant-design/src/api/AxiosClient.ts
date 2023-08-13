@@ -2,11 +2,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toastError } from "../utils/toastify";
 import { setLoading } from "../features/common/CommonSlice";
 import { store } from "../Store";
-
-const REACT_APP_API_URL = 'http://localhost:3000/employees';
+import { Config } from "../Config";
 
 const axiosClient = axios.create({
-    baseURL: REACT_APP_API_URL,
+    baseURL: Config.REACT_APP_API_URL,
     headers: {
         'Content-Type': 'application/json'
     }
@@ -24,12 +23,14 @@ axiosClient.interceptors.request.use(
         return new Promise((resolve) => {
             store.dispatch(setLoading(true));
             // simulate latency
-            setTimeout(() => {
-                resolve(config);
-            }, 750);
+            resolve(config);
+            // setTimeout(() => {
+            //     resolve(config);
+            // }, 500);
         });
     },
     (error) => {
+        store.dispatch(setLoading(false));
         return Promise.reject(error);
     }
 );
@@ -40,6 +41,7 @@ axiosClient.interceptors.response.use(
         return response;
     },
     (error: AxiosError) => {
+        store.dispatch(setLoading(false));
         errorHandler(error);
     }
 );

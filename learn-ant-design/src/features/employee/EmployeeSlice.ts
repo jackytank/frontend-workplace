@@ -14,7 +14,7 @@ const initialState: EmployeeState = {
 };
 
 export const getEmployeeList = createAsyncThunk('employee/getEmployeeList', () => {
-    return employeeApi.getALl().then((res: AxiosResponse<EmployeeModelApi[]>) => {
+    return employeeApi.getAll().then((res: AxiosResponse<EmployeeModelApi[]>) => {
         if (res.status === 200) {
             return res.data;
         }

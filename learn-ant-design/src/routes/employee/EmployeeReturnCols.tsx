@@ -57,30 +57,30 @@ export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
         return dayjs(value).format("DD-MM-YYYY");
       },
     },
-    {
-      title: "",
-      key: "deleteEmployee",
-      width: "15%",
-      render: (record: EmployeeModelApi) => (
-        <Popconfirm
-          title="Confirm"
-          description="Are you sure to delete this employee?"
-          okButtonProps={{ loading: isLoading }}
-          onConfirm={() => {
-            void employeeApi.removeOne(record.id).then((res) => {
-              if (res.status === 200) {
-                store.dispatch(deleteEmployee(record.id));
-                toastInfo("Delete employee successfully!");
-              }
-            });
-          }}
-          onCancel={() => {
-            toastInfo("Cancel delete employee!");
-          }}
-        >
-          <Button type="primary">Delete</Button>
-        </Popconfirm>
-      )
-    },
+    // {
+    //   title: "",
+    //   key: "deleteEmployee",
+    //   width: "15%",
+    //   render: (record: EmployeeModelApi) => (
+    //     <Popconfirm
+    //       title="Confirm"
+    //       description="Are you sure to delete this employee?"
+    //       okButtonProps={{ loading: isLoading }}
+    //       onConfirm={() => {
+    //         void employeeApi.removeOne(record.id).then((res) => {
+    //           if (res.status === 200) {
+    //             store.dispatch(deleteEmployee(record.id));
+    //             toastInfo("Delete employee successfully!");
+    //           }
+    //         });
+    //       }}
+    //       onCancel={() => {
+    //         toastInfo("Cancel delete employee!");
+    //       }}
+    //     >
+    //       <Button type="primary">Delete</Button>
+    //     </Popconfirm>
+    //   )
+    // },
   ];
 };
