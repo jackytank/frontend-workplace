@@ -1,6 +1,6 @@
 import { Button, Card, Modal, Table } from "antd";
 import { EmployeeReturnCols } from "./EmployeeReturnCols";
-import { RootState, store, useAppDispatch, useAppSelector } from "../../../Store";
+import { RootState, useAppDispatch, useAppSelector } from "../../../Store";
 import { useEffect, useState } from "react";
 import { deleteEmployee, getEmployeeList } from "../../../features/employee/EmployeeSlice";
 import { employeeApi } from "../../../api/EmployeeApi";
