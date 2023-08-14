@@ -1,15 +1,18 @@
 import { Config } from "../Config";
-import { EmployeeModelApi } from "../routes/employee/EmployeeTypes";
+import { EmployeeModelApi, EmployeeSearchFormType } from "../routes/employee/Employee.Types";
 import axiosClient from "./AxiosClient";
 
 const employeeApi = {
     getAll: (
-        query?: string,
+        { search, name, email, status }: EmployeeSearchFormType
     ) => {
+        const filteredParams = Object.fromEntries(Object.entries({ search, name, email, status }).filter(([key, value]) => value !== undefined && value !== null));
+        // Create a query string from the filtered object using the URLSearchParams constructor
+        const queryString = new URLSearchParams(filteredParams as unknown as string).toString();
+        // Append it to the base url
         return axiosClient.get(
-            Config.API_PATH.EMPLOYEE
-            + '?'
-            + `search=${query ?? ''}`);
+            Config.API_PATH.EMPLOYEE + (queryString ? `?${queryString}` : "")
+        );
     },
     getOne: (id: number) => {
         return axiosClient.get(`${Config.API_PATH.EMPLOYEE}/${id}`);

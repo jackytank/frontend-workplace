@@ -1,4 +1,4 @@
-import { EmployeeModelApi } from "../routes/employee/EmployeeTypes";
+import { EmployeeModelApi } from "../routes/employee/Employee.Types";
 import axiosClient from "./AxiosClient";
 
 const todoApi = {

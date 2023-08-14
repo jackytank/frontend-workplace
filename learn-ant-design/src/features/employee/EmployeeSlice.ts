@@ -1,6 +1,6 @@
 import { Action, Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { employeeApi } from "../../api/EmployeeApi";
-import { EmployeeModelApi } from "../../routes/employee/EmployeeTypes";
+import { EmployeeModelApi, EmployeeSearchFormType } from "../../routes/employee/Employee.Types";
 
 interface EmployeeState {
     employeeList: EmployeeModelApi[];
@@ -13,9 +13,9 @@ const initialState: EmployeeState = {
 };
 
 export const getEmployeeList = (
-    query?: string
+    { search, name, email, status }: EmployeeSearchFormType
 ) => async (dispatch: Dispatch<Action>) => {
-    const response = await employeeApi.getAll(query);
+    const response = await employeeApi.getAll({ search, name, email, status });
     if (response.status === 200) {
         const data = response.data as EmployeeModelApi[];
         const modifiedData = data.map((item) => ({ ...item, status: Math.floor(Math.random() * 3) }));

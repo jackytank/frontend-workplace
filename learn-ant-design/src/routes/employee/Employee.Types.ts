@@ -24,7 +24,9 @@ export const EmployeeStatusColorMap: Record<EmployeeStatus, string> = {
     [EmployeeStatus.Probation]: 'yellow',
 };
 
-export interface EmployeeListLoaderType{
-    employeeList?: unknown[];
-    query: string | null;
+export interface EmployeeSearchFormType {
+    search: string | null,
+    name: string | null,
+    email: string | null,
+    status: number | null,
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { deleteEmployee, getEmployeeList } from "../../../features/employee/EmployeeSlice";
 import { employeeApi } from "../../../api/EmployeeApi";
 import { TableRowSelection } from "antd/es/table/interface";
-import { EmployeeModelApi } from "../EmployeeTypes";
+import { EmployeeModelApi } from "../Employee.Types";
 import EmployeeSearchForm from "./EmployeeSearchForm";
 import { toastError, toastInfo } from "../../../utils/toastify";
 
@@ -23,7 +23,7 @@ const EmployeeList = () => {
   const handleBulkDelete = () => {
     Modal.confirm({
       title: "Are you sure to delete these employees?",
-      content: `You have seleteced ${selectedRows.length} employees to bulk delete`,
+      content: `You have seleteced ${selectedRows.length} employee${selectedRows.length > 1 ? 's' : ''} to bulk delete`,
       okText: "Yes",
       okType: "danger",
       cancelText: "No",
@@ -52,7 +52,12 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-    void dispatch(getEmployeeList());
+    void dispatch(getEmployeeList({
+      search: null,
+      name: null,
+      email: null,
+      status: null
+    }));
   }, [dispatch]);
 
   const rowSelection: TableRowSelection<EmployeeModelApi> = {
