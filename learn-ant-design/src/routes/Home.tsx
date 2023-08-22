@@ -1,10 +1,10 @@
-const Index = () => {
+const Home = () => {
     return (
         <>
-            <div>Index</div>
+            <div>Home</div>
             <div>Welcome to here</div>
         </>
     );
 };
 
-export default Index;
+export default Home;

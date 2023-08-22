@@ -1,4 +1,4 @@
-import { DesktopOutlined, UserOutlined, TeamOutlined, TwitterCircleFilled, UsergroupAddOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { DesktopOutlined, UserOutlined, TeamOutlined, TwitterCircleFilled, UsergroupAddOutlined, QuestionCircleOutlined, FolderOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import { Layout, Menu, MenuProps, Spin, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
@@ -32,13 +32,17 @@ const items: MenuItem[] = [
     getItem("Home", "1", <DesktopOutlined />, "/", undefined),
     getItem("Employee", "2", <UsergroupAddOutlined />, undefined,
         [
-            getItem("List", "3", <TeamOutlined />, "employees/list", undefined),
+            getItem("List", "3", <UnorderedListOutlined />, "employees/list", undefined),
             getItem("Detail", "4", <UserOutlined />, "employees/detail", undefined)
         ]),
-    getItem("About", "5", <QuestionCircleOutlined />, "/about", undefined),
+    getItem("Project", "5", <FolderOutlined />, undefined,
+        [
+            getItem("List", "6", <UnorderedListOutlined />, "projects/list", undefined),
+        ]),
+    getItem("About", "7", <QuestionCircleOutlined />, "/about", undefined),
 ];
 
-const Root = () => {
+const MainLayout = () => {
     const [collapsed, setCollapsed] = useState(false);
     const { token: { colorBgContainer } } = theme.useToken();
     const { isLoading } = useSelector((store: RootState) => store.common);
@@ -77,4 +81,4 @@ const Root = () => {
     );
 };
 
-export default Root;
+export default MainLayout;

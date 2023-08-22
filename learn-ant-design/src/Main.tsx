@@ -3,17 +3,18 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import './Main.css';
 import ErrorPage from './ErrorPage.tsx';
-import Index from './routes/Index.tsx';
-import Root from './routes/Root.tsx';
+import Home from './routes/Home.tsx';
+import MainLayout from './routes/MainLayout.tsx';
 import About from './routes/About.tsx';
 import EmployeeList from './routes/employee/employee-list/EmployeeList.tsx';
 import EmployeeDetail from './routes/employee/employee-detail/EmployeeDetail.tsx';
 import { Provider } from 'react-redux';
 import { store } from './Store.ts';
+import ProjectList from './routes/project/project-list/ProjectList.tsx';
 
 const router = createBrowserRouter([{
   path: '/',
-  element: <Root />,
+  element: <MainLayout />,
   errorElement: <ErrorPage />,
   children: [
     {
@@ -21,15 +22,29 @@ const router = createBrowserRouter([{
       children: [
         {
           index: true,
-          element: <Index />
+          element: <Home />
         },
         {
-          path: 'employees/list',
-          element: <EmployeeList />,
+          path: 'employees',
+          children: [
+            {
+              path: 'list',
+              element: <EmployeeList />
+            },
+            {
+              path: 'detail',
+              element: <EmployeeDetail />
+            }
+          ]
         },
         {
-          path: 'employees/detail',
-          element: <EmployeeDetail />
+          path: 'projects',
+          children: [
+            {
+              path: 'list',
+              element: <ProjectList />
+            },
+          ]
         },
         {
           path: 'todos',
