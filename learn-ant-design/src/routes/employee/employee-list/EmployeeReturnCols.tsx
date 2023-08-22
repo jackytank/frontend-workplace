@@ -58,19 +58,19 @@ export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
         const statusText = EmployeeStatus[value];
         const statusColor = EmployeeStatusColorMap[value];
         return (
-          // <Tag color={statusColor}>
-          //   {statusText}
-          // </Tag>
-          <Select
-            defaultValue="lucy"
-            onChange={handleStatusOnChange}
-            options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}
-          />
+          <Tag color={statusColor}>
+            {statusText}
+          </Tag>
+          // <Select
+          //   defaultValue="lucy"
+          //   onChange={handleStatusOnChange}
+          //   options={[
+          //     { value: 'jack', label: 'Jack' },
+          //     { value: 'lucy', label: 'Lucy' },
+          //     { value: 'Yiminghe', label: 'yiminghe' },
+          //     { value: 'disabled', label: 'Disabled', disabled: true },
+          //   ]}
+          // />
         );
       }
     },
@@ -96,7 +96,7 @@ export const EmployeeReturnCols = (): ColumnsType<EmployeeModelApi> => {
         >
           <Button type="dashed" danger>
             <CloseOutlined />Delete
-            </Button>
+          </Button>
         </Popconfirm>
       )
     },
