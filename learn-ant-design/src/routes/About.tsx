@@ -31,7 +31,6 @@ const About = () => {
                     <CustomTable />
                 ),
                 onOk() {
-                    // do something when confirmed
                     console.log("OK");
                     // update the selected state with the temporary variable
                     setSelected([...selected, temp]);
@@ -68,8 +67,6 @@ const About = () => {
                         <span style={{ color: "grey" }}> Working on another project</span>
                     </div>
                 </Option>
-
-
             ))}
         </Select>
     );
