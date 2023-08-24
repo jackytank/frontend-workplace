@@ -5,12 +5,12 @@ import CustomTable from "./CustomTable";
 const { Option } = Select;
 
 const options = [
-    { value: "red", label: "Red" },
-    { value: "green", label: "Green" },
-    { value: "blue", label: "Blue" },
+    { value: "emp1", label: "Employee 1" },
+    { value: "emp2", label: "Employee 2" },
+    { value: "emp3", label: "Employee 3" },
 ];
 
-const About = () => {
+const PlayGround = () => {
     const [selected, setSelected] = useState<string[]>([]);
 
     const handleChange = (value: string[]) => {
@@ -64,7 +64,7 @@ const About = () => {
                 >
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
                         {option.label}
-                        <span style={{ color: "grey" }}> Working on another project</span>
+                        {option.value === 'emp2' ? <span style={{ color: "grey" }}> Working on another project</span> : ''}
                     </div>
                 </Option>
             ))}
@@ -73,4 +73,4 @@ const About = () => {
 
 };
 
-export default About;
+export default PlayGround;

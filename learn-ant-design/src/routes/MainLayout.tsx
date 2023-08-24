@@ -39,7 +39,7 @@ const items: MenuItem[] = [
         [
             getItem("List", "6", <UnorderedListOutlined />, "projects/list", undefined),
         ]),
-    getItem("About", "7", <QuestionCircleOutlined />, "/about", undefined),
+    getItem("PlayGround", "7", <QuestionCircleOutlined />, "/playground", undefined),
 ];
 
 const MainLayout = () => {

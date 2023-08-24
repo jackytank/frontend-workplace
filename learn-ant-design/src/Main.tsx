@@ -5,7 +5,7 @@ import './Main.css';
 import ErrorPage from './ErrorPage.tsx';
 import Home from './routes/Home.tsx';
 import MainLayout from './routes/MainLayout.tsx';
-import About from './routes/About.tsx';
+import PlayGround from './routes/PlayGround.tsx';
 import EmployeeList from './routes/employee/employee-list/EmployeeList.tsx';
 import EmployeeDetail from './routes/employee/employee-detail/EmployeeDetail.tsx';
 import { Provider } from 'react-redux';
@@ -51,8 +51,8 @@ const router = createBrowserRouter([{
           element: <EmployeeDetail />
         },
         {
-          path: 'about',
-          element: <About />
+          path: 'playground',
+          element: <PlayGround />
         }
       ]
     }
