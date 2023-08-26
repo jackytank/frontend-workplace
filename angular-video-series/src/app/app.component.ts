@@ -7,6 +7,28 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class AppComponent implements OnInit, OnDestroy {
   intervalSub: any;
+  title: string = "It just a normal title!";
+  employeeList: Employee[] = [
+    {
+      id: 1,
+      name: 'John',
+      email: 'john@gmail.com'
+    },
+    {
+      id: 2,
+      name: 'Smith',
+      email: 'smith@gmail.com'
+    },
+    {
+      id: 3,
+      name: 'Smilga',
+      email: 'smilga@gmail.com'
+    }
+  ];
+
+  getMin(arg0: number, arg1: number) {
+    return Math.min(arg0, arg1);
+  }
 
   ngOnInit(): void {
     this.intervalSub = setInterval(() => {
@@ -18,4 +40,10 @@ export class AppComponent implements OnInit, OnDestroy {
       clearInterval(this.intervalSub);
     }
   }
+}
+
+interface Employee {
+  id: number;
+  name: string;
+  email: string;
 }

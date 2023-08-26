@@ -1,1 +1,10 @@
-<app-hello-world></app-hello-world>
+<h1>{{ title }}</h1>
+<span>List Employee</span>
+<ul>
+  <li *ngFor="let employee of employeeList">
+    {{ employee.id }} - {{ employee.name }} - {{ employee.email }}
+  </li>
+</ul>
+<span>Get Min: {{getMin(10,999)}}</span>
+
+<app-parent></app-parent>
