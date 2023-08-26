@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-video-series": {
+    "angular-todo-app": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angular-video-series",
+            "outputPath": "dist/angular-todo-app",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-video-series:build:production"
+              "browserTarget": "angular-todo-app:build:production"
             },
             "development": {
-              "browserTarget": "angular-video-series:build:development"
+              "browserTarget": "angular-todo-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,7 +71,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-video-series:build"
+            "browserTarget": "angular-todo-app:build"
           }
         },
         "test": {
@@ -96,6 +96,6 @@
     }
   },
   "cli": {
-    "analytics": "80016114-aa08-44d2-9382-0ecae2afd80e"
+    "analytics": "f4f94164-fc46-4d99-b6c8-9f611bd0d2a6"
   }
 }
