@@ -25,6 +25,8 @@ export class AppComponent implements OnInit, OnDestroy {
       email: 'smilga@gmail.com'
     }
   ];
+  currentDate: Date = new Date();
+  salary: number = 10000.2345323;
 
   getMin(arg0: number, arg1: number) {
     return Math.min(arg0, arg1);
