@@ -11,6 +11,7 @@ import EmployeeDetail from './routes/employee/employee-detail/EmployeeDetail.tsx
 import { Provider } from 'react-redux';
 import { store } from './Store.ts';
 import ProjectList from './routes/project/project-list/ProjectList.tsx';
+import PowerBiPlayGround from './routes/PowerBiPlayGround.tsx';
 
 const router = createBrowserRouter([{
   path: '/',
@@ -53,6 +54,10 @@ const router = createBrowserRouter([{
         {
           path: 'playground',
           element: <PlayGround />
+        },
+        {
+          path: 'powerbi-playground',
+          element: <PowerBiPlayGround />
         }
       ]
     }

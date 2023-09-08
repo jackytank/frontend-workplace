@@ -1,4 +1,4 @@
-import { DesktopOutlined, UserOutlined, TeamOutlined, TwitterCircleFilled, UsergroupAddOutlined, QuestionCircleOutlined, FolderOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { DesktopOutlined, UserOutlined, TeamOutlined, TwitterCircleFilled, UsergroupAddOutlined, QuestionCircleOutlined, FolderOutlined, UnorderedListOutlined, PieChartOutlined } from "@ant-design/icons";
 import { Layout, Menu, MenuProps, Spin, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
@@ -40,6 +40,7 @@ const items: MenuItem[] = [
             getItem("List", "6", <UnorderedListOutlined />, "projects/list", undefined),
         ]),
     getItem("PlayGround", "7", <QuestionCircleOutlined />, "/playground", undefined),
+    getItem("PlayGround", "8", <PieChartOutlined />, "/powerbi-playground", undefined),
 ];
 
 const MainLayout = () => {
