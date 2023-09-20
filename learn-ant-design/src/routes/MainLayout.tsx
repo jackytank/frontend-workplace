@@ -48,10 +48,6 @@ const MainLayout = () => {
     const { token: { colorBgContainer } } = theme.useToken();
     const { isLoading } = useSelector((store: RootState) => store.common);
 
-    useEffect(() => {
-        toastInfo('Welcome to here!');
-    }, []);
-
     return (
         <>
             <Spin spinning={isLoading}>
