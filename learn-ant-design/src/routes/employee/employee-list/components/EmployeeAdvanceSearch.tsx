@@ -1,15 +1,15 @@
 import { ClearOutlined, DownOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row, Select, Space } from "antd";
+import { Col, Input, Select, Card, Row, Space, Button, Form } from "antd";
+import { debounce } from "lodash";
 import { useState } from "react";
-import { useAppDispatch } from "../../../Store";
-import { getEmployeeList } from "../../../features/employee/EmployeeSlice";
-import debounce from "lodash/debounce";
-import { EmployeeSearchFormType } from "../Employee.Types";
+import { useAppDispatch } from "../../../../Store";
+import { getEmployeeList } from "../../../../features/employee/EmployeeSlice";
+import { EmployeeSearchFormType } from "../../Employee.Types";
 
-const EmployeeSearchForm = () => {
+const EmployeeAdvanceSearch = () => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const [expand, setExpand] = useState<boolean>(false);
+    // const [expand, setExpand] = useState(false);
     const [searchValues, setSearchValues] = useState<EmployeeSearchFormType>({ search: '', name: '', email: '', status: 0 });
 
     const handleClearButton = () => {
@@ -20,10 +20,6 @@ const EmployeeSearchForm = () => {
             email: null,
             status: null
         }));
-    };
-
-    const handleExpandButton = () => {
-        setExpand(!expand);
     };
 
     const debouncedSearch = debounce((object: EmployeeSearchFormType) => {
@@ -43,48 +39,50 @@ const EmployeeSearchForm = () => {
                         />
                     </Form.Item>
                 </Col>
-                {expand && <>
-                    <Col span={8}>
-                        <Form.Item name="name" label="Name">
-                            <Input placeholder="Name" onChange={handleSearchChange} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="email" label="Email">
-                            <Input placeholder="Email" onChange={handleSearchChange} />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name="status" label="Status">
-                            <Select placeholder="Status" onChange={handleSearchChange}>
-                                <Select.Option value="Active">Active</Select.Option>
-                                <Select.Option value="Inactive">Inactive</Select.Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                </>}
+                <Col span={8}>
+                    <Form.Item name="name" label="Name">
+                        <Input placeholder="Name" onChange={handleSearchChange} />
+                    </Form.Item>
+                </Col>
+                <Col span={8}>
+                    <Form.Item name="email" label="Email">
+                        <Input placeholder="Email" onChange={handleSearchChange} />
+                    </Form.Item>
+                </Col>
+                <Col span={8}>
+                    <Form.Item name="status" label="Status">
+                        <Select placeholder="Status" onChange={handleSearchChange}>
+                            <Select.Option value="Active">Active</Select.Option>
+                            <Select.Option value="Inactive">Inactive</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Col>
+                {/* {expand && <>
+                </>} */}
             </>
         );
     };
 
     return (
         <>
-            <Card style={{ marginBottom: '15px' }}>
+            <Card style={{ marginBottom: '15px' }} title="Advance Search">
                 <Form
                     form={form}
                     layout="vertical"
                     autoComplete="off"
                     onValuesChange={(_changedValues, allValues: EmployeeSearchFormType) => setSearchValues(allValues)}
                 >
-                    <Row gutter={24}>{getFields()}</Row>
+                    <Row gutter={24}>
+                        {getFields()}
+                    </Row>
                     <div style={{ textAlign: 'right' }}>
                         <Space size="small">
                             <Button onClick={handleClearButton} icon={<ClearOutlined />}>
                                 Reset
                             </Button>
-                            <a style={{ fontSize: 12 }} onClick={handleExpandButton}>
+                            {/* <a style={{ fontSize: 12 }} onClick={handleExpandButton}>
                                 <DownOutlined rotate={expand ? 180 : 0} /> {expand ? 'Collapse' : 'Expand'}
-                            </a>
+                            </a> */}
                         </Space>
                     </div>
                 </Form>
@@ -93,4 +91,4 @@ const EmployeeSearchForm = () => {
     );
 };
 
-export default EmployeeSearchForm;
+export default EmployeeAdvanceSearch;

@@ -1,4 +1,8 @@
-export interface EmployeeModelApi {
+interface BaseUnique {
+    uniqueKey: number;
+}
+
+export interface EmployeeModelApi extends BaseUnique {
     id: number;
     hccId: string;
     name: string;

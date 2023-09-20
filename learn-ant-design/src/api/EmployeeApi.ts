@@ -7,9 +7,7 @@ const employeeApi = {
         { search, name, email, status }: EmployeeSearchFormType
     ) => {
         const filteredParams = Object.fromEntries(Object.entries({ search, name, email, status }).filter(([, value]) => value !== undefined && value !== null));
-        // Create a query string from the filtered object using the URLSearchParams constructor
         const queryString = new URLSearchParams(filteredParams as unknown as string).toString();
-        // Append it to the base url
         return axiosClient.get(
             Config.API_PATH.EMPLOYEE + (queryString ? `?${queryString}` : "")
         );

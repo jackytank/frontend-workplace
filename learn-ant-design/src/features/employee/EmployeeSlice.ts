@@ -4,11 +4,13 @@ import { EmployeeModelApi, EmployeeSearchFormType } from "../../routes/employee/
 
 interface EmployeeState {
     employeeList: EmployeeModelApi[];
+    selectedEmployeeList: EmployeeModelApi[];
     isLoading: boolean;
 }
 
 const initialState: EmployeeState = {
     employeeList: [],
+    selectedEmployeeList: [],
     isLoading: false
 };
 
@@ -28,10 +30,16 @@ const employeeSlice = createSlice({
     initialState,
     reducers: {
         setEmployeeList: (state, action: PayloadAction<EmployeeModelApi[]>) => {
-            state.employeeList = action.payload;
+            state.employeeList = action.payload.map((e, idx) => ({ ...e, uniqueKey: idx }));
         },
-        deleteEmployee: (state, action: PayloadAction<number>) => {
-            state.employeeList = state.employeeList.filter((employee) => employee.id !== action.payload);
+        setSelectedEmployeeList: (state, action: PayloadAction<EmployeeModelApi[]>) => {
+            state.selectedEmployeeList = action.payload.map((e, idx) => ({ ...e, uniqueKey: idx }));
+        },
+        setRemoveEmployeeList: (state, action: PayloadAction<EmployeeModelApi>) => {
+            state.employeeList = state.employeeList.filter((employee) => employee.uniqueKey !== action.payload.uniqueKey);
+        },
+        setRemoveSelectedEmployeeList: (state, action: PayloadAction<EmployeeModelApi>) => {
+            state.selectedEmployeeList = state.selectedEmployeeList.filter((employee) => employee.uniqueKey !== action.payload.uniqueKey);
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
@@ -57,7 +65,9 @@ const employeeSlice = createSlice({
 
 export const {
     setEmployeeList,
-    deleteEmployee,
+    setSelectedEmployeeList,
+    setRemoveSelectedEmployeeList,
+    setRemoveEmployeeList,
     setLoading
 } = employeeSlice.actions;
 export default employeeSlice.reducer;
