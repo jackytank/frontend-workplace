@@ -55,5 +55,9 @@ const employeeSlice = createSlice({
     // }
 });
 
-export const { setEmployeeList, deleteEmployee, setLoading } = employeeSlice.actions;
+export const {
+    setEmployeeList,
+    deleteEmployee,
+    setLoading
+} = employeeSlice.actions;
 export default employeeSlice.reducer;
