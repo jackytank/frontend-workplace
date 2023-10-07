@@ -1,79 +1,127 @@
-import './App.css'
-import { LoadingOutlined } from "@ant-design/icons";
-import { Space, Select, Spin, message } from "antd";
-import axios, { AxiosError } from "axios";
-import _ from "lodash";
-import { useState, useMemo } from "react";
-import { User, UserApiParams } from "./types";
+import './App.css';
+import { Space, Select, message, Modal, Button } from "antd";
+import { useState, useEffect, cloneElement } from "react";
+import { User, } from "./types";
 
 export default function App() {
-	const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
-	const [options, setOptions] = useState<User[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [options, setOptions] = useState<User[]>([]);
+  const [modal, modalContextHolder] = Modal.useModal();
+  const [modalXButton, modalXButtonContextHolder] = Modal.useModal();
 
-	const removeFromActionEmployee = (option: number) => {
-		setSelectedEmployeeIds(selectedEmployeeIds.filter((item) => item !== option));
-	};
+  const onChange = (records: number[]) => {
+    // get the last selected option
+    const last = records[records.length - 1];
+    // check if it is already in the selected array
+    if (selected.includes(last)) {
+      // if yes, do nothing
+      return;
+    }
+    if (!selected.includes(last) && last !== undefined) {
+      // if no, store it in a temporary variable and show the confirm modal
+      const temp = last;
+      modal.confirm({
+        title: `Do you want to select ${temp}?`,
+        okText: 'OK',
+        cancelText: 'Cancel',
+        onOk() {
+          setSelected(prev => {
+            const newState = [...prev, temp];
+            console.log('newState', newState);
+            return newState;
+          });
+        },
+        onCancel() {
+          // remove the last option from the value array when canceled
+          records.pop();
+        },
+      });
+    }
+  };
 
-	const handleSelectOnSearch = (keyword: string) => {
-		console.log('keyword', keyword);
-		setOptions([]);
-		setIsLoading(true);
-		axios.get('https://random-data-api.com/api/v2/users', {
-			params: {
-				size: 10
-			} as UserApiParams
-		}).then((res) => {
-			if (Array.isArray(res)) {
-				setOptions(res);
-			}
-		}).catch((err: AxiosError) => {
-			message.error(`Error: ${err.message}`);
-		}).finally(() => {
-			setIsLoading(false);
-		});
-	};
+  const onDeselect = (record: number) => {
+    setSelected(selected.filter((item) => item !== record));
+  };
 
-	const debouncedHandleSelectOnSearch = useMemo(() => _.debounce(handleSelectOnSearch, 600), []);
+  const handleXButtonClick = (record: User) => {
+    const onOk = () => {
+      onDeselect(record.id);
+    };
+    const onCancel = () => {
+    };
+    modalXButton.confirm({
+      title: `Remove confirm`,
+      content: `Do you want to remove this user (id: ${record.id})?`,
+      onOk: () => onOk(),
+      onCancel: () => onCancel(),
+      okText: 'Yes',
+      cancelText: 'Cancel',
+    });
+  };
 
-	return (
-		<>
-			<Select
-				placeholder={`Search user...`}
-				showSearch
-				filterOption={false}
-				mode="multiple"
-				optionLabelProp="label"
-				onDeselect={removeFromActionEmployee}
-				onSearch={(e: string) => debouncedHandleSelectOnSearch(e)}
-				value={selectedEmployeeIds}
-				notFoundContent={
-					isLoading ? (
-						<Spin
-							indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
-						/>
-					) : null
-				}
-			>
-				{!options.length
-					? ''
-					: options.map((option: User) => {
-						return (
-							<Select.Option
-								key={option.id}
-								value={option.id}
-								label={option.last_name}
-							>
-								<Space style={{ display: 'flex', justifyContent: 'space-between' }}>
-									<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-										<span>{option.last_name}</span>
-										<span>{option.email}</span>
-									</div>
-								</Space>
-							</Select.Option>
-						);
-					})}
-			</Select>
-		</>
-	);
+  useEffect(() => {
+    fetch(`https://random-data-api.com/api/v2/users?size=10`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Network response was not okay.');
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        setOptions(data);
+      })
+      .catch((error) => {
+        message.error(`Error: ${error.message}`);
+      });
+  }, []);
+
+  return (
+    <>
+      {cloneElement(modalContextHolder, { key: 'modalContextHolder' })}
+      {cloneElement(modalXButtonContextHolder, { key: 'modalXButtonContextHolder' })}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Select
+          style={{ width: '30rem' }}
+          placeholder={`Select user...`}
+          mode="multiple"
+          optionLabelProp="label"
+          onChange={(e) => onChange(e)}
+          onDeselect={(e) => onDeselect(e)}
+          value={selected}
+        >
+          {options.map((option: User) => {
+            const isDisabled = selected.includes(option.id);
+            return (
+              <Select.Option
+                key={option.id}
+                value={option.id}
+                label={<>
+                  {option.last_name}
+                  <Button
+                    size='small'
+                    type='text'
+                    onClick={() => handleXButtonClick(option)}
+                  >
+                    x
+                  </Button>
+                </>}
+
+                disabled={isDisabled}
+              >
+                <Space style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <span>{option.last_name}</span>
+                    <span>{option.email}</span>
+                  </div>
+                </Space>
+              </Select.Option>
+            );
+          })}
+        </Select>
+      </div>
+    </>
+  );
 }
+
