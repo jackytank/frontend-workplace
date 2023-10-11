@@ -40,7 +40,6 @@ const items: MenuItem[] = [
             getItem("List", "6", <UnorderedListOutlined />, "projects/list", undefined),
         ]),
     getItem("PlayGround", "7", <QuestionCircleOutlined />, "/playground", undefined),
-    getItem("PowerBI", "8", <PieChartOutlined />, "/powerbi-playground", undefined),
 ];
 
 const MainLayout = () => {

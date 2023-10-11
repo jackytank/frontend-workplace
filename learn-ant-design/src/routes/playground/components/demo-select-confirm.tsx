@@ -1,18 +1,14 @@
+import { Modal, Select } from "antd";
 import { useState } from "react";
-import { Select, Modal } from "antd";
-import CustomTable from "./CustomTable";
-
-const { Option } = Select;
+import CustomTable from "../../CustomTable";
 
 const options = [
     { value: "emp1", label: "Employee 1" },
     { value: "emp2", label: "Employee 2" },
     { value: "emp3", label: "Employee 3" },
 ];
-
-const PlayGround = () => {
+const DemoSelectConfirm = () => {
     const [selected, setSelected] = useState<string[]>([]);
-
     const handleChange = (value: string[]) => {
         // get the last selected option
         const last = value[value.length - 1];
@@ -47,30 +43,30 @@ const PlayGround = () => {
         // remove the deselected option from the selected state
         setSelected(selected.filter((item) => item !== value));
     };
-
     return (
-        <Select
-            mode="multiple"
-            style={{ width: 1000 }}
-            placeholder="Please select"
-            onChange={handleChange}
-            onDeselect={handleDeselect} // add this prop
-            value={selected}
-        >
-            {options.map((option) => (
-                <Option
-                    key={option.value}
-                    value={option.value}
-                >
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        {option.label}
-                        {option.value === 'emp2' ? <span style={{ color: "grey" }}> Working on another project</span> : ''}
-                    </div>
-                </Option>
-            ))}
-        </Select>
+        <div>
+            <Select
+                mode="multiple"
+                style={{ width: 1000 }}
+                placeholder="Please select"
+                onChange={handleChange}
+                onDeselect={handleDeselect} // add this prop
+                value={selected}
+            >
+                {options.map((option) => (
+                    <Select.Option
+                        key={option.value}
+                        value={option.value}
+                    >
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            {option.label}
+                            {option.value === 'emp2' ? <span style={{ color: "grey" }}> Working on another project</span> : ''}
+                        </div>
+                    </Select.Option>
+                ))}
+            </Select>
+        </div>
     );
-
 };
 
-export default PlayGround;
+export default DemoSelectConfirm;

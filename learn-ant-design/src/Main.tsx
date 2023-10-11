@@ -5,13 +5,12 @@ import './Main.css';
 import ErrorPage from './ErrorPage.tsx';
 import Home from './routes/Home.tsx';
 import MainLayout from './routes/MainLayout.tsx';
-import PlayGround from './routes/PlayGround.tsx';
+import PlayGround from './routes/playground/PlayGround.tsx';
 import EmployeeList from './routes/employee/employee-list/EmployeeList.tsx';
 import EmployeeDetail from './routes/employee/employee-detail/EmployeeDetail.tsx';
 import { Provider } from 'react-redux';
 import { store } from './Store.ts';
 import ProjectList from './routes/project/project-list/ProjectList.tsx';
-import PowerBiPlayGround from './routes/PowerBiPlayGround.tsx';
 
 const router = createBrowserRouter([{
   path: '/',
@@ -55,10 +54,6 @@ const router = createBrowserRouter([{
           path: 'playground',
           element: <PlayGround />
         },
-        {
-          path: 'powerbi-playground',
-          element: <PowerBiPlayGround />
-        }
       ]
     }
   ]
