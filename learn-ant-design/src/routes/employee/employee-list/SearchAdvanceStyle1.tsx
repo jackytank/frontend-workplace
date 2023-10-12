@@ -91,11 +91,6 @@ const SearchAdvanceStyle1 = () => {
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE],
     };
 
-    const handleShowListButton = (newState: boolean) => {
-        setShowListModal(newState);
-        setShowAdvance(!showAdvance);
-    };
-
     const handleSearchAdvanceButton = (newState: boolean) => {
         setShowAdvance(newState);
         setShowListModal(!showListModal);

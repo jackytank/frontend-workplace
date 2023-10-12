@@ -1,4 +1,4 @@
-import { ClearOutlined, DownOutlined } from "@ant-design/icons";
+import { ClearOutlined } from "@ant-design/icons";
 import { Col, Input, Select, Card, Row, Space, Button, Form } from "antd";
 import { debounce } from "lodash";
 import { useState } from "react";

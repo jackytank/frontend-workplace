@@ -1,5 +1,5 @@
-import { ClearOutlined, DownOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Input, Row, Select, Space } from "antd";
+import { ClearOutlined } from "@ant-design/icons";
+import { Button, Card, Col, Form, Input, Row, Space } from "antd";
 import { useState } from "react";
 import debounce from "lodash/debounce";
 import { useAppDispatch } from "../../../../Store";
@@ -9,7 +9,6 @@ import { EmployeeSearchFormType } from "../../Employee.Types";
 const EmployeeNormalSearchForm = () => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const [expand, setExpand] = useState(false);
     const [searchValues, setSearchValues] = useState<EmployeeSearchFormType>({ search: '', name: '', email: '', status: 0 });
 
     const handleClearButton = () => {

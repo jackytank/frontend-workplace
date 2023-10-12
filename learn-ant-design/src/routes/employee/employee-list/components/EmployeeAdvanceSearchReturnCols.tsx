@@ -1,12 +1,9 @@
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { Tag } from "antd";
-import { useAppSelector, RootState } from "../../../../Store";
 import { EmployeeModelApi, EmployeeStatus, EmployeeStatusColorMap } from "../../Employee.Types";
 
 export const EmployeeAdvanceSearchReturnCols = (): ColumnsType<EmployeeModelApi> => {
-    const { isLoading } = useAppSelector((store: RootState) => store.common);
-
     return [
         {
             title: "ID",
