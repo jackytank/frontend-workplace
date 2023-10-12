@@ -1,4 +1,41 @@
 {
+  "users": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "age": 30,
+      "city": "New York"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "janesmith@example.com",
+      "age": 25,
+      "city": "Los Angeles"
+    },
+    {
+      "id": 3,
+      "name": "David Johnson",
+      "email": "davidjohnson@example.com",
+      "age": 40,
+      "city": "Chicago"
+    },
+    {
+      "id": 4,
+      "name": "Emily Brown",
+      "email": "emilybrown@example.com",
+      "age": 28,
+      "city": "San Francisco"
+    },
+    {
+      "id": 5,
+      "name": "Michael Wilson",
+      "email": "michaelwilson@example.com",
+      "age": 35,
+      "city": "Miami"
+    }
+  ],
   "employees": [
     {
       "created": "2023-08-13T04:25:18.338Z",
