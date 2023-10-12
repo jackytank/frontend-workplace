@@ -24,31 +24,31 @@ const router = createBrowserRouter([{
           index: true,
           element: <Home />
         },
-        {
-          path: 'employees',
-          children: [
-            {
-              path: 'list',
-              element: <EmployeeList />
-            },
-            {
-              path: 'detail',
-              element: <EmployeeDetail />
-            }
-          ]
-        },
-        {
-          path: 'projects',
-          children: [
-            {
-              path: 'list',
-              element: <ProjectList />
-            },
-          ]
-        },
+        // {
+        //   path: 'employees',
+        //   children: [
+        //     {
+        //       path: 'list',
+        //       element: <EmployeeList />
+        //     },
+        //     {
+        //       path: 'detail',
+        //       element: <EmployeeDetail />
+        //     }
+        //   ]
+        // },
+        // {
+        //   path: 'projects',
+        //   children: [
+        //     {
+        //       path: 'list',
+        //       element: <ProjectList />
+        //     },
+        //   ]
+        // },
         {
           path: 'todos',
-          element: <EmployeeDetail />
+          element: <>To be implemented...</>
         },
         {
           path: 'playground',
