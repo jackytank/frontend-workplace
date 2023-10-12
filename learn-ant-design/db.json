@@ -3,37 +3,50 @@
     {
       "id": 1,
       "name": "John Doe",
-      "email": "johndoe@example.com",
+      "email": "johndoe@gmail.com",
+      "password": "1221",
       "age": 30,
       "city": "New York"
     },
     {
       "id": 2,
       "name": "Jane Smith",
-      "email": "janesmith@example.com",
+      "email": "janesmith@gmail.com",
+      "password": "1221",
       "age": 25,
       "city": "Los Angeles"
     },
     {
       "id": 3,
       "name": "David Johnson",
-      "email": "davidjohnson@example.com",
+      "email": "davidjohnson@gmail.com",
+      "password": "1221",
       "age": 40,
       "city": "Chicago"
     },
     {
       "id": 4,
       "name": "Emily Brown",
-      "email": "emilybrown@example.com",
+      "email": "emilybrown@gmail.com",
+      "password": "1221",
       "age": 28,
       "city": "San Francisco"
     },
     {
       "id": 5,
       "name": "Michael Wilson",
-      "email": "michaelwilson@example.com",
+      "email": "michaelwilson@gmail.com",
+      "password": "1221",
       "age": 35,
       "city": "Miami"
+    },
+    {
+      "id": 6,
+      "name": "Jackson",
+      "email": "jack@gmail.com",
+      "password": "1221",
+      "age": 39,
+      "city": "Old York"
     }
   ],
   "employees": [
