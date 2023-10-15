@@ -1,6 +1,6 @@
 import { Card, Space } from "antd";
-import SearchAdvanceStyle1 from "./SearchAdvanceStyle1";
-import SearchAdvanceStyle2 from "./SearchAdvanceStyle2";
+import SearchAdvanceStyle1 from "./search-advanced-style-1.component";
+import SearchAdvanceStyle2 from "./search-advanced-style-2.component";
 
 const EmployeeList = () => {
   return (

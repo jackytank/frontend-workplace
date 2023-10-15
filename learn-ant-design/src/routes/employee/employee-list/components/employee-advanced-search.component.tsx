@@ -2,9 +2,9 @@ import { ClearOutlined } from "@ant-design/icons";
 import { Col, Input, Select, Card, Row, Space, Button, Form } from "antd";
 import { debounce } from "lodash";
 import { useState } from "react";
-import { useAppDispatch } from "../../../../Store";
-import { getEmployeeList } from "../../../../features/employee/EmployeeSlice";
-import { EmployeeSearchFormType } from "../../Employee.Types";
+import { useAppDispatch } from "../../../../store";
+import { getEmployeeList } from "../../../../features/employee/employee-slice";
+import { EmployeeSearchFormType } from "../../employee.type";
 
 const EmployeeAdvanceSearch = () => {
     const [form] = Form.useForm();

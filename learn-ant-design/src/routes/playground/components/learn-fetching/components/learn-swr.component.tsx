@@ -1,9 +1,9 @@
 import useSWR, { Fetcher, Middleware } from "swr";
-import { Config } from "../../../../../Config";
+import { Config } from "../../../../../config";
 import { CalendarOutlined, EnvironmentOutlined, LoadingOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Card, Col, Row, Spin } from "antd";
-import { User } from "../../../../../Main.Types";
-import { concatDomain, logger } from "../../../../../api/SwrMiddleware";
+import { User } from "../../../../../main.type";
+import { concatDomain, logger } from "../../../../../api/swr-middlewares";
 
 const fetcher: Fetcher<User[], string> = (url) => {
     return fetch(url).then(res => res.json());

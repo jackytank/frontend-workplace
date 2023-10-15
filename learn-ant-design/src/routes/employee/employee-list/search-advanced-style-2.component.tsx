@@ -2,16 +2,16 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Modal, Table, Button, Space } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector, RootState } from "../../../Store";
-import { employeeApi } from "../../../api/EmployeeApi";
-import { setRemoveEmployeeList, setSelectedEmployeeList } from "../../../features/employee/EmployeeSlice";
+import { useAppDispatch, useAppSelector, RootState } from "../../../store";
+import { employeeApi } from "../../../api/employee-api";
+import { setRemoveEmployeeList, setSelectedEmployeeList } from "../../../features/employee/employee-slice";
 import { toastError, toastInfo } from "../../../utils/toastify";
-import { EmployeeModelApi } from "../Employee.Types";
-import EmployeeAdvanceSearch from "./components/EmployeeAdvanceSearch";
-import { EmployeeAdvanceSearchReturnCols } from "./components/EmployeeAdvanceSearchReturnCols";
-import EmployeeNormalSearchForm from "./components/EmployeeNormalSearchForm";
-import { EmployeeSearchNormalReturnCols } from "./components/EmployeeNormalSearchReturnCols";
-import './employee-list.scss';
+import { EmployeeModelApi } from "../employee.type";
+import EmployeeAdvanceSearch from "./components/employee-advanced-search.component";
+import { EmployeeAdvanceSearchReturnCols } from "./components/employee-advanced-search-cols";
+import EmployeeNormalSearchForm from "./components/employee-normal-search-form.component";
+import { EmployeeSearchNormalReturnCols } from "./components/employee-normal-search-cols";
+// import styles from './employee-list.module.scss';
 
 const SearchAdvanceStyle2 = () => {
     const dispatch = useAppDispatch();
@@ -168,7 +168,7 @@ const SearchAdvanceStyle2 = () => {
                     </a>
                 </Space> */}
                     <Table
-                        rowKey={(e) => e.uniqueKey.toString()}
+                        rowKey={(e: EmployeeModelApi) => (e.uniqueKey).toString()}
                         rowSelection={rowSelectionSearchAdvance}
                         columns={EmployeeAdvanceSearchReturnCols()}
                         dataSource={modifiedEmployeeList}

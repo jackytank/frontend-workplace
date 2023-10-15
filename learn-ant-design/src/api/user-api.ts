@@ -1,6 +1,6 @@
-import { User } from '../Main.Types';
-import { Config } from "../Config";
-import axiosClient from "./AxiosClient";
+import { User } from '../main.type';
+import { Config } from "../config";
+import axiosClient from "./axios-client";
 
 export const userApi = {
     getAll: (): Promise<User[]> => {

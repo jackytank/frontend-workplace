@@ -2,15 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import './Main.css';
-import ErrorPage from './ErrorPage.tsx';
-import Home from './routes/Home.tsx';
-import MainLayout from './routes/MainLayout.tsx';
-import PlayGround from './routes/playground/PlayGround.tsx';
-import EmployeeList from './routes/employee/employee-list/EmployeeList.tsx';
-import EmployeeDetail from './routes/employee/employee-detail/EmployeeDetail.tsx';
+import ErrorPage from './error-page.tsx';
+import MainLayout from './routes/main-layout.tsx';
+import PlayGround from './routes/playground/playground.tsx';
 import { Provider } from 'react-redux';
-import { store } from './Store.ts';
-import ProjectList from './routes/project/project-list/ProjectList.tsx';
+import { store } from './store.ts';
+import PokemonSWR from './routes/applications/pokemon/pokemon-swr.component.tsx';
+import Home from './routes/Home.tsx';
 
 const router = createBrowserRouter([{
   path: '/',
@@ -24,19 +22,19 @@ const router = createBrowserRouter([{
           index: true,
           element: <Home />
         },
-        // {
-        //   path: 'employees',
-        //   children: [
-        //     {
-        //       path: 'list',
-        //       element: <EmployeeList />
-        //     },
-        //     {
-        //       path: 'detail',
-        //       element: <EmployeeDetail />
-        //     }
-        //   ]
-        // },
+        {
+          path: 'applications',
+          children: [
+            {
+              path: 'pokemon',
+              element: <PokemonSWR />
+            },
+            // {
+            //   path: 'detail',
+            //   element: <EmployeeDetail />
+            // }
+          ]
+        },
         // {
         //   path: 'projects',
         //   children: [

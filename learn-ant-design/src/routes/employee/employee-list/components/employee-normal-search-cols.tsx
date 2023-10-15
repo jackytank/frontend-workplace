@@ -2,11 +2,11 @@ import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { Button, Popconfirm, Space, Tag } from "antd";
 import { ArrowDownOutlined, CloseOutlined, CopyOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useAppDispatch, useAppSelector, RootState, store } from "../../../../Store";
-import { employeeApi } from "../../../../api/EmployeeApi";
-import { setRemoveSelectedEmployeeList, setSelectedEmployeeList, setRemoveEmployeeList } from "../../../../features/employee/EmployeeSlice";
+import { useAppDispatch, useAppSelector, RootState, store } from "../../../../store";
+import { employeeApi } from "../../../../api/employee-api";
+import { setRemoveSelectedEmployeeList, setSelectedEmployeeList, setRemoveEmployeeList } from "../../../../features/employee/employee-slice";
 import { toastInfo } from "../../../../utils/toastify";
-import { EmployeeModelApi, EmployeeStatus, EmployeeStatusColorMap } from "../../Employee.Types";
+import { EmployeeModelApi, EmployeeStatus, EmployeeStatusColorMap } from "../../employee.type";
 
 export const EmployeeSearchNormalReturnCols = (): ColumnsType<EmployeeModelApi> => {
   const dispatch = useAppDispatch();

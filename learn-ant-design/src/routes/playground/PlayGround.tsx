@@ -1,8 +1,8 @@
 import { Collapse, CollapseProps } from "antd";
-import DemoSelectConfirm from "./components/demo-select-confirm";
-import DemoIframePowerBI from "./components/demo-iframe-powerbi";
-import LearnFetching from "./components/learn-fetching/learn-fetching";
-import EmployeeList from "../employee/employee-list/EmployeeList";
+import DemoSelectConfirm from "./components/demo-select-confirm.component";
+import DemoIframePowerBI from "./components/demo-iframe-powerbi.component";
+import LearnFetching from "./components/learn-fetching/learn-fetching.component";
+import EmployeeList from "../employee/employee-list/employee-list.component";
 
 const items: CollapseProps['items'] = [
     {

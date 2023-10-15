@@ -1,4 +1,4 @@
-import { DesktopOutlined, QuestionCircleOutlined, WindowsOutlined } from "@ant-design/icons";
+import { DesktopOutlined, FileOutlined, FolderOutlined, QuestionCircleOutlined, WindowsOutlined } from "@ant-design/icons";
 import { Col, Layout, Menu, MenuProps, Row, Spin, Switch } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
@@ -7,7 +7,7 @@ import { Link, Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/ReactToastify.min.css';
 import { useSelector } from "react-redux";
-import { RootState } from "../Store";
+import { RootState } from "../store";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -29,11 +29,10 @@ function getItem(
 
 const items: MenuItem[] = [
     getItem("Home", "1", <DesktopOutlined />, "/"),
-    // getItem("Employee", "2", <UsergroupAddOutlined />, undefined,
-    //     [
-    //         getItem("List", "3", <UnorderedListOutlined />, "employees/list", undefined),
-    //         getItem("Detail", "4", <UserOutlined />, "employees/detail", undefined)
-    //     ]),
+    getItem("App", "2", <FolderOutlined />, undefined,
+        [
+            getItem("Pokemon (SWR)", "3", <FileOutlined />, "applications/pokemon", undefined),
+        ]),
     // getItem("Project", "5", <FolderOutlined />, undefined,
     //     [
     //         getItem("List", "6", <UnorderedListOutlined />, "projects/list", undefined),
@@ -42,6 +41,7 @@ const items: MenuItem[] = [
 ];
 
 const color = {
+    white: '#ffffff',
     light: '#f0f0f0',
     dark: '#001529'
 };
@@ -69,7 +69,7 @@ const MainLayout = () => {
                     <Layout>
                         <Header style={{
                             padding: '0 15px',
-                            backgroundColor: theme === 'light' ? color.light : color.dark
+                            backgroundColor: theme === 'light' ? color.white : color.dark
                         }}
                         >
                             <Row

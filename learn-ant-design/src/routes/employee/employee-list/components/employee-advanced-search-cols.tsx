@@ -1,7 +1,7 @@
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { Tag } from "antd";
-import { EmployeeModelApi, EmployeeStatus, EmployeeStatusColorMap } from "../../Employee.Types";
+import { EmployeeModelApi, EmployeeStatus, EmployeeStatusColorMap } from "../../employee.type";
 
 export const EmployeeAdvanceSearchReturnCols = (): ColumnsType<EmployeeModelApi> => {
     return [

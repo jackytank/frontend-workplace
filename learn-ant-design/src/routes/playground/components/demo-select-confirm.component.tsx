@@ -1,6 +1,6 @@
 import { Modal, Select } from "antd";
 import { useState } from "react";
-import CustomTable from "../../CustomTable";
+import CustomTable from "../../custom-tables";
 
 const options = [
     { value: "emp1", label: "Employee 1" },

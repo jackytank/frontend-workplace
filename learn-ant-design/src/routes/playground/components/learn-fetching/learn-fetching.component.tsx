@@ -1,5 +1,5 @@
 import { Collapse, CollapseProps } from "antd";
-import LearnSWR from "./components/learn-swr";
+import LearnSWR from "./components/learn-swr.component";
 
 const items: CollapseProps['items'] = [
     {

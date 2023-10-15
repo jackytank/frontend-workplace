@@ -1,6 +1,6 @@
 import { Action, Dispatch, PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { employeeApi } from "../../api/EmployeeApi";
-import { EmployeeModelApi, EmployeeSearchFormType } from "../../routes/employee/Employee.Types";
+import { employeeApi } from "../../api/employee-api";
+import { EmployeeModelApi, EmployeeSearchFormType } from "../../routes/employee/employee.type";
 
 interface EmployeeState {
     employeeList: EmployeeModelApi[];

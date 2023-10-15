@@ -1,5 +1,5 @@
 import { Arguments, BareFetcher, SWRConfiguration, SWRHook } from "swr";
-import { Config } from "../Config";
+import { Config } from "../config";
 
 export const concatDomain = (useSWRNext: SWRHook): unknown => {
     return (key: unknown, fetcher: BareFetcher | null, config: SWRConfiguration) => {

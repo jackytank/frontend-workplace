@@ -1,6 +1,6 @@
 import { Config } from "../Config";
-import { EmployeeModelApi, EmployeeSearchFormType } from "../routes/employee/Employee.Types";
-import axiosClient from "./AxiosClient";
+import { EmployeeModelApi, EmployeeSearchFormType } from "../routes/employee/employee.type";
+import axiosClient from "./axios-client";
 
 const employeeApi = {
     getAll: (
