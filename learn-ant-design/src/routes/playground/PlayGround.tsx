@@ -3,6 +3,7 @@ import DemoSelectConfirm from "./components/demo-select-confirm.component";
 import DemoIframePowerBI from "./components/demo-iframe-powerbi.component";
 import LearnFetching from "./components/learn-fetching/learn-fetching.component";
 import EmployeeList from "../employee/employee-list/employee-list.component";
+import LearnReactHooks from "./components/learn-react-hooks/learn-react-hooks.component";
 
 const items: CollapseProps['items'] = [
     {
@@ -24,6 +25,11 @@ const items: CollapseProps['items'] = [
         key: '4',
         label: 'Learn Fetching REST',
         children: <LearnFetching />,
+    },
+    {
+        key: '5',
+        label: 'React hooks',
+        children: <LearnReactHooks />,
     },
 ];
 
