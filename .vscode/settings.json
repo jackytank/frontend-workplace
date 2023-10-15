@@ -1,0 +1,4 @@
+{
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "javascript.inlayHints.enumMemberValues.enabled": false
+}
