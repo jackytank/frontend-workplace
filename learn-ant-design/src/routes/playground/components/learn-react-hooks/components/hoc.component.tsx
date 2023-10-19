@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { withTimer } from "../../../../../utils";
+import { withLoading, withTimer } from "../../../../../utils";
 
 const Sample = ({ title, content }: {
   title: string,
@@ -17,12 +17,18 @@ const Sample = ({ title, content }: {
 };
 
 const SampleWithTimer = withTimer(Sample);
+const SampleWithLoading = withLoading(Sample);
 
 const HigherOrderComponent = () => {
   return (
     <>
       <SampleWithTimer
         title={'Sample wrapped with withTimer HOC'}
+        content={"Hello HOC"}
+      />
+      <br />
+      <SampleWithLoading
+        title={'Sample wrapped with withLoading HOC'}
         content={"Hello HOC"}
       />
     </>

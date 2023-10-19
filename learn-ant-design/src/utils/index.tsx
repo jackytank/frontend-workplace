@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { Skeleton, message } from "antd";
 import { ComponentType, useState, useCallback, useEffect, useRef } from "react";
 
 export function withTimer<T>(Component: ComponentType<T>) {
@@ -32,6 +32,30 @@ export function withTimer<T>(Component: ComponentType<T>) {
                     startTimer={startTimer}
                     endTimer={endTimer}
                     count={count}
+                />
+            </>
+        );
+    };
+}
+
+export function withLoading<T>(Component: ComponentType<T>) {
+    return (hocProps: T) => {
+        const [loading, setLoading] = useState(true);
+
+        useEffect(() => {
+            void message.info('Please wait for ~2s');
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000);
+        }, []);
+
+        if (loading) {
+            return <Skeleton active paragraph={{ rows: 3 }} />;
+        }
+        return (
+            <>
+                <Component
+                    {...(hocProps as any)}
                 />
             </>
         );
