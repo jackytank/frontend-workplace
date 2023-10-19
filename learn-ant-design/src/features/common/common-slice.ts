@@ -12,7 +12,7 @@ const commonSlice = createSlice({
     name: 'common',
     initialState,
     reducers: {
-        setLoading: (state, action: PayloadAction<boolean>) => {
+        setLoading: (state: CommonState, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         }
     }
