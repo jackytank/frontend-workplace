@@ -1,4 +1,91 @@
-.hello-scss {
-    color: red;
-    background-color: red;
+@use 'base';
+@use 'sass:math';
+
+$bgcolor: lightblue;
+$textcolor: darkblue;
+$fontsize: 18px;
+
+.hello {
+    background-color: $bgcolor;
+    color: $textcolor;
+    font-size: $fontsize;
+}
+
+nav {
+
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        display: inline-block;
+    }
+
+    a {
+        display: block;
+        padding: 6px 12px;
+        text-decoration: none;
+    }
+}
+
+@mixin theme($theme: DarkGray) {
+    background: $theme;
+    box-shadow: 0 0 1px rgb($theme, .25);
+    color: #fff;
+}
+
+%message-shared {
+    border: 1px solid #ccc;
+    padding: 10px 30px;
+    margin: 0 10px;
+    font-size: 25px
+}
+
+%equal-heights {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.message {
+    @extend %message-shared;
+    border-radius: 5px;
+}
+
+.info {
+    @include theme;
+    @extend %message-shared;
+}
+
+.alert {
+    @include theme($theme: DarkRed);
+    @extend %message-shared;
+}
+
+.success {
+    @extend %message-shared;
+    border-color: yellow;
+}
+
+.container {
+    display: grid;
+}
+
+%grid-bg-color {
+    border: 1px solid blue;
+    padding: 10px 10px;
+    border-radius: 5px
+}
+
+article[role="main"] {
+    width: math.div(600px, 960px) * 100%;
+    @extend %grid-bg-color;
+}
+
+aside[role="complementary"] {
+    width: math.div(300px, 960px) * 100%;
+    margin-left: auto;
+    @extend %grid-bg-color;
 }
