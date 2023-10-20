@@ -1,5 +1,4 @@
 import { Button, Card, Divider, InputNumber, Space, message } from "antd";
-import { JointContent } from "antd/es/message/interface";
 import { useEffect, useRef, useState } from "react";
 
 const UseRef = () => {

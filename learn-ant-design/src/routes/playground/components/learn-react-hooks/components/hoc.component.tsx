@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { withLoading, withTimer } from "../../../../../utils";
+import { withLoading, withTimer } from "../../../../../utils/hoc";
 
 const Sample = ({ title, content }: {
   title: string,
