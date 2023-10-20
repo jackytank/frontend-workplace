@@ -1,4 +1,4 @@
-import { Skeleton, message } from "antd";
+import { Button, Skeleton, message } from "antd";
 import { ComponentType, useState, useCallback, useEffect, useRef } from "react";
 
 export function withTimer<T>(Component: ComponentType<T>) {
@@ -33,6 +33,11 @@ export function withTimer<T>(Component: ComponentType<T>) {
                     endTimer={endTimer}
                     count={count}
                 />
+                <Button
+                    onClick={endTimer}
+                >
+                    Stop
+                </Button>
             </>
         );
     };

@@ -4,6 +4,7 @@ import DemoIframePowerBI from "./components/demo-iframe-powerbi.component";
 import LearnFetching from "./components/learn-fetching/learn-fetching.component";
 import EmployeeList from "../employee/employee-list/employee-list.component";
 import LearnReactHooks from "./components/learn-react-hooks/learn-react-hooks.component";
+import LearnSASS from "./components/learn-sass/learn-sass.component";
 
 const items: CollapseProps['items'] = [
     {
@@ -30,6 +31,11 @@ const items: CollapseProps['items'] = [
         key: '5',
         label: 'React hooks',
         children: <LearnReactHooks />,
+    },
+    {
+        key: '6',
+        label: 'SASS/SCSS',
+        children: <LearnSASS />,
     },
 ];
 
