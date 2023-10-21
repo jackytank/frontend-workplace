@@ -1,0 +1,13 @@
+@mixin font-fl($font){
+    &:after{
+        @if(type-of($font) == string){
+            content: 'My font is: #{$font}';
+        } @else{
+            content: 'Sorry, the argument #{$font} is a: #{type-of($font)}';
+        }
+    }
+}
+
+.h2-font-fl-1{
+    @include font-fl(sans-serif)
+}

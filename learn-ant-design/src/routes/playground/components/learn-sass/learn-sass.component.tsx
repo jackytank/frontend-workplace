@@ -1,11 +1,17 @@
-import s from './learn-sass.module.scss';
+import { Divider } from 'antd';
+import _1 from './learn-sass-1.module.scss';
+import _2 from './learn-sass-2.module.scss';
 
 const LearnSASS = () => {
   return (
     <>
       <div>
-        <span className={s['hello']}>Hehe</span>
-        <span className={s['what']}>Hoho</span>
+        <h2 className={_2['h2-font-fl-1']}></h2>
+      </div>
+      <Divider />
+      <div>
+        <span className={_1['hello']}>Hehe</span>
+        <span className={_1['what']}>Hoho</span>
       </div>
       <br />
       <nav>
@@ -18,15 +24,15 @@ const LearnSASS = () => {
       <br />
       <nav>
         <ul>
-          <li><span className={s["info"]}>Info</span></li>
-          <li><span className={s["alert"]}>Alert</span></li>
-          <li><span className={s["success"]}>Success</span></li>
-          <li><span className={s["message"]}>Message</span></li>
+          <li><span className={_1["info"]}>Info</span></li>
+          <li><span className={_1["alert"]}>Alert</span></li>
+          <li><span className={_1["success"]}>Success</span></li>
+          <li><span className={_1["message"]}>Message</span></li>
         </ul>
       </nav>
       <br />
 
-      <div className={s["container"]}>
+      <div className={_1["container"]}>
         <aside role='complementary'>
           <nav>
             <ul>
