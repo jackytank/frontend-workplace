@@ -11,3 +11,47 @@
 .h2-font-fl-1{
     @include font-fl(sans-serif)
 }
+
+$fg-color-list: "red", "yellow", "lightblue";
+@mixin fg-color($property){
+    @each $item in $fg-color-list{
+        $color-length: str-length($item);
+        @if($color-length % 2 != 0){
+            #{$property}: unquote($item);
+        }
+    }
+}
+
+$list-fg-size: "10px", "50px";
+@mixin fg-font-size($size-string){
+    @if(type-of($size-string) == string and $size-string == "small"){
+        font-size: unquote(nth($list-fg-size, 1));
+    }@else if(type-of($size-string) == string and $size-string == "big"){
+        font-size: unquote(nth($list-fg-size, 2));
+    }@else{
+        content: "Sorry the argument must be either \"small\"/\"big\"";
+    }
+}
+
+.h2-fg-color-fg-font-size-1{
+    @include fg-color(color);
+    @include fg-font-size("big");
+}
+
+$list-map-button-state: (
+    success: lightgreen,
+    alert: red,
+    info: lightblue,
+);
+
+@mixin button-state($btn-state){
+    @if(length($list-map-button-state) > 2 and length($list-map-button-state) < 5){
+        background-color: map-get($list-map-button-state, $btn-state);
+    }@else{
+        background-color: grey;
+    }
+}
+
+.btn-button-state{
+    @include button-state(alert)
+}

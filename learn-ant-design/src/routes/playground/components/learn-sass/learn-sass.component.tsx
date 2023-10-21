@@ -8,6 +8,12 @@ const LearnSASS = () => {
       <div>
         <h2 className={_2['h2-font-fl-1']}></h2>
       </div>
+      <div>
+        <h2 className={_2['h2-fg-color-fg-font-size-1']}>fg-color-fg-font-size</h2>
+      </div>
+      <div>
+        <button className={_2['btn-button-state']}>button-state</button>
+      </div>
       <Divider />
       <div>
         <span className={_1['hello']}>Hehe</span>
