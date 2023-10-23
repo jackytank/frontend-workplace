@@ -12,7 +12,7 @@ const items: CollapseProps['items'] = [
         key: '2',
         label: 'HigherOrderComponent',
         children: <HigherOrderComponent />
-    }
+    },
 ];
 
 const LearnReactHooks = () => {

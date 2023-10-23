@@ -5,7 +5,8 @@ import { Card, Col, Row, Spin } from "antd";
 import { User } from "../../../../../main.type";
 import { concatDomain, logger } from "../../../../../api/swr-middlewares";
 
-const fetcher: Fetcher<User[], string> = (url) => {
+const fetcher: Fetcher<User[], string> = async (url) => {
+    await new Promise(resolve => setTimeout(resolve, 800))
     return fetch(url).then(res => res.json());
 };
 
