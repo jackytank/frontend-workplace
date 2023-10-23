@@ -1,4 +1,4 @@
-import { Config } from "../Config";
+import { Config } from "../config";
 import { EmployeeModelApi, EmployeeSearchFormType } from "../routes/employee/employee.type";
 import axiosClient from "./axios-client";
 
