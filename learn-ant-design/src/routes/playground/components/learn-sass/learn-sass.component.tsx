@@ -6,6 +6,15 @@ const LearnSASS = () => {
   return (
     <>
       <div>
+        <h2 className={_2['p-else-if-directive']}>p-else-if-directive</h2>
+      </div>
+      <div>
+        <h2 className={_2['p-if-directive']}>p-if-directive</h2>
+      </div>
+      <div>
+        <h2 className={_2['h2-if-directive']}>if directives</h2>
+      </div>
+      <div>
         <h2 className={_2['h2-font-fl-1']}></h2>
       </div>
       <div>
