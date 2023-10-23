@@ -83,3 +83,47 @@ $type-else-if: "monster";
         color: black;
     }
 }
+
+@for $i from 1 through 5{
+    .p-for-directive#{$i} {
+        padding-left: $i * 10px;
+        color: darkblue;
+        border: 1px solid red;
+        border-radius: 5px;
+        box-shadow: 5px 10px gray;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+}
+
+$color-array-each-directive: pink, violet, yellow, blue;
+
+@each $color in $color-array-each-directive{
+    .p_array_each_directive_#{$color}{
+        background-color: #{$color};
+        margin-bottom: 10px;
+    }
+}
+
+$color-map-each-directive: (
+    pink: pink,
+    violet: violet,
+    red: red
+);
+
+@each $key, $value in $color-map-each-directive{
+    .p_map_each_directive_#{$value}{
+        background-color: darkblue;
+        color: $key;
+        margin-bottom: 10px;
+    }
+}
+
+@each $color, $border in (aqua, dotted),(red, solid),(green, double){
+    .p_each_directive_multiple_#{$color}{
+        background-color: $color;
+        border: $border;
+        margin-bottom: 5px;
+        padding: 5px;
+    }
+}

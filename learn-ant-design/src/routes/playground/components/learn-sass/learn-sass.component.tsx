@@ -6,6 +6,23 @@ const LearnSASS = () => {
   return (
     <>
       <div>
+        <h2 className={_2['']}></h2>
+      </div>
+      <div>
+        <h2 className={_2['p_each_directive_multiple_aqua']}>p_each_directive_multiple_</h2>
+        <h2 className={_2['p_each_directive_multiple_red']}>p_each_directive_multiple_</h2>
+        <h2 className={_2['p_each_directive_multiple_green']}>p_each_directive_multiple_</h2>
+      </div>
+      <div>
+        <h2 className={_2['p_map_each_directive_red']}>p_map_each_directive_red</h2>
+      </div>
+      <div>
+        <h2 className={_2['p_array_each_directive_violet']}>p_each_directive_pink</h2>
+      </div>
+      <div>
+        <h2 className={_2['p-for-directive1']}>p-for-directive1</h2>
+      </div>
+      <div>
         <h2 className={_2['p-else-if-directive']}>p-else-if-directive</h2>
       </div>
       <div>
