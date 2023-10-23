@@ -4,9 +4,9 @@ import { CalendarOutlined, EnvironmentOutlined, LoadingOutlined, MailOutlined, U
 import { Card, Col, Row, Spin } from "antd";
 import { User } from "../../../../../main.type";
 import { concatDomain, logger } from "../../../../../api/swr-middlewares";
+import _ from 'lodash';
 
-const fetcher: Fetcher<User[], string> = async (url) => {
-    await new Promise(resolve => setTimeout(resolve, 800))
+const fetcher: Fetcher<User[], string> = (url) => {
     return fetch(url).then(res => res.json());
 };
 
@@ -16,9 +16,10 @@ const LearnSWR = () => {
         fetcher,
         { use: [concatDomain, logger] as Middleware[] }
     );
+    const loading = _.debounce(() => isLoading, 2000);
 
     if (error) return "Error had occur!";
-    if (isLoading) return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
+    if (loading()) return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
 
     return (
         <>
