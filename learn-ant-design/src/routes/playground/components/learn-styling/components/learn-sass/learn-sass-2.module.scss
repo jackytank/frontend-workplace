@@ -42,6 +42,7 @@ $list-map-button-state: (
     success: lightgreen,
     alert: red,
     info: lightblue,
+    debug: grey
 );
 
 @mixin button-state($btn-state){
