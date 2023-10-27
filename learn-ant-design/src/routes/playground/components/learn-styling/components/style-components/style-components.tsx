@@ -1,11 +1,17 @@
 import { Divider, Space } from "antd";
-import styled from "styled-components";
+import styled, { ThemeProvider, createGlobalStyle, css, keyframes } from "styled-components";
 import AuthorBox from "./author-box.component";
 import { Link } from "react-router-dom";
 
 const LearnStyleComponents = () => {
     return (
         <>
+            <Learn5Theme />
+            <Divider />
+            <Learn4 />
+            <Divider />
+            <Learn3 />
+            <Divider />
             <Learn2 />
             <Divider />
             <AuthorBox isPrimary={false} />
@@ -13,6 +19,195 @@ const LearnStyleComponents = () => {
             <Learn1 />
         </>
     );
+};
+
+const Learn5Theme = () => {
+    const ButtonSc1 = styled.button`
+        font-size: 1em;
+        margin: 1em;
+        padding: 0.25em 1em;
+        border-radius: 3px;
+        color: ${props => props.theme.main};
+    `;
+
+    ButtonSc1.defaultProps = {
+        theme: {
+            main: "red",
+        }
+    };
+
+    const theme1 = {
+        main: "mediumseagreen"
+    };
+
+    const ButtonSc2 = styled.button`
+        color: ${p => p.theme.fg};
+        border: 2px dotted ${p => p.theme.bg};
+        background: ${p => p.theme.bg};
+        font-size: 1em;
+        margin: 1em;
+        padding: 0.25em 1em;
+        border-radius: 3px;
+    `;
+
+    const theme2 = {
+        fg: '#BF4F74',
+        bg: 'white'
+    };
+
+    const invertTheme = ({ fg, bg }) => ({
+        fg: bg,
+        bg: fg
+    });
+
+    return <>
+        <div>
+            <ButtonSc2 theme={{ main: "royalblue" }}>Ad hoc theme</ButtonSc2>
+            <ThemeProvider theme={theme2}>
+                <div>
+                    <ButtonSc2>Themed</ButtonSc2>
+                    <ButtonSc2 theme={{ main: "darkorange" }}>Overridden</ButtonSc2>
+                </div>
+            </ThemeProvider>
+        </div>
+        <div>
+            <ThemeProvider theme={theme2}>
+                <div>
+                    <ButtonSc2>Default Theme</ButtonSc2>
+
+                    <ThemeProvider theme={invertTheme}>
+                        <ButtonSc2>Inverted Theme</ButtonSc2>
+                    </ThemeProvider>
+                </div>
+            </ThemeProvider>
+        </div>
+        <br />
+        <div>
+            <ButtonSc1>Normal</ButtonSc1>
+            <ThemeProvider theme={theme1}>
+                <ButtonSc1>Themed</ButtonSc1>
+            </ThemeProvider>
+        </div>
+    </>;
+};
+
+const Learn4 = () => {
+    const ThingSc = styled.div`
+        && {
+            color: blue;
+        }
+    `;
+
+    const GlobalStyleSc = createGlobalStyle`
+        div${ThingSc}{
+            color:red;
+        }
+    `;
+
+    const Thing2Sc = styled.div`
+        color: blue;
+        .something{
+            border: 1px solid red;
+            display: block;
+        }
+        .what{
+            color: white;
+            background-color: black;
+            border: 1px dotted wheat;
+            border-radius: 5px;
+            box-shadow: 5px 5px grey;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+    `;
+
+    const rotate = keyframes`
+        from {
+            transform: rotate(0deg);
+        }
+        to{
+            transform: rotate(360deg);
+        }
+    `;
+
+    const RotateSc = styled.div`
+        display: inline-block;
+        animation: ${rotate} 2s linear infinite;
+        padding: 2rem 1rem;
+        font-size: 1.2rem;
+    `;
+
+    return <>
+        <RotateSc>&lt; 💅🏾 &gt;</RotateSc>
+        <Thing2Sc>
+            <label htmlFor="" className="what">What</label>
+            <label htmlFor="foo-button" className="something">Coolshit Button</label>
+            <button id="foo-button">What do I do?</button>
+        </Thing2Sc>
+        <GlobalStyleSc />
+        <ThingSc>
+            I'm blue. muahahahahahha
+        </ThingSc>
+    </>;
+};
+
+const Learn3 = () => {
+    const Input1Sc = styled.input.attrs({
+        type: 'checkbox'
+    })``;
+
+    const Label1Sc = styled.label`
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+    `;
+
+    interface LabelText1ScProps {
+        $mode: string;
+    }
+
+    const LabelText1Sc = styled.span<LabelText1ScProps>`
+        ${(props) => {
+            switch (props.$mode) {
+                case 'dark':
+                    return css`
+                        background-color: black;
+                        color: white;
+                        $(Input1Sc):checked + && {
+                            color: border-left: unset;
+                        }
+                    `;
+                default:
+                    return css`
+                        background-color: white;
+                        color:black;
+                        $(Input1Sc):checked + && {
+                            color: red;
+                        }
+                    `;
+            }
+        }}
+    `;
+
+    return <>
+        <Label1Sc>
+            <Input1Sc defaultChecked />
+            <LabelText1Sc $mode="">Foo-None</LabelText1Sc>
+        </Label1Sc>
+        <Label1Sc>
+            <Input1Sc />
+            <LabelText1Sc $mode="dark">Foo-Dark</LabelText1Sc>
+        </Label1Sc>
+        <Label1Sc>
+            <Input1Sc defaultChecked />
+            <LabelText1Sc $mode="">Foo-None</LabelText1Sc>
+        </Label1Sc>
+        <Label1Sc>
+            <Input1Sc defaultChecked />
+            <LabelText1Sc $mode="dark">Foo-Dark</LabelText1Sc>
+        </Label1Sc>
+    </>;
 };
 
 const Learn2 = () => {
@@ -36,7 +231,8 @@ const Learn2 = () => {
             color: red; // <Thing> when hovered
         }
         & ~ & {
-            background: tomato; // <Thing> as a sibling of <Thing>, but maybe not directly next to it
+            background: blue; // <Thing> as a sibling of <Thing>, but maybe not directly next to it
+            color: white;
         }
         & + & {
             background: lime; // <Thing> next to <Thing>
@@ -54,6 +250,12 @@ const Learn2 = () => {
             <div>
                 <Thing>Hello world!</Thing>
                 <Thing>How ya doing?</Thing>
+                <Thing className="something">The sun is shining...</Thing>
+                <div>Pretty nice day today.</div>
+                <Thing>Don't you think?</Thing>
+                <div className="something-else">
+                    <Thing>Splendid.</Thing>
+                </div>
             </div>
             <br />
             <Space>
