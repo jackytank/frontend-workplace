@@ -86,7 +86,7 @@ $type-else-if: "monster";
 }
 
 @for $i from 1 through 5{
-    .p-for-directive#{$i} {
+    .p-for-directive#{"" + $i} {
         padding-left: $i * 10px;
         color: darkblue;
         border: 1px solid red;
@@ -99,7 +99,7 @@ $type-else-if: "monster";
 $color-array-each-directive: pink, violet, yellow, blue;
 
 @each $color in $color-array-each-directive{
-    .p_array_each_directive_#{$color}{
+    .p_array_each_directive_#{"" + $color}{
         background-color: #{$color};
         margin-bottom: 10px;
     }
@@ -112,7 +112,7 @@ $color-map-each-directive: (
 );
 
 @each $key, $value in $color-map-each-directive{
-    .p_map_each_directive_#{$value}{
+    .p_map_each_directive_#{"" + $value}{
         background-color: darkblue;
         color: $key;
         margin-bottom: 10px;
@@ -120,7 +120,7 @@ $color-map-each-directive: (
 }
 
 @each $color, $border in (aqua, dotted),(red, solid),(green, double){
-    .p_each_directive_multiple_#{$color}{
+    .p_each_directive_multiple_#{"" + $color}{
         background-color: $color;
         border: $border;
         margin-bottom: 5px;

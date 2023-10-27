@@ -1,13 +1,70 @@
-import { Divider } from "antd";
+import { Divider, Space } from "antd";
 import styled from "styled-components";
 import AuthorBox from "./author-box.component";
+import { Link } from "react-router-dom";
 
 const LearnStyleComponents = () => {
     return (
         <>
-            <AuthorBox />
+            <Learn2 />
+            <Divider />
+            <AuthorBox isPrimary={false} />
             <Divider />
             <Learn1 />
+        </>
+    );
+};
+
+const Learn2 = () => {
+    const StyledLinkSc = styled(Link)`
+        color: #BF4F74;
+        font-weight: bold;
+    `;
+
+    const InputSc = styled.input<{ $inputColor?: string; }>`
+        padding: 0.5rem;
+        margin: 0.5em;
+        color: ${props => props.$inputColor || "#ff1060"};
+        background: papayawhip;
+        border: none;
+        border-radius: 3px;
+    `;
+
+    const Thing = styled.div.attrs((/* props */) => ({ tabIndex: 0 }))`
+        color: blue;
+        &:hover {
+            color: red; // <Thing> when hovered
+        }
+        & ~ & {
+            background: tomato; // <Thing> as a sibling of <Thing>, but maybe not directly next to it
+        }
+        & + & {
+            background: lime; // <Thing> next to <Thing>
+        }
+        &.something {
+            background: orange; // <Thing> tagged with an additional CSS class ".something"
+        }
+        .something-else & {
+            border: 1px solid; // <Thing> inside another element labeled ".something-else"
+        }
+    `;
+
+    return (
+        <>
+            <div>
+                <Thing>Hello world!</Thing>
+                <Thing>How ya doing?</Thing>
+            </div>
+            <br />
+            <Space>
+                <InputSc defaultValue="@probablyup" type="text"></InputSc>
+                <InputSc defaultValue="@probablyup" type="text" $inputColor="purple"></InputSc>
+            </Space>
+            <br />
+            <Space>
+                <Link to={"/"}>Unstyled, Boring Link</Link>
+                <StyledLinkSc to="/">Styled, Exciting Link</StyledLinkSc>
+            </Space>
         </>
     );
 };

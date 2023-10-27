@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Row, Col } from 'antd';
+import { Row, Col, Divider } from 'antd';
+import { ReactNode } from "react";
 
 const sizeS = "14px";
 const sizeM = "16px";
@@ -37,13 +38,14 @@ const SocialURL = styled.a`
 `;
 
 const ButtonSc = styled.button<{ $primary?: boolean; }>`
+  display: inline-block;
   color: #BF4F74;
   font-size: 1em;
   margin: 1em;
   padding: 0.25em 1em;
   border: 2px solid #BF4F74;
   border-radius: 3px;
-  box-shadow: 5px 5px whitesmoke;
+  display: block;
 `;
 
 const TomatoButtonSc = styled(ButtonSc)`
@@ -52,6 +54,16 @@ const TomatoButtonSc = styled(ButtonSc)`
   font-size: 1.2em;
 `;
 
+type ReversedButtonScProps = {
+  children: string | ReactNode;
+};
+
+const ReversedButtonSc = (props: ReversedButtonScProps) => (
+  <ButtonSc {...props}>
+    {(props.children as string).split('').reverse()}
+  </ButtonSc>
+);
+
 const AuthorBox = ({
   isPrimary
 }: {
@@ -59,16 +71,11 @@ const AuthorBox = ({
 }) => {
   return (
     <>
-      {/* <div className="wrapper  wrapper-border">
-        <img src="https://picsum.photos/id/237/200/200" alt="" />
-        <h3 className="author-name">Author name</h3>
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipiscing elit. Fugiat, et.
-        </p>
-        <a href="#socialURL" className="author-socialUrl">
-          Social URL
-        </a>
-      </div> */}
+      <div>
+        <ButtonSc>Normal Button</ButtonSc>
+        <ButtonSc as={ReversedButtonSc}>Custom Button with Normal Button styles</ButtonSc>
+      </div>
+      <Divider/>
       <Wrapper isPrimary={isPrimary}>
         <img src="https://picsum.photos/id/237/200/200" alt="" />
         <Name>Author name</Name>
