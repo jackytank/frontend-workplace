@@ -30,7 +30,7 @@ const Learn2 = () => {
         border-radius: 3px;
     `;
 
-    const Thing = styled.div.attrs((/* props */) => ({ tabIndex: 0 }))`
+    const ThingSc = styled.div.attrs((/* props */) => ({ tabIndex: 0 }))`
         color: blue;
         &:hover {
             color: red; // <Thing> when hovered
@@ -52,8 +52,8 @@ const Learn2 = () => {
     return (
         <>
             <div>
-                <Thing>Hello world!</Thing>
-                <Thing>How ya doing?</Thing>
+                <ThingSc>Hello world!</ThingSc>
+                <ThingSc>How ya doing?</ThingSc>
             </div>
             <br />
             <Space>
