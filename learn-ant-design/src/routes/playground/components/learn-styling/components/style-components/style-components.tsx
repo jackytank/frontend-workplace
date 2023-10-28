@@ -22,7 +22,7 @@ const LearnStyleComponents = () => {
 };
 
 const Learn5Theme = () => {
-    const ButtonSc1 = styled.button`
+    const ButtonSc1 = styled.button<{ theme: { main: string; }; }>`
         font-size: 1em;
         margin: 1em;
         padding: 0.25em 1em;
@@ -40,7 +40,7 @@ const Learn5Theme = () => {
         main: "mediumseagreen"
     };
 
-    const ButtonSc2 = styled.button`
+    const ButtonSc2 = styled.button<{ theme: ThemeProps; }>`
         color: ${p => p.theme.fg};
         border: 2px dotted ${p => p.theme.bg};
         background: ${p => p.theme.bg};
@@ -50,12 +50,18 @@ const Learn5Theme = () => {
         border-radius: 3px;
     `;
 
+    interface ThemeProps {
+        fg: string;
+        bg: string;
+    }
+
     const theme2 = {
         fg: '#BF4F74',
         bg: 'white'
     };
 
-    const invertTheme = ({ fg, bg }) => ({
+
+    const invertTheme = ({ fg, bg }: ThemeProps): ThemeProps => ({
         fg: bg,
         bg: fg
     });
