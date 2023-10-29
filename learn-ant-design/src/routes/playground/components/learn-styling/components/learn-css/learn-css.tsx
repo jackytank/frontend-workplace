@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import './learn-css.scss';
+import './learn-css-1.scss';
 
 const LearnCSS = () => {
   return (
