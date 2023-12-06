@@ -31,7 +31,7 @@ const items: MenuItem[] = [
     getItem("Home", "1", <DesktopOutlined />, "/"),
     getItem("App", "2", <FolderOutlined />, undefined,
         [
-            getItem("Pokemon (SWR)", "3", <FileOutlined />, "applications/pokemon", undefined),
+            getItem("Pokemon (SWR)", "3", <FileOutlined />, "applications/pokemon"),
         ]),
     // getItem("Project", "5", <FolderOutlined />, undefined,
     //     [
@@ -57,48 +57,46 @@ const MainLayout = () => {
     };
 
     return (
-        <>
-            <Spin spinning={isLoading}>
-                <Layout style={{ minHeight: '100vh' }}>
-                    <Sider theme={theme} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                        <div className="demo-logo-vertical">
-                            <WindowsOutlined style={{ fontSize: '30px', margin: '15px auto', display: 'block', color: 'DodgerBlue' }} />
-                        </div>
-                        <Menu theme={theme} defaultSelectedKeys={['1']} mode="inline" items={items} />
-                    </Sider>
-                    <Layout>
-                        <Header style={{
-                            padding: '0 15px',
-                            backgroundColor: theme === 'light' ? color.white : color.dark
+        <Spin spinning={isLoading}>
+            <Layout style={{ minHeight: '100vh' }}>
+                <Sider theme={theme} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                    <div className="demo-logo-vertical">
+                        <WindowsOutlined style={{ fontSize: '30px', margin: '15px auto', display: 'block', color: 'DodgerBlue' }} />
+                    </div>
+                    <Menu theme={theme} defaultSelectedKeys={['1']} mode="inline" items={items} />
+                </Sider>
+                <Layout>
+                    <Header style={{
+                        padding: '0 15px',
+                        backgroundColor: theme === 'light' ? color.white : color.dark
+                    }}
+                    >
+                        <Row
+                            justify={'end'}
+                            align={'middle'}
+                        >
+                            <Col>
+                                <Switch checkedChildren="Dark" unCheckedChildren="Light" onChange={onChange} />
+                            </Col>
+                        </Row>
+                    </Header>
+                    <Content
+                        style={{
+                            margin: '0px 0px',
+                            padding: 24,
+                            minHeight: '100vh',
+                            backgroundColor: theme === 'light' ? color.light : color.dark
                         }}
-                        >
-                            <Row
-                                justify={'end'}
-                                align={'middle'}
-                            >
-                                <Col>
-                                    <Switch checkedChildren="Dark" unCheckedChildren="Light" onChange={onChange} />
-                                </Col>
-                            </Row>
-                        </Header>
-                        <Content
-                            style={{
-                                margin: '0px 0px',
-                                padding: 24,
-                                minHeight: '100vh',
-                                backgroundColor: theme === 'light' ? color.light : color.dark
-                            }}
-                        >
-                            <div style={{ backgroundColor: color.light, padding: '15px' }}>
-                                <Outlet />
-                            </div>
-                            <ToastContainer />
-                        </Content>
-                        <Footer style={{ textAlign: 'center' }}>React ©2023 Created by jackytank</Footer>
-                    </Layout>
+                    >
+                        <div style={{ backgroundColor: color.light, padding: '15px' }}>
+                            <Outlet />
+                        </div>
+                        <ToastContainer />
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>React ©2023 Created by jackytank</Footer>
                 </Layout>
-            </Spin>
-        </>
+            </Layout>
+        </Spin>
     );
 };
 

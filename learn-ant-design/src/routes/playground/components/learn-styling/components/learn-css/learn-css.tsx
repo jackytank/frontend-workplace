@@ -3,13 +3,11 @@ import './learn-css-1.scss';
 
 const LearnCSS = () => {
   return (
-    <>
-      <_1 />
-    </>
+    <One />
   );
 };
 
-const _1 = () => {
+const One = () => {
   const P = styled.p`
     width: 100px;
     height: 50px;
