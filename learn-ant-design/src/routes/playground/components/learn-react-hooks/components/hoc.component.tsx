@@ -1,6 +1,6 @@
 import { Card, Divider } from "antd";
 import { withLoading, withMousePosition, withTimer } from "../../../../../utils/hoc";
-import { PanelMouseLoggerUsingHOC, PointMouseLoggerUsingHOC } from "./utils";
+import { PanelMouseLoggerUsingHOC, PointMouseLoggerUsingHOC } from "../learn-react-hooks.utils";
 
 const Sample = ({ title, content }: {
   title: string,

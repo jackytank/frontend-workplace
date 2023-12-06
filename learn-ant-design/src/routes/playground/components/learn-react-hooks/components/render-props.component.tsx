@@ -1,5 +1,5 @@
 import { Divider } from "antd";
-import { PanelMouseLoggerUsingRenderProps, TemperatureInput } from "./utils";
+import { PanelMouseLoggerUsingRenderProps, TemperatureInput } from "../learn-react-hooks.utils";
 
 
 const RenderProps = () => {
