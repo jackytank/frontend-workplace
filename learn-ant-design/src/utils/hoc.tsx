@@ -58,11 +58,9 @@ export function withLoading<T>(Component: ComponentType<T>) {
             return <Skeleton active paragraph={{ rows: 3 }} />;
         }
         return (
-            <>
-                <Component
-                    {...(hocProps as any)}
-                />
-            </>
+            <Component
+                {...(hocProps as any)}
+            />
         );
     };
 }
