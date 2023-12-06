@@ -70,33 +70,31 @@ const StopWatch = () => {
 
 
   return (
-    <>
-      <Space>
-        <h3>Timer: {count}</h3>
-        <Button
-          type="primary"
-          onClick={startHandler}
-        >
-          Start
-        </Button>
-        <Button
-          type="primary"
-          danger
-          onClick={stopHandler}
-        >
-          Stop
-        </Button>
-        <Button
-          type="dashed"
-          onClick={() => {
-            clearInterval(timeIdRef.current);
-            setCount(0);
-          }}
-        >
-          Clear
-        </Button>
-      </Space>
-    </>
+    <Space>
+      <h3>Timer: {count}</h3>
+      <Button
+        type="primary"
+        onClick={startHandler}
+      >
+        Start
+      </Button>
+      <Button
+        type="primary"
+        danger
+        onClick={stopHandler}
+      >
+        Stop
+      </Button>
+      <Button
+        type="dashed"
+        onClick={() => {
+          clearInterval(timeIdRef.current);
+          setCount(0);
+        }}
+      >
+        Clear
+      </Button>
+    </Space>
   );
 };
 
@@ -108,12 +106,10 @@ const AccessingElement = () => {
   }, []);
 
   return (
-    <>
-      <InputNumber
-        ref={elementRef}
-        placeholder="Enter number..."
-      />
-    </>
+    <InputNumber
+      ref={elementRef}
+      placeholder="Enter number..."
+    />
   );
 }
 
