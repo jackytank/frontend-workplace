@@ -14,7 +14,7 @@ const EmployeeList = lazy(() =>
     import("../employee/employee-list/employee-list.component")
 );
 const LearnReactHooks = lazy(() =>
-    import("./components/learn-react-hooks/learn-react-hooks.component")
+    import("./components/learn-react-hooks/learn-react-hooks")
 );
 const LearnStyling = lazy(() =>
     import("./components/learn-styling/learn-styling")
