@@ -17,9 +17,7 @@ const items: CollapseProps['items'] = [
 
 const LearnReactHooks = () => {
     return (
-        <>
-            <Collapse items={items} />
-        </>
+        <Collapse items={items} />
     );
 };
 
