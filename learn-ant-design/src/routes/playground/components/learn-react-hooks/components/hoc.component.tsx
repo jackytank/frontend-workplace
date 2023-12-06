@@ -6,13 +6,11 @@ const Sample = ({ title, content }: {
   content: string;
 }) => {
   return (
-    <>
-      <Card
-        title={title}
-      >
-        {content}
-      </Card>
-    </>
+    <Card
+      title={title}
+    >
+      {content}
+    </Card>
   );
 };
 
