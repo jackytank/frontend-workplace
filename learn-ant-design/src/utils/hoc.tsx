@@ -1,6 +1,36 @@
 import { Button, Skeleton, message } from "antd";
 import { ComponentType, useState, useCallback, useEffect, useRef } from "react";
 
+export function withMousePosition<T>(Component: ComponentType<T>) {
+    return (hocProps: Omit<T, 'mousePosition'>) => {
+        const [mousePosition, setMousePosition] = useState({
+            x: 0,
+            y: 0,
+        });
+
+        useEffect(() => {
+            const handleMouseMove = (e: MouseEvent) => {
+                setMousePosition({
+                    x: e.clientX,
+                    y: e.clientY
+                });
+            };
+            window.addEventListener('mousemove', handleMouseMove);
+            return () => {
+                window.removeEventListener('mousemove', handleMouseMove);
+            };
+        }, []);
+
+        return (
+            <Component
+                {...(hocProps as T)}
+                mousePosition={mousePosition}
+            />
+        )
+
+    };
+}
+
 export function withTimer<T>(Component: ComponentType<T>) {
     return (hocProps: Omit<T, 'count' | 'startTimer' | 'endTimer'>) => {
         const count = useRef(0);

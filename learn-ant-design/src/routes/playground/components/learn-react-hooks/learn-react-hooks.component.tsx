@@ -1,6 +1,7 @@
 import { Collapse, CollapseProps } from 'antd';
 import UseRef from './components/use-ref.component';
 import HigherOrderComponent from './components/hoc.component';
+import UserReducer from './components/use-reducer.component';
 
 const items: CollapseProps['items'] = [
     {
@@ -12,6 +13,11 @@ const items: CollapseProps['items'] = [
         key: '2',
         label: 'HigherOrderComponent',
         children: <HigherOrderComponent />
+    },
+    {
+        key: '3',
+        label: 'useReducer todo',
+        children: <UserReducer />
     },
 ];
 

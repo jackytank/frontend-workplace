@@ -1,4 +1,4 @@
-import { Button, Card, Divider, InputNumber, Space, message } from "antd";
+import { Button, Card, Divider, Input, InputNumber, InputRef, Space, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 
 const UseRef = () => {
@@ -15,16 +15,37 @@ const UseRef = () => {
       >
         <StopWatch />
       </Card>
+      <Divider />
       <Card
         title='AccessingElement'
       >
         <AccessingElement />
+      </Card>
+      <Divider />
+      <Card
+        title='RefFocusElement'
+      >
+        <RefFocusElement />
       </Card>
     </>
   );
 };
 
 export default UseRef;
+
+const RefFocusElement = () => {
+  const ref = useRef<InputRef | null>(null);
+
+  const handleClick = () => {
+    ref.current?.focus();
+  }
+  return (
+    <Space>
+      <Input type="text" ref={ref}/>
+      <Button onClick={handleClick}>Comment</Button>
+    </Space>
+  );
+};
 
 const LogButtonClick = () => {
   const countRef = useRef(0);
