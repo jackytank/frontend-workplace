@@ -1,4 +1,4 @@
-import { Divider, Space } from "antd";
+import { Divider } from "antd";
 import { PanelMouseLoggerUsingRenderProps, TemperatureInput } from "./utils";
 
 

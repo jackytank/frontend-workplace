@@ -38,6 +38,7 @@ export const PanelMouseLoggerUsingRenderProps = () => {
                         <div style={{
                             backgroundColor: `rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})`,
                             padding: '10px',
+                            border: '1px solid black'
                         }}>
                             Color: {JSON.stringify(rgbColor)}
                         </div>

@@ -5,6 +5,7 @@ import LearnFetching from "./components/learn-fetching/learn-fetching.component"
 import EmployeeList from "../employee/employee-list/employee-list.component";
 import LearnReactHooks from "./components/learn-react-hooks/learn-react-hooks.component";
 import LearnStyling from "./components/learn-styling/learn-styling";
+import Other from "./components/other/other.component";
 
 const items: CollapseProps['items'] = [
     {
@@ -37,13 +38,16 @@ const items: CollapseProps['items'] = [
         label: 'Styling',
         children: <LearnStyling />,
     },
+    {
+        key: '7',
+        label: 'Other...',
+        children: <Other />,
+    },
 ];
 
 const PlayGround = () => {
     return (
-        <>
-            <Collapse items={items} />
-        </>
+        <Collapse items={items} />
     );
 };
 

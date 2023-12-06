@@ -96,11 +96,12 @@ const TodoItem = ({ todo, toggleTodo, deleteTodo }: TodoItemProps) => {
         <span
           style={{
             textDecoration: todo.done ? 'line-through' : 'none',
+            width: '100px',
           }}
         >
           {todo.text}
         </span>
-        <Button onClick={() => deleteTodo(todo.id)}>Delete</Button>
+        <Button size="small" type="dashed" danger onClick={() => deleteTodo(todo.id)}>X</Button>
       </Space>
     </li>
   );
