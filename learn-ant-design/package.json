@@ -8,7 +8,7 @@
     "test:watch": "jest --watch",
     "server": "json-server-auth --watch db.json",
     "dev": "vite",
-    "both": "jest concurrently \"json-server-auth --port 3333 --watch db.json\" \"vite\"",
+    "both": "concurrently \"json-server-auth --port 3333 --watch db.json\" \"vite\"",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
