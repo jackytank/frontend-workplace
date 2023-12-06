@@ -1,4 +1,4 @@
-import { Button, Form, Input, Space } from "antd";
+import { Button, Card, Form, Input, Space } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useReducer, useState } from "react";
 
@@ -143,15 +143,16 @@ const UserReducer = () => {
     dispatch({ type: 'DELETE_TODO', payload: id });
   };
   return (
-    <Space direction="vertical">
-      <h2>REACT TS TODO useReducer</h2>
-      <TodoForm addTodo={addTodo} />
-      <TodoList
-        todos={state.todos}
-        toggleTodo={toggleTodo}
-        deleteTodo={deleteTodo}
-      />
-    </Space>
+    <Card title="REACT TS TODO useReducer">
+      <Space direction="vertical">
+        <TodoForm addTodo={addTodo} />
+        <TodoList
+          todos={state.todos}
+          toggleTodo={toggleTodo}
+          deleteTodo={deleteTodo}
+        />
+      </Space>
+    </Card>
   );
 };
 

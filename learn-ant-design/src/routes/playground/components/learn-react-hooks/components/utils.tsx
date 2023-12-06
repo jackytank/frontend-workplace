@@ -1,6 +1,52 @@
-import { InputNumber } from "antd";
+import { InputNumber, Space } from "antd";
 import { MousePosition } from "antd/es/modal/interface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+export const MousePositionRenderProps = ({ render }) => {
+    const [mousePosition, setMousePosition] = useState({
+        x: 0,
+        y: 0
+    });
+    const [rgbColor, setRgbColor] = useState({
+        r: 0,
+        g: 0,
+        b: 0
+    });
+    useEffect(() => {
+        const updateMousePosition = (e: MouseEvent) => {
+            setMousePosition({ x: e.clientX, y: e.clientY });
+            setRgbColor({
+                r: e.clientX > 255 ? 255 : e.clientX,
+                g: e.clientY > 255 ? 255 : e.clientY,
+                b: (e.clientX + e.clientY) / 2 > 255 ? 255 : (e.clientX + e.clientY) / 2
+            });
+        };
+        document.addEventListener("mousemove", updateMousePosition);
+        return () => document.removeEventListener("mousemove", updateMousePosition);
+    });
+    return render({ mousePosition, rgbColor });
+};
+
+export const PanelMouseLoggerUsingRenderProps = () => {
+    return (
+        <Space direction="vertical">
+            <p>Mouse position: </p>
+            <MousePositionRenderProps
+                render={({ mousePosition, rgbColor }) => (
+                    <p>
+                        ({mousePosition.x}, {mousePosition.y})
+                        <div style={{
+                            backgroundColor: `rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})`,
+                            padding: '10px',
+                        }}>
+                            Color: {JSON.stringify(rgbColor)}
+                        </div>
+                    </p>
+                )}
+            />
+        </Space>
+    );
+};
 
 type TemperatureInputProps = {
     renderKelvin: (props: { value: number; }) => JSX.Element;
@@ -22,7 +68,7 @@ export const TemperatureInput = (props: TemperatureInputProps) => {
     );
 };
 
-export const PanelMouseLogger = ({
+export const PanelMouseLoggerUsingHOC = ({
     mousePosition
 }: {
     mousePosition: MousePosition;
@@ -35,7 +81,7 @@ export const PanelMouseLogger = ({
 };
 
 
-export const PointMouseLogger = ({
+export const PointMouseLoggerUsingHOC = ({
     mousePosition
 }: {
     mousePosition: MousePosition;

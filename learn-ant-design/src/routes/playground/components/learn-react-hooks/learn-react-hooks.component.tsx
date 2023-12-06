@@ -17,7 +17,7 @@ const items: CollapseProps['items'] = [
     },
     {
         key: '3',
-        label: 'useReducer todo',
+        label: 'useReducer',
         children: <UserReducer />
     },
     {

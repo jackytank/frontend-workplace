@@ -1,15 +1,17 @@
-import { Space } from "antd";
-import { TemperatureInput } from "./utils";
+import { Divider, Space } from "antd";
+import { PanelMouseLoggerUsingRenderProps, TemperatureInput } from "./utils";
 
 
 const RenderProps = () => {
   return (
-    <Space>
+    <div >
       <TemperatureInput
         renderKelvin={({ value }) => <p>kelvin: {value}</p>}
         renderFahrenheit={({ value }) => <p>fahrenheit: {value}</p>}
       />
-    </Space>
+      <Divider />
+      <PanelMouseLoggerUsingRenderProps />
+    </div>
   );
 };
 

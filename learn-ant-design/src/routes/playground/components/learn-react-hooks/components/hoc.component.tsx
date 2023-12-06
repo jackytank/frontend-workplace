@@ -1,6 +1,6 @@
 import { Card, Divider } from "antd";
 import { withLoading, withMousePosition, withTimer } from "../../../../../utils/hoc";
-import { PanelMouseLogger, PointMouseLogger } from "./utils";
+import { PanelMouseLoggerUsingHOC, PointMouseLoggerUsingHOC } from "./utils";
 
 const Sample = ({ title, content }: {
   title: string,
@@ -17,8 +17,8 @@ const Sample = ({ title, content }: {
 
 const SampleWithTimer = withTimer(Sample);
 const SampleWithLoading = withLoading(Sample);
-const PanelMouseTracker = withMousePosition(PanelMouseLogger);
-const PointMouseTracker = withMousePosition(PointMouseLogger);
+const PanelMouseTracker = withMousePosition(PanelMouseLoggerUsingHOC);
+const PointMouseTracker = withMousePosition(PointMouseLoggerUsingHOC);
 
 const HigherOrderComponent = () => {
   return (
