@@ -2,10 +2,10 @@ import { lazy, Suspense } from "react";
 import { Collapse, CollapseProps } from "antd";
 
 const DemoSelectConfirm = lazy(() =>
-    import("./components/demo-select-confirm.component")
+    import("./components/demo-select-confirm/demo-select-confirm")
 );
 const DemoIframePowerBI = lazy(() =>
-    import("./components/demo-iframe-powerbi.component")
+    import("./components/demo-iframe-powerbi/demo-iframe-powerbi")
 );
 const LearnFetching = lazy(() =>
     import("./components/learn-fetching/learn-fetching.component")
