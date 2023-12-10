@@ -60,7 +60,7 @@ const items: CollapseProps["items"] = [
     },
     {
         key: "5",
-        label: "React hooks",
+        label: "React hooks & external hooks",
         children: (
             <Suspense fallback={<div>Loading...</div>}>
                 <LearnReactHooks />

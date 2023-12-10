@@ -3,6 +3,7 @@ import UseRef from './components/use-ref.component';
 import HigherOrderComponent from './components/hoc.component';
 import UserReducer from './components/use-reducer.component';
 import RenderProps from './components/render-props.component';
+import LearnFormik from './components/formik.component';
 
 const items: CollapseProps['items'] = [
     {
@@ -24,6 +25,11 @@ const items: CollapseProps['items'] = [
         key: '4',
         label: 'RenderProps',
         children: <RenderProps />
+    },
+    {
+        key: '5',
+        label: 'Formik',
+        children: <LearnFormik />
     },
 ];
 
