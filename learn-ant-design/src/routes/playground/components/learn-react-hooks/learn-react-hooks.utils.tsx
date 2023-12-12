@@ -5,9 +5,42 @@ import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import axiosClient from "../../../../api/axios-client";
 import { Config } from "../../../../config";
 import FormItem from "antd/es/form/FormItem";
+import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 
+export const BasicHookForm = () => {
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
+    const { onSubmit } = useLearnFormik();
+    console.log(watch('firstName'));
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+                type="text"
+                placeholder="First name"
+                {...register('firstName', { required: true })}
+            />
+            {errors.firstName && <span>First name is required</span>}
+            <br />
+            <input
+                type="text"
+                placeholder="Last name"
+                {...register('lastName', { required: true })}
+            />
+            {errors.lastName && <span>Last name is required</span>}
+            <br />
+            <input
+                type="text"
+                placeholder="Email"
+                {...register('email', { required: true })}
+            />
+            {errors.email && <span>Email is required</span>}
+            <br />
+            <Button htmlType="submit">Submit</Button>
+        </form>
+    );
+
+};
 
 export const FullFormik = () => {
     const { initialValues, validationSchema, onSubmit } = useLearnFormik();
@@ -115,14 +148,15 @@ export const BasicUseFormik = () => {
     );
 };
 
+type FormValues = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    gender?: string;
+    favoriteColor?: string;
+};
+
 const useLearnFormik = () => {
-    type FormValues = {
-        firstName: string;
-        lastName: string;
-        email: string;
-        gender?: string;
-        favoriteColor?: string;
-    };
     const initialValues: FormValues = {
         firstName: 'asd',
         lastName: 'asd',
