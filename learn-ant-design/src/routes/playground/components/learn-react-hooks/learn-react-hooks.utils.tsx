@@ -147,12 +147,17 @@ export const BasicUseFormik = () => {
         </Space >
     );
 };
+enum GenderEnum {
+    female = "female",
+    male = "male",
+    other = "other",
+}
 
 type FormValues = {
     firstName: string;
     lastName: string;
     email: string;
-    gender?: string;
+    gender?: GenderEnum;
     favoriteColor?: string;
 };
 
