@@ -5,36 +5,168 @@ import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import axiosClient from "../../../../api/axios-client";
 import { Config } from "../../../../config";
 import FormItem from "antd/es/form/FormItem";
-import { useForm } from 'react-hook-form';
+import { Resolver, useForm } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from 'yup';
 
+export const BasicHookFormWithYup = () => {
+    const schemaYup = Yup.object().shape({
+        firstName: Yup.string()
+            .max(15, 'Must be 15 characters or less')
+            .matches(/^[A-Za-z]+$/i, 'Invalid first name')
+            .required('First name is required'),
+        lastName: Yup.string()
+            .max(20, 'Must be 20 characters or less')
+            .matches(/^[A-Za-z]+$/i, 'Invalid last name')
+            .required('Last name is required'),
+        email: Yup.string()
+            .email('Invalid email address')
+            .required('Email is required'),
+        age: Yup.number()
+            .typeError('Age must be a number')
+            .required('Age is required')
+            .min(18, 'Min age is 18')
+            .max(99, 'Max age is 99'),
+        gender: Yup.mixed<GenderEnum>()
+            .oneOf(Object.values(GenderEnum))
+            .required('Gender is required'),
+        favoriteColor: Yup.string()
+            .notRequired()
+    });
 
-export const BasicHookForm = () => {
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({
+        defaultValues: {
+            firstName: 'hehe',
+            lastName: 'hihi',
+            email: 'hoho@asd.asd',
+            age: 21,
+            gender: GenderEnum.female,
+        },
+        resolver: yupResolver(schemaYup) as Resolver<FormValues, any>
+    });
     const { onSubmit } = useLearnFormik();
     console.log(watch('firstName'));
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+        >
             <input
                 type="text"
                 placeholder="First name"
-                {...register('firstName', { required: true })}
+                {...register('firstName')}
             />
-            {errors.firstName && <span>First name is required</span>}
+            {errors.firstName && <span>{errors.firstName.message}</span>}
             <br />
             <input
                 type="text"
                 placeholder="Last name"
-                {...register('lastName', { required: true })}
+                {...register('lastName')}
             />
-            {errors.lastName && <span>Last name is required</span>}
+            {errors.lastName && <span>{errors.lastName.message}</span>}
+            <br />
+            <input
+                type="number"
+                placeholder="Age"
+                {...register('age')}
+            />
+            {errors.age && <span>{errors.age.message}</span>}
             <br />
             <input
                 type="text"
                 placeholder="Email"
-                {...register('email', { required: true })}
+                {...register('email')}
             />
-            {errors.email && <span>Email is required</span>}
+            {errors.email && <span>{errors.email.message}</span>}
+            <br />
+            <select {...register("gender")}>
+                <option value="female">female</option>
+                <option value="male">male</option>
+                <option value="other">other</option>
+            </select>
+            <br />
+            <Button htmlType="submit">Submit</Button>
+        </form>
+    );
+
+};
+
+export const BasicHookForm = () => {
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({
+        defaultValues: {
+            firstName: 'defaultFirst',
+            lastName: 'defaultLast',
+            email: 'default@gmail.com',
+            age: 18,
+            gender: GenderEnum.male,
+        }
+    });
+    const { onSubmit } = useLearnFormik();
+    console.log(watch('firstName'));
+    return (
+        <form
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <input
+                type="text"
+                placeholder="First name"
+                {...register('firstName', {
+                    required: 'First name is required',
+                    maxLength: {
+                        message: 'First name is too long',
+                        value: 10
+                    }
+                })}
+            />
+            {errors.firstName && <span>{errors.firstName.message}</span>}
+            <br />
+            <input
+                type="text"
+                placeholder="Last name"
+                {...register('lastName', {
+                    required: 'Last name is required',
+                    pattern: {
+                        message: 'Last name is not valid',
+                        value: /^[A-Za-z]+$/i
+                    }
+                })}
+            />
+            {errors.lastName && <span>{errors.lastName.message}</span>}
+            <br />
+            <input
+                type="number"
+                placeholder="Age"
+                {...register('age', {
+                    min: {
+                        message: 'Min age is 18',
+                        value: 18
+                    },
+                    max: {
+                        message: 'Max age is 99',
+                        value: 99
+                    },
+                    required: 'Age is required'
+                })}
+            />
+            {errors.age && <span>{errors.age.message}</span>}
+            <br />
+            <input
+                type="text"
+                placeholder="Email"
+                {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                        message: 'Email is not valid',
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
+                    }
+                })}
+            />
+            {errors.email && <span>{errors.email.message}</span>}
+            <br />
+            <select {...register("gender")}>
+                <option value="female">female</option>
+                <option value="male">male</option>
+                <option value="other">other</option>
+            </select>
             <br />
             <Button htmlType="submit">Submit</Button>
         </form>
@@ -157,6 +289,7 @@ type FormValues = {
     firstName: string;
     lastName: string;
     email: string;
+    age?: number;
     gender?: GenderEnum;
     favoriteColor?: string;
 };
