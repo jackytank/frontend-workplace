@@ -4,12 +4,16 @@ import { useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik, useFormik } from "formik";
 import axiosClient from "../../../../api/axios-client";
 import { Config } from "../../../../config";
-import FormItem from "antd/es/form/FormItem";
 import { Resolver, useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from 'yup';
+import FormItem from "antd/es/form/FormItem";
 
-export const BasicHookFormWithYup = () => {
+export const BasicHookFormWithYup = ({
+    onSubmit
+}: {
+    onSubmit: (values: FormValues) => Promise<void>;
+}) => {
     const schemaYup = Yup.object().shape({
         firstName: Yup.string()
             .max(15, 'Must be 15 characters or less')
@@ -44,7 +48,6 @@ export const BasicHookFormWithYup = () => {
         },
         resolver: yupResolver(schemaYup) as Resolver<FormValues, any>
     });
-    const { onSubmit } = useLearnFormik();
     console.log(watch('firstName'));
     return (
         <form
@@ -55,28 +58,28 @@ export const BasicHookFormWithYup = () => {
                 placeholder="First name"
                 {...register('firstName')}
             />
-            {errors.firstName && <span>{errors.firstName.message}</span>}
+            {errors.firstName && <span role='alert'>{errors.firstName.message}</span>}
             <br />
             <input
                 type="text"
                 placeholder="Last name"
                 {...register('lastName')}
             />
-            {errors.lastName && <span>{errors.lastName.message}</span>}
+            {errors.lastName && <span role='alert'>{errors.lastName.message}</span>}
             <br />
             <input
                 type="number"
                 placeholder="Age"
                 {...register('age')}
             />
-            {errors.age && <span>{errors.age.message}</span>}
+            {errors.age && <span role='alert'>{errors.age.message}</span>}
             <br />
             <input
                 type="text"
                 placeholder="Email"
                 {...register('email')}
             />
-            {errors.email && <span>{errors.email.message}</span>}
+            {errors.email && <span role='alert'>{errors.email.message}</span>}
             <br />
             <select {...register("gender")}>
                 <option value="female">female</option>
@@ -117,7 +120,7 @@ export const BasicHookForm = () => {
                     }
                 })}
             />
-            {errors.firstName && <span>{errors.firstName.message}</span>}
+            {errors.firstName && <span role='alert'>{errors.firstName.message}</span>}
             <br />
             <input
                 type="text"
@@ -130,7 +133,7 @@ export const BasicHookForm = () => {
                     }
                 })}
             />
-            {errors.lastName && <span>{errors.lastName.message}</span>}
+            {errors.lastName && <span role='alert'>{errors.lastName.message}</span>}
             <br />
             <input
                 type="number"
@@ -147,7 +150,7 @@ export const BasicHookForm = () => {
                     required: 'Age is required'
                 })}
             />
-            {errors.age && <span>{errors.age.message}</span>}
+            {errors.age && <span role='alert'>{errors.age.message}</span>}
             <br />
             <input
                 type="text"
@@ -160,7 +163,7 @@ export const BasicHookForm = () => {
                     }
                 })}
             />
-            {errors.email && <span>{errors.email.message}</span>}
+            {errors.email && <span role='alert'>{errors.email.message}</span>}
             <br />
             <select {...register("gender")}>
                 <option value="female">female</option>
@@ -294,7 +297,7 @@ type FormValues = {
     favoriteColor?: string;
 };
 
-const useLearnFormik = () => {
+export const useLearnFormik = () => {
     const initialValues: FormValues = {
         firstName: 'asd',
         lastName: 'asd',
