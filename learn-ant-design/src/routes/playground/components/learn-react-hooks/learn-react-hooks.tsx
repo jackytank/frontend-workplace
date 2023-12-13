@@ -29,12 +29,12 @@ const items: CollapseProps['items'] = [
     },
     {
         key: '5',
-        label: 'Formik',
+        label: 'formik',
         children: <LearnFormik />
     },
     {
         key: '6',
-        label: 'React Hook Form',
+        label: 'react-hook-form',
         children: <LearnReactHookForm />
     },
 ];
