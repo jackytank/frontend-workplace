@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import { Collapse, CollapseProps } from "antd";
 
+const LearnMUI = lazy(() => import("./components/learn-mui/learn-mui"));
+
 const DemoSelectConfirm = lazy(() =>
     import("./components/demo-select-confirm/demo-select-confirm")
 );
@@ -78,6 +80,15 @@ const items: CollapseProps["items"] = [
     },
     {
         key: "7",
+        label: "MUI",
+        children: (
+            <Suspense fallback={<div>Loading...</div>}>
+                <LearnMUI />
+            </Suspense>
+        ),
+    },
+    {
+        key: "99999999999999999",
         label: "Other...",
         children: (
             <Suspense fallback={<div>Loading...</div>}>
