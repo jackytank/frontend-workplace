@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import style from './App.module.scss';
+import * as d3 from "d3";
+
 
 function App() {
   const [count, setCount] = useState(0);
