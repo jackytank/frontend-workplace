@@ -1,0 +1,3 @@
+type GlobalType = {
+    name: string;
+}
