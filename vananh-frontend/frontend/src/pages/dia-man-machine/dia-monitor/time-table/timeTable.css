@@ -1,0 +1,14 @@
+.timetable-content th,
+.timetable-content td {
+  text-align: center;
+  padding: 5px;
+  font-size: 12px;
+  height: 32px;
+}
+.timetable-content th {
+  white-space: nowrap;
+}
+
+.station-name {
+  text-align: left !important;
+}

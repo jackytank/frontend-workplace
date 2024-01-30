@@ -1,0 +1,40 @@
+.HvFormElement-root.HvDropdown-root {
+  width: 60%;
+}
+
+.field-time {
+  display: inline-flex;
+}
+
+.number-input {
+  width: 50px;
+  height: 100%;
+  border: none;
+  border-radius: 5px !important;
+  margin-left: 10px;
+}
+
+.number-input-minus {
+  width: 55px;
+  height: 100%;
+  border: none;
+  border-radius: 5px !important;
+}
+
+.speed {
+  width: 122px;
+  height: 100%;
+  border: none;
+  border-radius: 5px !important;
+  margin-left: 10px;
+}
+
+.traffic-restriction-area[traffic-restriction-disruption='0'] {
+  fill: rgb(255, 255, 0, 128);
+  opacity: 0.5;
+}
+
+.traffic-restriction-area[traffic-restriction-disruption='1'] {
+  fill: rgb(255, 0, 0, 128);
+  opacity: 0.5;
+}

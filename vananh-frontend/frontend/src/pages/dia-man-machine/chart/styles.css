@@ -1,0 +1,11 @@
+svg[display-passenger-flow='1'] .train-line.train-passenger-medium {
+  stroke: green !important;
+}
+
+svg[display-passenger-flow='1'] .train-line.train-passenger-high {
+  stroke: red !important;
+}
+
+svg[display-passenger-flow='1'] .train-line.train-passenger-low {
+  stroke: blue !important;
+}

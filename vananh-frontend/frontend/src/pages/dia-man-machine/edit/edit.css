@@ -1,0 +1,14 @@
+.edit-btn.disabled * {
+  --color-0: rgba(153, 150, 150, 0.4) !important;
+  cursor: none !important;
+}
+
+.edit-btn.disabled {
+  color: rgba(153, 150, 150, 0.4) !important;
+  cursor: none !important;
+}
+
+.edit-btn.disabled:focus,
+.edit-btn.disabled:hover {
+  background-color: transparent;
+}
