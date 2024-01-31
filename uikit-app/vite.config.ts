@@ -3,12 +3,14 @@
 
 import { defineConfig } from "vite";
 
-import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
 import unoCSS from "unocss/vite";
-import { presetHv } from "@hitachivantara/uikit-uno-preset";
+import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
-export default defineConfig({
+import { HvAppShellVitePlugin } from "@hitachivantara/app-shell-vite-plugin";
+
+export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxImportSource: "@emotion/react",
@@ -16,9 +18,19 @@ export default defineConfig({
         plugins: ["@emotion/babel-plugin"],
       },
     }),
-    tsconfigPaths({ root: ".." }),
-    unoCSS(),
+    tsconfigPaths(),
+    unoCSS({ mode: "per-module" }),
+    cssInjectedByJsPlugin({
+      relativeCSSInjection: true,
+    }),
+    HvAppShellVitePlugin({
+      mode,
+      modules: [
+        "src/pages/Project"
+      ]
+    }),
   ],
+
   test: {
     globals: true,
     environment: "jsdom",
@@ -26,7 +38,7 @@ export default defineConfig({
     reporters: "default",
     coverage: {
       enabled: false, // disabled by default. run vitest with --coverage
-      provider: "c8",
+      provider: "v8",
       reporter: "lcov",
       include: ["src/**/*.ts?(x)"],
       exclude: [
@@ -39,6 +51,7 @@ export default defineConfig({
       ],
     },
   },
+
   build: {
     rollupOptions: {
       // hides warnings about module level directive use client
@@ -54,4 +67,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

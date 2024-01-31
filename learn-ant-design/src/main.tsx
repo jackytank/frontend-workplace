@@ -29,10 +29,6 @@ const router = createBrowserRouter([{
               path: 'pokemon',
               element: <PokemonSWR />
             },
-            // {
-            //   path: 'detail',
-            //   element: <EmployeeDetail />
-            // }
           ]
         },
         // {

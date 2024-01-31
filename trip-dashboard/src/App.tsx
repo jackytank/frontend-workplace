@@ -1,33 +1,30 @@
-import { useState } from 'react';
-import style from './App.module.scss';
-import ChartTest from './components/ChartTest';
+import { Suspense, useEffect } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { HvProvider, createTheme } from '@hitachivantara/uikit-react-core';
+import router from './routers';
+import Toast from './components/Toasts';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const newTheme = createTheme({
+    name: 'myTheme',
+    base: 'ds5',
+    inheritColorModes: true,
+    fontFamily: {
+      body: 'NotoSansJP'
+    }
+  });
+
+  useEffect(() => {
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://react.dev" target="_blank">
-        </a>
-        <h2 className={style['hello']}>hello</h2>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-        <ChartTest />
-      </p>
-    </>
+    <HvProvider rootElementId="root" themes={[newTheme]}>
+      <Suspense fallback={<div>Loading......</div>}>
+        <RouterProvider router={router} />
+        <Toast />
+      </Suspense>
+    </HvProvider>
   );
 }
-
 
 export default App;
