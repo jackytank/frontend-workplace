@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import style from './App.module.scss';
-import ChartTest from 'components/ChartTest';
+import ChartTest from './components/ChartTest';
 
 function App() {
   const [count, setCount] = useState(0);

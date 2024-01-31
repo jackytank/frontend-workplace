@@ -8,6 +8,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+
 import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -20,7 +21,7 @@ ChartJS.register(
     Legend
 );
 
-export const options = {
+const options = {
     responsive: true,
     plugins: {
         legend: {
@@ -35,7 +36,7 @@ export const options = {
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-export const data = {
+const data = {
     labels,
     datasets: [
         {
@@ -54,7 +55,7 @@ export const data = {
 };
 
 const ChartTest = () => {
-    return <Line options={options} data={data} />;
+    return <Line  options={options} data={data} />;
 };
 
 export default ChartTest;
