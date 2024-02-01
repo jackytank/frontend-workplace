@@ -1,63 +1,85 @@
-import { v4 as uuid } from 'uuid';
 import {
   HvHeader,
-  HvHeaderNavigation,
   HvVerticalNavigation,
   HvVerticalNavigationTree,
   HvHeaderBrand,
   HvVerticalNavigationHeader,
-  HvVerticalNavigationActions,
-  HvVerticalNavigationAction,
+  HvFooter,
 } from '@hitachivantara/uikit-react-core';
 import HitachiLogo from '../assets/HitachiLogo';
 import { Outlet } from 'react-router-dom';
+import { Backwards, Menu } from '@hitachivantara/uikit-react-icons';
+import { useState } from 'react';
+import { Grid } from '@mui/material';
 
 const MainLayout = () => {
+  const [openNav, setOpenNav] = useState(true);
+  const [navSelected, setNavSelected] = useState(localStorage.getItem('navSelected') || '1');
+
   return (
-    <div>
+    <>
       <HvHeader position="relative">
         <HvHeaderBrand
           logo={<HitachiLogo />}
           name="Inspire The Next"
         />
       </HvHeader>
-      <div
-        style={{
-          display: 'flex',
-          height: 'calc(100vh - 64px)',
-          width: '100%',
-        }}
+      < Grid
+        minHeight={window.innerHeight}
+        height="100%"
+        display="flex"
       >
         <HvVerticalNavigation
-          open
+          open={openNav}
+          useIcons={false}
         >
+          <HvVerticalNavigationHeader
+            collapseButtonProps={{
+              'aria-expanded': true,
+              'aria-label': 'collapseButton'
+            }}
+            onCollapseButtonClick={() => setOpenNav((openNav) => !openNav)}
+            title=""
+            openIcon={<Menu />}
+            closeIcon={<Backwards />}
+          />
           <HvVerticalNavigationTree
             aria-label="Example 1 navigation"
+            collapsible
             data={[
               {
+                id: '1',
                 href: '/kpi',
-                id: uuid(),
                 label: 'KPI'
               },
               {
+                id: '2',
                 href: '/intervention',
-                id: uuid(),
                 label: 'Intervention'
               },
               {
+                id: '3',
                 href: '/user',
-                id: uuid(),
                 label: 'User'
               },
 
             ]}
-            onChange={function _a() { }}
-            selected="00"
+            defaultExpanded={false}
+            onChange={(event, page) => {
+              localStorage.setItem('navSelected', page.id);
+              setNavSelected(page.id);
+              if (openNav === false) setOpenNav(true);
+            }}
+            selected={navSelected}
           />
         </HvVerticalNavigation>
-        <Outlet/>
-      </div>
-    </div>
+        <Outlet />
+      </Grid>
+      <HvFooter
+        copyright="© Hitachi Digital Services 2024"
+        name="Hitachi Digital Services"
+      />
+    </>
   );
 };
 
