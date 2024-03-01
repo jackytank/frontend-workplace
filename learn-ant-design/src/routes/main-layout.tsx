@@ -29,9 +29,9 @@ function getItem(
 
 const items: MenuItem[] = [
     getItem("Home", "1", <DesktopOutlined />, "/"),
-    getItem("App", "2", <FolderOutlined />, undefined,
+    getItem("Visualization", "2", <FolderOutlined />, undefined,
         [
-            getItem("Pokemon (SWR)", "3", <FileOutlined />, "applications/pokemon"),
+            getItem("ChartJS", "3", <FileOutlined />, "visualization/chartjs"),
         ]),
     // getItem("Project", "5", <FolderOutlined />, undefined,
     //     [
