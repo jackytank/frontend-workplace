@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# node package lock, yarn lock
+# node package lock, yarn lock, pnpm
 package-lock.json
 yarn.lock
+pnpm-lock.yaml
