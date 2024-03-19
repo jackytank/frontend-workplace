@@ -38,10 +38,10 @@ const RefFocusElement = () => {
 
   const handleClick = () => {
     ref.current?.focus();
-  }
+  };
   return (
     <Space>
-      <Input type="text" ref={ref}/>
+      <Input type="text" ref={ref} />
       <Button onClick={handleClick}>Comment</Button>
     </Space>
   );
@@ -70,7 +70,7 @@ const LogButtonClick = () => {
 };
 
 const StopWatch = () => {
-  const timeIdRef = useRef<number>(0);
+  const timeIdRef = useRef<NodeJS.Timeout | number>(0);
   const [count, setCount] = useState<number>(0);
 
   const startHandler = () => {

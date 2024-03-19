@@ -11,7 +11,7 @@
     "both": "concurrently \"json-server --port 3333 --watch db.json\" \"vite --port 3000\"",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview --port 3000"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.1",

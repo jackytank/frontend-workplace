@@ -1,0 +1,13 @@
+# writing docker compose to deploy this react project
+
+version: '1'
+services:
+  frontend:
+    container_name: learn-ant-design
+    build:
+      context: ./learn-ant-design
+      dockerfile: Dockerfile.development
+    ports:
+      - "5173:3000"
+    volumes:
+      - ./learn-ant-design:/app

@@ -34,7 +34,7 @@ export function withMousePosition<T>(Component: ComponentType<T>) {
 export function withTimer<T>(Component: ComponentType<T>) {
     return (hocProps: Omit<T, 'count' | 'startTimer' | 'endTimer'>) => {
         const count = useRef(0);
-        const [timer, setTimer] = useState(-1);
+        const [timer, setTimer] = useState<NodeJS.Timeout | number>(-1);
 
         const startTimer = useCallback(() => {
             const timer = setInterval(
