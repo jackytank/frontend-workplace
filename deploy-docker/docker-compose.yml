@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  fe:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vite-remix
+    ports:
+      - "3000:3000"
+networks:
+  frontend:
+  backend:
+volumes:
+  db-data:
