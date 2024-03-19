@@ -2,9 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Col, Row, Switch } from 'antd';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, Plugin, ChartData, ChartOptions } from 'chart.js';
-// import chartjs line plugin
-import '';
-
 import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -30,8 +27,8 @@ const linePlugin: Plugin = {
     id: 'line-plugin',
     beforeDraw: (chart) => {
         const ctx = chart.ctx;
-        const activeTooltip = chart?.tooltip?._active;
-        if (activeTooltip && activeTooltip?.length) {
+        const activeTooltip = (chart?.tooltip as any)?._active;
+        if (activeTooltip && activeTooltip?.length && chart.tooltip) {
             const xCoor = chart.scales.x.getPixelForValue(chart.tooltip.dataPoints[0].dataIndex);
             ctx.save();
             ctx.beginPath();
