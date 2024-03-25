@@ -1,30 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-
-type UserType = {
-    id: number;
-    name: string;
-    username: string;
-    email: string;
-    address: {
-        street: string;
-        suite: string;
-        city: string;
-        zipcode: string;
-        geo: {
-            lat: string;
-            lng: string;
-        };
-    };
-    phone: string;
-    website: string;
-    company: {
-        name: string;
-        catchPhrase: string;
-        bs: string;
-    };
-};
 
 export const loader = async ({
     request
