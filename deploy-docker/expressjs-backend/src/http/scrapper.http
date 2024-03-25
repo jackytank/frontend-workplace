@@ -1,0 +1,6 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Scrapper
+GET {{ baseURL }}/scrapper/http://localhost:3000/users/1
