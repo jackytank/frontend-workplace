@@ -2,16 +2,31 @@
 import React, { useEffect, useState } from 'react';
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
+import axios from 'axios';
 
 export const loader = async ({
     request
 }: LoaderFunctionArgs) => {
-    const res = await fetch('https://jsonplaceholder.typicode.com/users/1');
+    const res = await fetch('http://localhost:8080/api/v1/users/1');
     const data: UserType = await res.json();
+    console.log('data', data);
     return json({
         user: data
     });
 };
+
+export const action = async ({
+    request
+}: ActionFunctionArgs) => {
+    const formData = await request.formData();
+    // send PUT request to update via axios
+    await axios.put('http://localhost:8080/api/v1/users/1', {
+        name: formData.get('name'),
+        email: formData.get('email')
+    });
+    return null;
+};
+
 
 const User = () => {
     // get loader data with types
@@ -38,24 +53,5 @@ const User = () => {
     );
 };
 
-export const action = async ({
-    request
-}: ActionFunctionArgs) => {
-    const formData = await request.formData();
-    console.log('formData', Object.fromEntries(formData));
-    const res = await fetch('https://jsonplaceholder.typicode.com/users/1', {
-        method: 'PUT',
-        body: JSON.stringify(Object.fromEntries(formData)),
-        headers: {
-            'Content-Type': 'application/json; chartset=UTF-8'
-        }
-    });
-    const updatedUser = await res.json();
-    return json({
-        user: updatedUser,
-        status: res.status,
-        message: 'User updated successfully!'
-    });
-};
 
 export default User;
