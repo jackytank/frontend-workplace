@@ -26,11 +26,18 @@ export const action = async ({
 }: ActionFunctionArgs) => {
     const formData = await request.formData();
     const { _action, ...values } = Object.fromEntries(formData);
-    console.log('_action', _action);
     if (_action === ReqEnum.CREATE) {
-        await axios.post(`${HOST}/users`, values);
+        await fetch(`${HOST}/users`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values)
+        });
     } else if (_action === ReqEnum.DELETE) {
-        await axios.delete(`${HOST}/users/${values.id}`);
+        await fetch(`${HOST}/users/${values.id}`, {
+            method: 'DELETE'
+        });
     }
     return null;
 };
