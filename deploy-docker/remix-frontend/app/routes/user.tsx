@@ -14,7 +14,7 @@ enum ReqEnum {
 export const loader = async ({
     request
 }: LoaderFunctionArgs) => {
-    const res = await fetch(`${HOST}/api/v1/users`);
+    const res = await fetch(`${HOST}/users`);
     const data: UserType[] = await res.json();
     return json({
         users: data
@@ -28,9 +28,9 @@ export const action = async ({
     const { _action, ...values } = Object.fromEntries(formData);
     console.log('_action', _action);
     if (_action === ReqEnum.CREATE) {
-        await axios.post(`${HOST}/api/v1/users`, values);
+        await axios.post(`${HOST}/users`, values);
     } else if (_action === ReqEnum.DELETE) {
-        await axios.delete(`${HOST}/api/v1/users/${values.id}`);
+        await axios.delete(`${HOST}/users/${values.id}`);
     }
     return null;
 };
