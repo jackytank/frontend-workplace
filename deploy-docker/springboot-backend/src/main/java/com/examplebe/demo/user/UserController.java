@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/api/v1/users")
+@RequestMapping(path = "/users")
 public class UserController {
 
     private final UserRepo userRepo;

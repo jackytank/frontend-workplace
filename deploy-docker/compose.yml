@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  fe:
+    build:
+      context: ./remix-frontend
+      dockerfile: Dockerfile.prod
+    container_name: myshittyapp-remix-frontend
+    ports:
+      - "3000:3000"
+    tty: true
+  sprintboot:
+   
+  db:
+    image: postgres:16.2-alpine
+    container_name: myshittyapp-postgres-db
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - spring-postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+networks:
+  react-spring: {}
+  spring-postgres: {}
+volumes:
+  db-data: {}

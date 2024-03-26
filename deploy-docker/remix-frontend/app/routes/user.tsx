@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { ActionFunctionArgs, json, LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import axios from 'axios';
 
 const HOST = 'http://localhost:8080';
 const actionName = '_action';

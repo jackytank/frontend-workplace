@@ -1,6 +1,8 @@
-import { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { MetaFunction, redirect } from "@remix-run/node";
+import { Outlet } from "@remix-run/react";
+import { Divider, Menu, MenuProps } from "antd";
+import { useRef, useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,14 +11,4 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function Index() {
-  return (
-    <div>
-      <h1>Super App</h1>
-      <Link to="/user">
-        User form
-      </Link>
-    </div>
-  );
-}
-
+export const loader = async () => redirect('/user');
