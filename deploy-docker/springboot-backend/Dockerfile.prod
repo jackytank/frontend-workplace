@@ -1,5 +1,16 @@
-FROM maven:3.9.6-eclipse-temurin-21-alpine
-WORKDIR /mybackendd_dir
-COPY . .
-RUN mvn clean install
-CMD mvn spring-boot:run
+# build_stage
+FROM maven:3.9.6-eclipse-temurin-21-alpine as build_stage
+WORKDIR /mybackend_build_dir
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src src
+CMD mvn clean package -DskipTests
+RUN ls -la /mybackend_build_dir/target/
+
+# run_stage
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /mybackend_dir
+COPY --from=build_stage /mybackend_build_dir/target/*.jar app.jar
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser:appgroup
+CMD [ "java", "-jar", "app.jar" ]
