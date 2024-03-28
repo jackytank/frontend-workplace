@@ -8,8 +8,8 @@ installGlobals();
 export default defineConfig({
   plugins: [remix(), tsconfigPaths()],
   server: {
-	host: true,
- 	port: 3000,
- 	watch: { usePolling: true }
+    host: true,
+    port: 3000,
+    watch: { usePolling: true }
   }
 });
