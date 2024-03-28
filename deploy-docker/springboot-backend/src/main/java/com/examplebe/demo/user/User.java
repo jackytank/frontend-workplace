@@ -36,40 +36,6 @@ class User {
     private Set<UserRole> userRoles;
 }
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "roles")
-class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String code;
-    private String name;
 
-    @OneToMany(mappedBy = "role")
-    private Set<UserRole> userRoles;
-}
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "user_roles")
-class UserRole {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
-    private Role role;
-
-}

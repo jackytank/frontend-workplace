@@ -3,50 +3,50 @@ services:
   fe:
     build:
       context: ./remix-frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     container_name: myshittyapp-remix-frontend
     networks:
       - react-spring
     ports:
       - "3000:3000"
     tty: true
-    depends_on:
-      - springboot
-  springboot:
-    build: 
-      context: ./springboot-backend
-      dockerfile: Dockerfile.prod
-    container_name: myshittyapp-springboot
-    environment:
-      - MY_POSTGRES_HOST=db
-    ports:
-      - "8080:8080"
-    networks:
-      - react-spring
-      - spring-postgres
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy
-  db:
-    image: postgres:16.2-alpine
-    container_name: myshittyapp-postgres-db
-    restart: always
-    ports:
-      - "5432:5432"
-    networks:
-      - spring-postgres
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+  #   depends_on:
+  #     - springboot
+  # springboot:
+  #   build: 
+  #     context: ./springboot-backend
+  #     dockerfile: Dockerfile.prod
+  #   container_name: myshittyapp-springboot
+  #   environment:
+  #     - MY_POSTGRES_HOST=db
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - react-spring
+  #     - spring-postgres
+  #   restart: always
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  # db:
+  #   image: postgres:16.2-alpine
+  #   container_name: myshittyapp-postgres-db
+  #   restart: always
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - spring-postgres
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=postgres
 networks:
   react-spring: {}
   spring-postgres: {}

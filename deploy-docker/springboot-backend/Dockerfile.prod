@@ -1,16 +1,17 @@
 # build_stage
-FROM maven:3.9.6-eclipse-temurin-21-alpine as build_stage
+FROM eclipse-temurin:21-jdk-alpine as build_stage
 WORKDIR /mybackend_build_dir
 COPY pom.xml .
-RUN mvn dependency:go-offline
 COPY src src
-CMD mvn clean package -DskipTests
-RUN ls -la /mybackend_build_dir/target/
+COPY .mvn .mvn
+COPY mvnw .
+RUN ./mvnw dependency:go-offline
+RUN ./mvnw clean install -DskipTests
 
 # run_stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /mybackend_dir
-COPY --from=build_stage /mybackend_build_dir/target/*.jar app.jar
+COPY --from=build_stage "/mybackend_build_dir/target/*.jar" app.jar
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser:appgroup
-CMD [ "java", "-jar", "app.jar" ]
+CMD [ "java", "-jar", "/mybackend_dir/app.jar" ]
