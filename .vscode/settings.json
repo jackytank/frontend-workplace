@@ -1,4 +1,5 @@
 {
     "editor.inlayHints.enabled": "offUnlessPressed",
-    "javascript.inlayHints.enumMemberValues.enabled": false
+    "javascript.inlayHints.enumMemberValues.enabled": false,
+    "java.compile.nullAnalysis.mode": "automatic"
 }
