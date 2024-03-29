@@ -28,6 +28,7 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<List<?>> getUsers() {
         // return list of record UserResponse
+        System.out.println("UserController::getUsers - Get all users");
         return ResponseEntity.ok(userRepo.findAll().stream()
                 .map(user -> {
                     return UserResponse.builder()

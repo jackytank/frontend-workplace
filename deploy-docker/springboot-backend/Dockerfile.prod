@@ -2,11 +2,14 @@
 FROM eclipse-temurin:21-jdk-alpine as build_stage
 WORKDIR /mybackend_build_dir
 COPY pom.xml .
-COPY src src
 COPY .mvn .mvn
 COPY mvnw .
 RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline
+
+# Copy the source code and build the application
+# This layer will be rebuilt when source code changes
+COPY src src
 RUN ./mvnw clean install -DskipTests
 
 # run_stage

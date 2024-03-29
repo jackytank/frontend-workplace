@@ -2,7 +2,7 @@
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
-const HOST = 'http://localhost:8080';
+const HOST = 'http://springboot:8080';
 const actionName = '_action';
 enum ReqEnum {
     CREATE = 'create',
@@ -48,7 +48,7 @@ const User = () => {
     return (
         <main>
             <h1>Users</h1>
-            {users.length ? (
+            {users ? (
                 <ul>
                     {users.map((user) => (
                         <li key={user.id}>
