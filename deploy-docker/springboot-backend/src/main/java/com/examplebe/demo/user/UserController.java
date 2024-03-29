@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cache.annotation.Cacheable;
 
 import jakarta.validation.Valid;
 
@@ -26,6 +27,7 @@ public class UserController {
 
     // GET request to get all users
     @GetMapping("")
+    @Cacheable("users")
     public ResponseEntity<List<?>> getUsers() {
         // return list of record UserResponse
         System.out.println("UserController::getUsers - Get all users");

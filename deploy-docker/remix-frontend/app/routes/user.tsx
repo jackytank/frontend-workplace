@@ -48,9 +48,9 @@ const User = () => {
     return (
         <main>
             <h1>Users</h1>
-            {users ? (
-                <ul>
-                    {users.map((user) => (
+            <ul>
+                {users.length > 0 ? (
+                    users.map((user) => (
                         <li key={user.id}>
                             {user.name} | {user.email} {' '}
                             <Form
@@ -67,22 +67,22 @@ const User = () => {
                                 </button>
                             </Form>
                         </li>
-                    ))}
-                    <li>
-                        <Form method="post">
-                            <input type="text" name="name" placeholder='name...' />
-                            <input type="email" name="email" placeholder='email...' />
-                            <button
-                                type="submit"
-                                name={actionName}
-                                value={ReqEnum.CREATE}
-                            >
-                                Add
-                            </button>
-                        </Form>
-                    </li>
-                </ul>
-            ) : null}
+                    ))
+                ) : null}
+                <li>
+                    <Form method="post">
+                        <input type="text" name="name" placeholder='name...' />
+                        <input type="email" name="email" placeholder='email...' />
+                        <button
+                            type="submit"
+                            name={actionName}
+                            value={ReqEnum.CREATE}
+                        >
+                            Add
+                        </button>
+                    </Form>
+                </li>
+            </ul>
         </main>
 
     );

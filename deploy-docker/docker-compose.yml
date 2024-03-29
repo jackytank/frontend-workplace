@@ -26,6 +26,8 @@ services:
       - MY_POSTGRES_DB=postgres
       - MY_POSTGRES_USER=postgres
       - MY_POSTGRES_PASSWORD=postgres
+      - MY_REDIS_HOST=myredis
+      - MY_REDIS_PORT=6379
     ports:
       - "8080:8080"
     networks:
@@ -56,8 +58,20 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     mem_limit: 500M
+  myredis: 
+    image: redis:alpine
+    container_name: myshittyapp-redis
+    networks:
+      - spring-postgres
+    ports:
+      - "6666:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    mem_limit: 500M
 networks:
   react-spring: {}
   spring-postgres: {}
 volumes:
   db-data: {}
+  redis-data: {}
