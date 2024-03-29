@@ -7,8 +7,9 @@ services:
     networks:
       - react-spring
     volumes:
-      - ./remix-frontend:/myfrontend_dir
-      - /myfrontend_dir/node_modules
+      - ./remix-frontend/src:/myfrontend_dir/src
+      - ./remix-frontend/app:/myfrontend_dir/app
+    #   - /myfrontend_dir/node_modules
     ports:
       - "3000:3000"
     tty: true

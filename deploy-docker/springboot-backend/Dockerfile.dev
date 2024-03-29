@@ -1,22 +1,21 @@
 # deps_stage
 FROM eclipse-temurin:21-jdk-alpine as deps_stage
-WORKDIR /mybackend_build_dir
+WORKDIR /mybackend_deps_dir
 COPY pom.xml .
 COPY .mvn .mvn
 COPY mvnw .
 RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline
 
-# This layer will be rebuilt when source code changes
+# build_stage
 FROM deps_stage as build_stage
 COPY src src
-RUN ./mvnw clean install -DskipTests
 
 # run_stage
-FROM eclipse-temurin:21-jre-alpine
+FROM build_stage
 WORKDIR /mybackend_dir
-COPY --from=build_stage "/mybackend_build_dir/target/*.jar" app.jar
+COPY --from=build_stage "/mybackend_deps_dir" "/mybackend_dir"
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN chown -R appuser:appgroup /mybackend_dir
 USER appuser:appgroup
-CMD [ "java", "-jar", "/mybackend_dir/app.jar" ]
+CMD [ "./mvnw", "spring-boot:run" ]
