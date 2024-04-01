@@ -39,9 +39,9 @@ public class AuthConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<?, ?> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisConnectionFactory());
         return template;
     }
 }
