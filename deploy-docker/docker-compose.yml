@@ -1,5 +1,5 @@
 services:
-  fe:
+  vite-remix:
     build:
       context: ./remix-frontend
       dockerfile: Dockerfile.prod
