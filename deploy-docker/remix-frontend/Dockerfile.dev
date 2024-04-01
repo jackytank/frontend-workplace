@@ -1,12 +1,12 @@
 # dependency_stage
 FROM node:20-alpine as deps
-WORKDIR /myfrontend_deps_dir
+WORKDIR /myremix_deps_dir
 COPY package*.json ./
 RUN npm install
 
 # run_stage
 FROM node:20-alpine
-WORKDIR /myfrontend_dir
-COPY --from=deps "/myfrontend_deps_dir/node_modules" "./node_modules"
+WORKDIR /myremix_dir
+COPY --from=deps "/myremix_deps_dir/node_modules" "./node_modules"
 COPY . .
 CMD [ "npm", "run", "dev" ]

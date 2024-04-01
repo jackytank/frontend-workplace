@@ -1,5 +1,5 @@
 services:
-  vite-remix:
+  remix:
     build:
       context: ./remix-frontend
       dockerfile: Dockerfile.prod
@@ -7,9 +7,22 @@ services:
     networks:
       - react-spring
     volumes:
-      - ./remix-frontend/app:/myfrontend_dir/app
+      - ./remix-frontend/app:/myremix_dir/app
     ports:
       - "3000:3000"
+    tty: true
+    depends_on:
+      - springboot
+    mem_limit: 500M
+  react:
+    build: 
+      context: ./react-frontend
+      dockerfile: Dockerfile.prod
+    container_name: myshittyapp-react-frontend
+    networks:
+      - react-spring
+    ports:
+      - "3001:3001"
     tty: true
     depends_on:
       - springboot

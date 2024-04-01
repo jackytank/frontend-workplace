@@ -1,0 +1,15 @@
+# dependency_stage
+FROM node:20-alpine as deps
+WORKDIR /myreact_deps_dir
+COPY package.json .
+RUN npm install
+
+# build_stage
+FROM deps as build
+WORKDIR /myreact_build_dir
+COPY --from=deps "/myreact_deps_dir/node_modules" "./node_modules"
+COPY . .
+RUN npm run build
+
+
+
