@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { AntdRegistry } from '@ant-design/nextjs-registry';
+import Layout, { Content, Footer, Header } from "antd/es/layout/layout";
+import { Menu } from "antd";
+import { headerItems } from "@/utils/utils";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,9 +14,37 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <AntdRegistry>
+          <Layout>
+            <Header style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="demo-logo" />
+              <Menu
+                theme="dark"
+                mode="horizontal"
+                items={headerItems}
+                style={{ flex: 1, minWidth: 0 }}
+              />
+            </Header>
+            <Content style={{ padding: '0 48px' }}>
+              <div
+                style={{
+                  minHeight: '100vh',
+                  padding: 24,
+                }}
+              >
+                {children}
+              </div>
+            </Content>
+            <Footer style={{ textAlign: 'center' }}>
+              Ant Design ©{new Date().getFullYear()} Created by a dude
+            </Footer>
+          </Layout>
+        </AntdRegistry>
+      </body>
     </html>
   );
 }
