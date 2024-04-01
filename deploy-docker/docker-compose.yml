@@ -2,7 +2,7 @@ services:
   fe:
     build:
       context: ./remix-frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     container_name: myshittyapp-remix-frontend
     networks:
       - react-spring
