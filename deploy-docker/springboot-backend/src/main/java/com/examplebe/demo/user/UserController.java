@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.cache.annotation.Cacheable;
 
 import jakarta.validation.Valid;
 
@@ -23,83 +22,39 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private final UserRepo userRepo;
+    private final UserService userService;
 
     // GET request to get all users
     @GetMapping("")
-    @Cacheable("users")
     public ResponseEntity<List<?>> getUsers() {
         // return list of record UserResponse
-        System.out.println("UserController::getUsers - Get all users");
-        return ResponseEntity.ok(userRepo.findAll().stream()
-                .map(user -> {
-                    return UserResponse.builder()
-                            .id(user.getId())
-                            .name(user.getName())
-                            .email(user.getEmail()).build();
-                })
-                .toList());
-
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) {
-        if (id == null)
-            return ResponseEntity.badRequest().build();
-        // builder to return only name, email, ignore password and other fields
-        return userRepo.findById(id)
-                .map(user -> ResponseEntity.ok(UserResponse.builder()
-                        .name(user.getName())
-                        .email(user.getEmail()).build()))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserResponse> getById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id,
-            @Valid @RequestBody UserRequest user,
+            @Valid @RequestBody UserRequest userRequest,
             BindingResult bindingResult) {
-        if (id == null)
-            return ResponseEntity.badRequest().build();
         if (bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        return userRepo.findById(id)
-                .map(userEntity -> {
-                    userEntity.setName(user.name());
-                    userEntity.setEmail(user.email());
-                    userRepo.save(userEntity);
-                    return ResponseEntity.ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        return userService.updateUser(id, userRequest);
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestWithPassword user,
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequestWithPassword userRequestWithPassword,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors())
-            // return only messages
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        User userEntity = User.builder()
-                .name(user.name())
-                .email(user.email())
-                .password(user.password()).build();
-        if (userEntity == null)
-            return ResponseEntity.badRequest().build();
-        // check exist email
-        if (userRepo.existsByEmail(user.email()))
-            return ResponseEntity.badRequest().body("Email already exists");
-        var updated = userRepo.save(userEntity);
-        return ResponseEntity.ok(updated);
+        return userService.createUser(userRequestWithPassword);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        if (id == null)
-            return ResponseEntity.badRequest().build();
-        return userRepo.findById(id)
-                .map(user -> {
-                    userRepo.delete(user);
-                    return ResponseEntity.ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        return userService.deleteUser(id);
     }
 }

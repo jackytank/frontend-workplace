@@ -1,5 +1,5 @@
 # deps_stage
-FROM eclipse-temurin:21-jdk-alpine as deps_stage
+FROM eclipse-temurin:17-jdk-alpine as deps_stage
 WORKDIR /mybackend_build_dir
 COPY pom.xml .
 COPY .mvn .mvn
@@ -13,7 +13,7 @@ COPY src src
 RUN ./mvnw clean install -DskipTests
 
 # run_stage
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /mybackend_dir
 COPY --from=build_stage "/mybackend_build_dir/target/*.jar" app.jar
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
