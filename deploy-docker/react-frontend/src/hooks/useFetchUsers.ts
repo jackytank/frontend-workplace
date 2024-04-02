@@ -5,6 +5,7 @@ export const useFetchUsers = (url: string) => {
     const [data, setData] = useState<UserType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
+    const [shouldRefetch, setShouldRefetch] = useState(false);
 
     const fetchUsers = async () => {
         try {
@@ -20,10 +21,10 @@ export const useFetchUsers = (url: string) => {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchUsers();
-    }, [url]);
+    }, [url, shouldRefetch]);
 
-    return { data, loading, error };
+    const refetch = () => setShouldRefetch((prev) => !prev);
+    return { data, loading, error, refetch };
 };
