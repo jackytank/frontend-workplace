@@ -1,20 +1,21 @@
 # dependency_stage
 FROM node:20-alpine as deps
-WORKDIR /myreact_deps_dir
+WORKDIR /myreact_dir
 COPY package.json .
 RUN npm install
 
 # build_stage
 FROM deps as build
-WORKDIR /myreact_build_dir
-COPY --from=deps "/myreact_deps_dir/node_modules" "./node_modules"
+WORKDIR /myreact_dir
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine as run_stage
-COPY --from=build "/myreact_build_dir/.nginx/nginx.conf" "/etc/nginx/conf.d/default.conf"
+# run_stage
+FROM nginx:stable-alpine as run_stage
+COPY --from=build "/myreact_dir/.nginx/nginx.conf" "/etc/ngin/conf.d/default.conf"
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
-COPY --from=build "/myreact_build_dir/build" ".
+COPY --from=build "/myreact_dir/dist" .
+ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
 
 
