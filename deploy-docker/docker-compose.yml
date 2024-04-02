@@ -22,7 +22,8 @@ services:
     networks:
       - react-spring
     ports:
-      - "3001:3001"
+      - "80:80"
+    restart: always
     tty: true
     depends_on:
       - springboot
