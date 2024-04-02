@@ -7,7 +7,8 @@ import { useFetchUsers } from './hooks/useFetchUsers';
 
 function App() {
   const [count, setCount] = useState(0);
-  const { data: users, loading, error } = useFetchUsers('http://localhost/api/v1/users');
+  const url = import.meta.env.VITE_API_URL as string;
+  const { data: users, loading, error } = useFetchUsers(`${url}/users`);
 
   // Handle the error state
   if (error) {
@@ -36,20 +37,20 @@ function App() {
           <p>
             Edit <code>src/App.tsx</code> and save to test HMR
           </p>
+          <List
+            loading={loading}
+            itemLayout='horizontal'
+            dataSource={users}
+            renderItem={user => (
+              <List.Item>
+                <List.Item.Meta
+                  title={user.name}
+                  description={user.email}
+                />
+              </List.Item>
+            )}
+          />
         </Card>
-        <List
-          loading={loading}
-          itemLayout='horizontal'
-          dataSource={users}
-          renderItem={user => (
-            <List.Item>
-              <List.Item.Meta
-                title={user.name}
-                description={user.email}
-              />
-            </List.Item>
-          )}
-        />
       </div>
     </>
   );
