@@ -1,19 +1,19 @@
 services:
-  remix:
-    build:
-      context: ./remix-frontend
-      dockerfile: Dockerfile.prod
-    container_name: myshittyapp-remix-frontend
-    networks:
-      - react-spring
-    volumes:
-      - ./remix-frontend/app:/myremix_dir/app
-    ports:
-      - "3000:3000"
-    tty: true
-    depends_on:
-      - springboot
-    mem_limit: 500M
+  # remix:
+  #   build:
+  #     context: ./remix-frontend
+  #     dockerfile: Dockerfile.prod
+  #   container_name: myshittyapp-remix-frontend
+  #   networks:
+  #     - react-spring
+  #   volumes:
+  #     - ./remix-frontend/app:/myremix_dir/app
+  #   ports:
+  #     - "3000:3000"
+  #   tty: true
+  #   depends_on:
+  #     - springboot
+  #   mem_limit: 500M
   react:
     build: 
       context: ./react-frontend
