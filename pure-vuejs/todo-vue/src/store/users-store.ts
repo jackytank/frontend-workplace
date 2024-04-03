@@ -6,7 +6,7 @@ export type UserStoreState = {
     users: UserPagiType | undefined;
 };
 
-export const useUserStore = defineStore('userStore', {
+export const useUsersStore = defineStore('userStore', {
     state: () => ({
         users: undefined
     } as UserStoreState),
