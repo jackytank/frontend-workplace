@@ -1,8 +1,15 @@
 <script setup lang="ts">
+import { ColumnType } from 'ant-design-vue/es/table';
+import { PropType } from 'vue';
 import { useCommonStore } from '../../../store/common-store';
 import { UserType } from '../../../types/global';
 
 const commonStore = useCommonStore();
+
+defineProps({
+    msg: String,
+    userTableColumns: Array as PropType<ColumnType[]>,
+});
 
 </script>
 
