@@ -1,5 +1,5 @@
 import { ColumnType } from "ant-design-vue/es/table";
-import { UserType } from "../../types/global";
+import { UserType } from "../../../types/global";
 
 export const userTableColumns: ColumnType<UserType>[] = [
     {
