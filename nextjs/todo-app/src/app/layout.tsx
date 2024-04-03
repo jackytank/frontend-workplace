@@ -18,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        // className={inter.className}
+      // className={inter.className}
       >
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          {children}
+        </AntdRegistry>
       </body>
     </html>
   );
