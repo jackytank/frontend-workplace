@@ -50,7 +50,7 @@ public class UserController {
             BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        return userService.createUser(userRequestWithPassword);
+		return userService.createUser(userRequestWithPassword);
     }
 
     @DeleteMapping("/{id}")
