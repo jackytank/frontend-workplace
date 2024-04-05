@@ -3,7 +3,10 @@ import { Link, Outlet } from "react-router-dom";
 const MainLayout = () => {
     return (
         <>
-            <h1>React App</h1>
+            <h1 style={{
+                textAlign: 'center',
+                color: 'blue',
+            }}>The TriBook</h1>
             <ul
                 style={{
                     listStyle: 'none',
@@ -17,7 +20,7 @@ const MainLayout = () => {
                     <Link to={'/user'}>User</Link>
                 </li>
                 <li>
-                    <Link to={'/message'}>Message</Link>
+                    <Link to={'/chat'}>Chat</Link>
                 </li>
             </ul>
             <br />

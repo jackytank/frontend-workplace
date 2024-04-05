@@ -1,13 +1,105 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Avatar, ChatContainer, ConversationHeader, InfoButton, MainContainer, Message, MessageInput, MessageList, MessageSeparator,
   TypingIndicator, VideoCallButton, VoiceCallButton
 } from "@chatscope/chat-ui-kit-react";
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import ChatLeftSideBar from "./components/ChatLeftSideBar";
-import ChatRightSideBar from "./components/ChatRightSideBar";
+import { useRef, useState } from "react";
+import SignUpChat from "./components/SignUpChat";
+import SockJS from 'sockjs-client';
+import { Client, over } from 'stompjs';
 
+type UserDataType = {
+  username: string;
+  receiverName: string;
+  connected: boolean;
+  message: string;
+};
+
+type ChatMessage = {
+  senderName: string;
+  receiverName?: string;
+  message?: string;
+  date?: string;
+  status: Status;
+};
+
+enum Status {
+  JOIN,
+  MESSAGE,
+  LEAVE
+}
+
+enum MessageStatus {
+  JOIN = 'JOIN',
+  MESSAGE = 'MESSAGE',
+  LEAVE = 'LEAVE'
+}
 
 const ChatPage = () => {
+  const [privateChats, setPrivateChats] = useState(new Map<string, ChatMessage[]>());
+  const [publicChats, setPublicChats] = useState([])
+  const [tab, setTab] = useState('CHATROOM')
+  const [userData, setUserData] = useState<UserDataType>({
+    username: '',
+    receiverName: '',
+    connected: true,
+    message: ''
+  });
+  const stompClientRef = useRef<Client | null>(null);
+
+  const connect = () => {
+    const sock = new SockJS('http://localhost:8080/ws');
+    stompClientRef.current = over(sock);
+    stompClientRef.current.connect({}, onConnected, onError);
+
+  };
+
+  const onConnected = () => {
+    setUserData({
+      ...userData,
+      connected: true
+    });
+    stompClientRef.current?.subscribe('/mychatroom/public', onPublicMessageReceived);
+    stompClientRef.current?.subscribe(`/mychatuser/${userData.username}/private`, onPrivateMessageReceived);
+    userJoin();
+  };
+
+  const userJoin = () => {
+    const chatMessage: ChatMessage = {
+      senderName: userData.username,
+      status: Status.JOIN
+    };
+    stompClientRef.current?.send('/mychatapp/message', {}, JSON.stringify(chatMessage));
+  };
+
+  const onPublicMessageReceived = (payload: { body: string; }) => {
+    const payloadData = JSON.parse(payload.body) as ChatMessage;
+    switch (payloadData.status) {
+      case Status.JOIN:
+        if (!)
+          break;
+
+      default:
+        break;
+    }
+  };
+
+  const onError = () => {
+    setUserData({
+      ...userData,
+      connected: false
+    });
+  };
+
+
+  if (!userData.connected) {
+    return (
+      <SignUpChat connect={connect} />
+    );
+  }
+
   return (
     <div style={{ position: "relative", height: "70vh", width: "100vw" }}>
       <MainContainer
@@ -166,7 +258,7 @@ const ChatPage = () => {
           </MessageList>
           <MessageInput placeholder="Type message here" />
         </ChatContainer>
-        <ChatRightSideBar />
+        {/* <ChatRightSideBar /> */}
       </MainContainer>
     </div>
   );
