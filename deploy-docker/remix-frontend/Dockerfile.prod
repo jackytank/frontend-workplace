@@ -1,13 +1,13 @@
 # dependency_stage
 FROM node:20-alpine as deps
 WORKDIR /myremix_deps_dir
-COPY package*.json ./
-RUN npm install
+COPY package.json .
+RUN yarn
 
 # run_stage
 FROM node:20-alpine
 WORKDIR /myremix_dir
 COPY --from=deps "/myremix_deps_dir/node_modules" "./node_modules"
 COPY . .
-RUN npm run build
-CMD [ "npm", "run", "start" ]
+RUN yarn run build
+CMD [ "yarn", "run", "start" ]
