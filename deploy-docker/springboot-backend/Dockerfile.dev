@@ -5,6 +5,7 @@ COPY pom.xml .
 COPY .mvn .mvn
 RUN mvn dependency:go-offline
 
+
 # This layer will be rebuilt when source code changes
 FROM deps_stage as build_stage
 COPY src src

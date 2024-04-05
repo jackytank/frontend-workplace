@@ -17,11 +17,18 @@ const MainLayout = () => {
                     <Link to={'/user'}>User</Link>
                 </li>
                 <li>
-                    <Link to={'/employee'}>Employee</Link>
+                    <Link to={'/message'}>Message</Link>
                 </li>
             </ul>
             <br />
-            <div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'start',
+                height: '100vh',
+                gap: '1rem',
+            }}>
                 <Outlet />
             </div>
         </>

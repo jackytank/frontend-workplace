@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
-import reactLogo from '../assets/react.svg';
+import reactLogo from '../../assets/react.svg';
 import { Button, Card, Col, Form, Image, Input, List, Result, Row, message } from 'antd';
-import { useFetchUsers } from '../hooks/useFetchUsers';
 import { json, useLoaderData, useNavigate } from 'react-router-dom';
+import { useFetchUsers } from '../../hooks/useFetchUsers';
 
 type FormType = {
   name: string;
@@ -33,14 +33,7 @@ function UserPage() {
     );
   }
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100vh',
-      gap: '1rem',
-    }}>
+    <div>
       <Card>
         <Image src={reactLogo} className="app-logo" alt="react logo" />
       </Card>

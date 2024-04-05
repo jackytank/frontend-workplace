@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import UserPage, { loader as userLoader } from "./pages/user-page";
-import EmployeePage from "./pages/employee-page";
+import UserPage, { loader as userLoader } from "./pages/user/user-page";
+import ChatPage from "./pages/chat/chat-page";
 import MainLayout from "./layout/main-layout";
 
 const router = createBrowserRouter([
@@ -18,8 +18,8 @@ const router = createBrowserRouter([
                 loader: userLoader
             },
             {
-                path: "employee",
-                element: <EmployeePage />,
+                path: "message",
+                element: <ChatPage />,
             }
         ]
     },
