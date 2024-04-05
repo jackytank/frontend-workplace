@@ -1,21 +1,16 @@
 # deps_stage
-FROM eclipse-temurin:21-jdk-alpine as deps_stage
-WORKDIR /mybackend_deps_dir
+FROM maven:3.9.6-eclipse-temurin-17-alpine as deps_stage
+WORKDIR /mybackend_build_dir
 COPY pom.xml .
 COPY .mvn .mvn
-COPY mvnw .
-RUN chmod +x ./mvnw
-RUN ./mvnw dependency:go-offline
+RUN mvn dependency:go-offline
 
-# build_stage
+# This layer will be rebuilt when source code changes
 FROM deps_stage as build_stage
 COPY src src
 
 # run_stage
 FROM build_stage
 WORKDIR /mybackend_dir
-COPY --from=build_stage "/mybackend_deps_dir" "/mybackend_dir"
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup /mybackend_dir
-USER appuser:appgroup
-CMD [ "./mvnw", "spring-boot:run" ]
+COPY --from=build_stage "/mybackend_build_dir" "/mybackend_dir"
+CMD [ "mvn", "spring-boot:run" ]

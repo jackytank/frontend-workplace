@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 
-export const useFetchUsers = (url: string) => {
+export type UseFetchUsersType = {
+    data: UserType[];
+    loading: boolean;
+    error: Error | null;
+    refetch: () => void;
+};
+
+export const useFetchUsers = (url: string): UseFetchUsersType => {
     const [data, setData] = useState<UserType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);

@@ -1,37 +1,39 @@
 services:
-  remix:
-    build:
-      context: ./remix-frontend
-      dockerfile: Dockerfile.prod
-    container_name: myshittyapp-remix-frontend
-    networks:
-      - react-spring
-    volumes:
-      - ./remix-frontend/app:/myremix_dir/app
-    ports:
-      - "3000:3000"
-    tty: true
-    depends_on:
-      - springboot
-    mem_limit: 500M
-  react:
-    build: 
-      context: ./react-frontend
-      dockerfile: Dockerfile.prod
-    container_name: myshittyapp-react-frontend
-    networks:
-      - react-spring
-    ports:
-      - "3001:3001"
-    restart: always
-    tty: true
-    depends_on:
-      - springboot
-    mem_limit: 500M
+  # remix:
+  #   build:
+  #     context: ./remix-frontend
+  #     dockerfile: Dockerfile.prod
+  #   container_name: myshittyapp-remix-frontend
+  #   networks:
+  #     - react-spring
+  #   volumes:
+  #     - ./remix-frontend/app:/myremix_dir/app
+  #   ports:
+  #     - "3000:3000"
+  #   tty: true
+  #   depends_on:
+  #     - springboot
+  #   mem_limit: 500M
+  # react:
+  #   build: 
+  #     context: ./react-frontend
+  #     dockerfile: Dockerfile.prod
+  #   container_name: myshittyapp-react-frontend
+  #   networks:
+  #     - react-spring
+  #   ports:
+  #     - "3001:3001"
+  #   # volumes:
+  #   #   - ./react-frontend:/myreact_dir
+  #   restart: always
+  #   tty: true
+  #   depends_on:
+  #     - springboot
+  #   mem_limit: 500M
   springboot:
     build: 
       context: ./springboot-backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     container_name: myshittyapp-springboot
     environment:
       - MY_POSTGRES_HOST=db
@@ -42,6 +44,8 @@ services:
       - MY_REDIS_HOST=myredis
       - MY_REDIS_PORT=6379
       - MY_REDIS_PASSWORD=mysupersecureredispassword42
+    volumes:
+      - ./springboot-backend:/mybackend_dir
     ports:
       - "8080:8080"
     networks:
