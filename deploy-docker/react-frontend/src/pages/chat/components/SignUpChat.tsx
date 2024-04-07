@@ -1,5 +1,6 @@
 import { Button, Card, Form, Input, message } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import { UserDataType } from '../chat-page';
 
 type FormType = {
     username: string;
@@ -8,17 +9,24 @@ type FormType = {
 const { Item } = Form;
 
 type SignUpChatProps = {
-    connect: () => void;
+    registerUser: () => void;
+    userData?: UserDataType,
+    setUserData: React.Dispatch<React.SetStateAction<UserDataType>>;
 };
 
 const SignUpChat = ({
-    connect,
+    registerUser,
+    setUserData,
 }: SignUpChatProps) => {
     const [form] = useForm<FormType>();
 
     const onFinish = (values: FormType) => {
         message.info(`Welcome to The TriBook! ${values.username}`);
-        connect();
+        setUserData(prev => ({
+            ...prev,
+            username: values.username,
+        }))
+        registerUser();
     };
 
     const onFinishFailed = () => {
