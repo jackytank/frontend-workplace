@@ -263,6 +263,7 @@ const ChatPage = () => {
                     : index === getChatList(tab).length - 1 ? 'last' : 'middle' as PositionMessType;
                   return (
                     <Message
+                      avatarSpacer
                       key={index}
                       model={{
                         direction: chat.senderName === userData.username ? 'outgoing' : 'incoming',
@@ -272,6 +273,10 @@ const ChatPage = () => {
                         sentTime: chat.date
                       }}
                     >
+                      <Avatar
+                        name={chat.senderName}
+                        src={ManLogo}
+                      />
                     </Message>
                   );
                 })}

@@ -8,7 +8,7 @@ const MainLayout = () => {
                 color: 'blue',
             }}
             >
-                Gia Lô
+                Gia Lôw
             </h1>
             <ul
                 style={{
