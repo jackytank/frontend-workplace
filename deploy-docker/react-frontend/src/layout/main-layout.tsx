@@ -6,7 +6,10 @@ const MainLayout = () => {
             <h1 style={{
                 textAlign: 'center',
                 color: 'blue',
-            }}>The TriBook</h1>
+            }}
+            >
+                Gia Lô
+            </h1>
             <ul
                 style={{
                     listStyle: 'none',

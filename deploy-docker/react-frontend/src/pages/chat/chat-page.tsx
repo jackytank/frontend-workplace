@@ -1,58 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Avatar, ChatContainer, ConversationHeader, InfoButton, MainContainer, Message, MessageInput, MessageList, MessageSeparator,
+  Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList, MessageSeparator,
+  Search,
+  Sidebar,
   TypingIndicator, VideoCallButton, VoiceCallButton
 } from "@chatscope/chat-ui-kit-react";
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
-import ChatLeftSideBar from "./components/ChatLeftSideBar";
 import { useEffect, useState } from "react";
-import SignUpChat from "./components/SignUpChat";
-import SockJS from 'sockjs-client';
+import { Button, Card, Form, Input, Radio, RadioChangeEvent, message } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import { Client, Frame, over } from 'stompjs';
+import SockJS from "sockjs-client/dist/sockjs";
+import ManLogo from '../../assets/man.png';
+import WomanLogo from '../../assets/woman.png';
+import ChatroomLogo from '../../assets/group.png';
+import { ChatMessage, CHAT_ROOM, FormType, UserDataType, GenderEnum, MessageStatus, PositionMessType } from "../../utils/helper";
 
-export type UserDataType = {
-  username: string;
-  receiverName: string;
-  connected: boolean;
-  message: string;
-};
-
-type ChatMessage = {
-  senderName: string;
-  receiverName?: string;
-  message?: string;
-  date?: string;
-  status: StatusEnum | MessageStatus;
-};
-
-enum StatusEnum {
-  JOIN,
-  MESSAGE,
-  LEAVE
-}
-
-enum MessageStatus {
-  JOIN = 'JOIN',
-  MESSAGE = 'MESSAGE',
-  LEAVE = 'LEAVE'
-}
-
+const { Item } = Form;
+let stompClient: Client | null = null;
 const ChatPage = () => {
   const [privateChats, setPrivateChats] = useState(new Map<string, ChatMessage[]>());
   const [publicChats, setPublicChats] = useState<ChatMessage[]>([]);
-  const [tab, setTab] = useState('CHATROOM');
+  const [tab, setTab] = useState(CHAT_ROOM);
+  const [form] = useForm<FormType>();
+
   const [userData, setUserData] = useState<UserDataType>({
     username: '',
+    gender: GenderEnum.MALE,
     receiverName: '',
-    connected: true,
+    connected: false,
     message: ''
   });
-  const WS_URL = import.meta.env.VITE_WS_URL as string;
-  let stompClient: Client | null = null;
-
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
+  const WS_URL = 'http://localhost:8080/ws';
 
   const connect = () => {
     const sock = new SockJS(WS_URL);
@@ -61,27 +40,37 @@ const ChatPage = () => {
   };
 
   const onConnected = () => {
-    setUserData({
-      ...userData,
+    setUserData(prev => ({
+      ...prev,
       connected: true
-    });
+    }));
     if (!stompClient) return;
-    stompClient.subscribe('/mychatroom/public', onPublicMessageReceived);
+    stompClient.subscribe('/mychatroom/public', onMessageReceived);
     stompClient.subscribe(`/mychatuser/${userData.username}/private`, onPrivateMessageReceived);
     userJoin();
   };
 
+  const onError = (err: string | Frame) => {
+    setUserData(prev => ({
+      ...prev,
+      connected: false
+    }));
+    console.log('Error', err);
+  };
+
   const userJoin = () => {
+    console.log('User join', userData);
     const chatMessage: ChatMessage = {
       senderName: userData.username,
       status: MessageStatus.JOIN
     };
     if (!stompClient) return;
+    console.log('user joining', stompClient);
     stompClient.send('/mychatapp/message', {}, JSON.stringify(chatMessage));
   };
 
-  const onPublicMessageReceived = (payload: { body: string; }) => {
-    console.log('Public message received', payload);
+  const onMessageReceived = (payload: { body: string; }) => {
+    console.log('onMessageReceived::payload', payload);
     const payloadData = JSON.parse(payload.body) as ChatMessage;
     switch (payloadData.status) {
       case MessageStatus.JOIN:
@@ -100,7 +89,7 @@ const ChatPage = () => {
   };
 
   const onPrivateMessageReceived = (payload: { body: string; }) => {
-    console.log('Private message received', payload);
+    console.log('onPrivateMessageReceived::payload', payload);
     const payloadData = JSON.parse(payload.body) as ChatMessage;
     if (privateChats.get(payloadData.senderName)) {
       privateChats.get(payloadData.senderName)?.push(payloadData);
@@ -113,15 +102,7 @@ const ChatPage = () => {
     }
   };
 
-  const onError = (err: string | Frame) => {
-    setUserData({
-      ...userData,
-      connected: false
-    });
-    console.log('Error', err);
-  };
-
-  const handleMessage = (event: { target: { value: any; }; }) => {
+  const handleMessage = (event: { target: { value: string; }; }) => {
     const { value } = event.target;
     setUserData({
       ...userData,
@@ -130,6 +111,7 @@ const ChatPage = () => {
   };
 
   const sendValue = () => {
+    console.log('sendValue', stompClient);
     if (stompClient) {
       const chatMessage: ChatMessage = {
         senderName: userData.username,
@@ -138,10 +120,7 @@ const ChatPage = () => {
       };
       console.log('Sending message', chatMessage);
       stompClient.send('/mychatapp/message', {}, JSON.stringify(chatMessage));
-      setUserData(prev => ({
-        ...prev,
-        message: ''
-      }));
+      setUserData(prev => ({ ...prev, message: '' }));
     }
   };
 
@@ -157,15 +136,12 @@ const ChatPage = () => {
         privateChats.get(tab)?.push(chatMessage);
         setPrivateChats(new Map(privateChats));
       }
-      stompClient.send('/mychatapp/private', {}, JSON.stringify(chatMessage));
-      setUserData(prev => ({
-        ...prev,
-        message: ''
-      }));
+      stompClient.send("/mychatapp/private-message", {}, JSON.stringify(chatMessage));
+      setUserData(prev => ({ ...prev, "message": "" }));
     }
   };
 
-  const handleUsername = (event: { target: { value: any; }; }) => {
+  const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setUserData(prev => ({
       ...prev,
@@ -173,181 +149,195 @@ const ChatPage = () => {
     }));
   };
 
-  const registerUser = () => {
+  const handleGender = (event: RadioChangeEvent) => {
+    const { value } = event.target;
+    setUserData(prev => ({
+      ...prev,
+      gender: value
+    }));
+  };
+
+  const onFinish = (values: FormType) => {
+    message.info(`Welcome to The TriBook! ${values.username}`);
+    setUserData(prev => ({
+      ...prev,
+      username: values.username,
+      gender: values.gender
+    }));
     connect();
   };
 
+  const handleMessageType = (val: string) => {
+    setUserData(prev => ({
+      ...prev,
+      message: val
+    }));
+  };
 
-  if (!userData.connected) {
-    return (
-      <SignUpChat
-        setUserData={setUserData}
-        registerUser={registerUser}
-      />
-    );
-  }
+  const getChatList = (tabStr: string) => (tabStr === CHAT_ROOM ? publicChats : [...privateChats.get(tab) ?? []]);
+
+  useEffect(() => {
+    console.log('tab', tab);
+  }, [tab]);
 
   return (
-    <div style={{ position: "relative", height: "70vh", width: "100vw" }}>
-      <MainContainer
-        responsive
-        style={{
-        }}
-      >
-        <ChatLeftSideBar />
-        <ChatContainer>
-          <ConversationHeader>
-            <ConversationHeader.Back />
-            <Avatar
-              name="Zoe"
-              src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
-            />
-            <ConversationHeader.Content
-              info="Active 10 mins ago"
-              userName="Zoe"
-            />
-            <ConversationHeader.Actions>
-              <VoiceCallButton />
-              <VideoCallButton />
-              <InfoButton />
-            </ConversationHeader.Actions>
-          </ConversationHeader>
-          <MessageList typingIndicator={<TypingIndicator content="Zoe is typing" />}>
-            <MessageSeparator content="Saturday, 30 November 2019" />
-            <Message
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'single',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
+    <>
+      {userData.connected === true ? (
+        <div style={{ position: "relative", height: "70vh", width: "100vw" }}>
+          <MainContainer
+            responsive
+            style={{
+            }}
+          >
+            <Sidebar
+              position="left"
             >
-              <Avatar
-                name="Zoe"
-                src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+              <Search placeholder="Search..." />
+              <ConversationList>
+                <Conversation
+                  info="Amen..."
+                  lastSenderName="Trisus"
+                  name="Chatroom"
+                  onClick={() => setTab(CHAT_ROOM)}
+                >
+                  <Avatar
+                    name="Chatroom"
+                    src={ChatroomLogo}
+                    status={tab === CHAT_ROOM ? 'available' : 'dnd'}
+                  />
+                  <Conversation.Operations>
+                    <InfoButton />
+                  </Conversation.Operations>
+                </Conversation>
+                {[...privateChats.keys()].map((val, idx) => {
+                  let genderSrc: string = '';
+                  if (userData.username === val) {
+                    genderSrc = userData.gender === GenderEnum.MALE ? ManLogo : WomanLogo;
+                  }
+                  return (
+                    <Conversation
+                      info="just a sample message..."
+                      lastSenderName={val}
+                      name={val}
+                      onClick={() => setTab(val)}
+                      key={`${idx}-${val}`}
+                    >
+                      <Avatar
+                        name={val}
+                        src={genderSrc}
+                        status={tab === val ? 'available' : 'dnd'}
+                      />
+                      <Conversation.Operations>
+                        <VoiceCallButton />
+                        <VideoCallButton />
+                        <InfoButton />
+                      </Conversation.Operations>
+                    </Conversation>
+                  );
+                })}
+
+              </ConversationList>
+            </Sidebar>
+            <ChatContainer>
+              <ConversationHeader>
+                <ConversationHeader.Back />
+                <Avatar
+                  name={tab}
+                  src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+                />
+                <ConversationHeader.Content
+                  // info="Active 10 mins ago"
+                  userName="Zoe"
+                />
+                <ConversationHeader.Actions>
+                  <VoiceCallButton />
+                  <VideoCallButton />
+                  <InfoButton />
+                </ConversationHeader.Actions>
+              </ConversationHeader>
+              <MessageList typingIndicator={<TypingIndicator content="Zoe is typing" />}>
+                {/* <MessageSeparator content="Saturday, 30 November 2019" /> */}
+                {getChatList(tab).map((chat, index) => {
+                  const position = index === 0
+                    ? 'first'
+                    : index === getChatList(tab).length - 1 ? 'last' : 'middle' as PositionMessType;
+                  return (
+                    <Message
+                      key={index}
+                      model={{
+                        direction: chat.senderName === userData.username ? 'outgoing' : 'incoming',
+                        message: chat.message,
+                        position: position,
+                        sender: chat.senderName,
+                        sentTime: chat.date
+                      }}
+                    >
+                    </Message>
+                  );
+                })}
+              </MessageList>
+              <MessageInput
+                placeholder="Type message here"
+                onChange={(e) => handleMessageType(e)}
+                onSend={tab === CHAT_ROOM ? sendValue : sendPrivateValue}
               />
-            </Message>
-            <Message
-              avatarSpacer
-              model={{
-                direction: 'outgoing',
-                message: 'Hello my friend',
-                position: 'single',
-                sender: 'Patrik',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              avatarSpacer
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'first',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              avatarSpacer
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'normal',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              avatarSpacer
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'normal',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'last',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
+            </ChatContainer>
+            {/* <ChatRightSideBar /> */}
+          </MainContainer>
+        </div>
+      ) : (
+        <Card title={<div style={{ textAlign: 'center' }}>Sign up to Chat</div>}>
+          <Form<FormType>
+            form={form}
+            name='signup-chat-form'
+            style={{
+              maxWidth: 600,
+            }}
+            initialValues={{
+              gender: GenderEnum.MALE
+            } as FormType}
+            variant='filled'
+            onFinish={onFinish}
+            autoComplete='off'
+          >
+            <Item<FormType>
+              label='Username'
+              name='username'
+              rules={[{ required: true, message: 'Please input your username' }]}
             >
-              <Avatar
-                name="Zoe"
-                src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
+              <Input
+                type='text'
+                placeholder='Username...'
+                onChange={handleUsername}
               />
-            </Message>
-            <Message
-              model={{
-                direction: 'outgoing',
-                message: 'Hello my friend',
-                position: 'first',
-                sender: 'Patrik',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              model={{
-                direction: 'outgoing',
-                message: 'Hello my friend',
-                position: 'normal',
-                sender: 'Patrik',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              model={{
-                direction: 'outgoing',
-                message: 'Hello my friend',
-                position: 'normal',
-                sender: 'Patrik',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              model={{
-                direction: 'outgoing',
-                message: 'Hello my friend',
-                position: 'last',
-                sender: 'Patrik',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              avatarSpacer
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'first',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
-            />
-            <Message
-              model={{
-                direction: 'incoming',
-                message: 'Hello my friend',
-                position: 'last',
-                sender: 'Zoe',
-                sentTime: '15 mins ago'
-              }}
+            </Item>
+            <Item<FormType>
+              label='Gender'
+              name='gender'
+              rules={[{ required: true, message: 'Please input your gender' }]}
             >
-              <Avatar
-                name="Zoe"
-                src="https://chatscope.io/storybook/react/assets/zoe-E7ZdmXF0.svg"
-              />
-            </Message>
-          </MessageList>
-          <MessageInput placeholder="Type message here" />
-        </ChatContainer>
-        {/* <ChatRightSideBar /> */}
-      </MainContainer>
-    </div>
+              <Radio.Group
+                onChange={handleGender}
+              >
+                <Radio value={GenderEnum.MALE}>Male</Radio>
+                <Radio value={GenderEnum.FEMALE}>Female</Radio>
+              </Radio.Group>
+            </Item>
+            <Item>
+              <Button
+                type='primary'
+                htmlType='submit'
+                style={{
+                  width: '100%',
+                }}
+              >
+                Go Chat
+              </Button>
+            </Item>
+          </Form>
+        </Card>
+      )}
+    </>
   );
 };
 
