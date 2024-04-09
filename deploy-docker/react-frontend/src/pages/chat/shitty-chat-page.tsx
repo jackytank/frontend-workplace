@@ -224,7 +224,7 @@ const ChatPage = () => {
                     >
                       <Avatar
                         name={val}
-                        src={genderSrc}
+                        src={ManLogo}
                         status={tab === val ? 'available' : 'dnd'}
                       />
                       <Conversation.Operations>

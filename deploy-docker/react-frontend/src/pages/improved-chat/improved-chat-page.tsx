@@ -4,7 +4,7 @@ import { ExampleChatService } from "@chatscope/use-chat/dist/examples";
 import { nanoid } from "nanoid";
 import ManLogo from '../../assets/man.png';
 import GroupLogo from '../../assets/group.png';
-import Chat from "./components/ImprovChat";
+import ImprovChat from "./components/ImprovChat";
 import { Card, Input, Radio, Button, Form, RadioChangeEvent, message } from "antd";
 import { FormType, GenderEnum } from "../../utils/helper";
 import { useForm } from "antd/es/form/Form";
@@ -22,18 +22,18 @@ const serviceFactory = (storage: IStorage, updateState: UpdateState) => {
 
 // const namStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
 // const nuStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
-const chatroomStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
+// const chatroomStorage = new BasicStorage({ groupIdGenerator, messageIdGenerator });
 
-const chatRoom = new User({
-    id: "Chatroom",
-    presence: new Presence({ status: UserStatus.Available, description: "" }),
-    firstName: "",
-    lastName: "",
-    username: 'Chatroom',
-    email: "",
-    avatar: GroupLogo,
-    bio: ""
-});
+// const chatRoom = new User({
+//     id: "Chatroom",
+//     presence: new Presence({ status: UserStatus.Available, description: "" }),
+//     firstName: "",
+//     lastName: "",
+//     username: 'Chatroom',
+//     email: "",
+//     avatar: GroupLogo,
+//     bio: ""
+// });
 
 // const chats = [
 //     // { name: "Nam", storage: namStorage },
@@ -56,7 +56,7 @@ const chatRoom = new User({
 //     },
 // ];
 
-function createConversation(id: ConversationId, name: string): Conversation {
+export function createConversation(id: ConversationId, name: string): Conversation {
     return new Conversation({
         id,
         participants: [
@@ -143,10 +143,6 @@ const ImprovedChatPage = () => {
             presence: new Presence({ status: UserStatus.Available, description: "" })
         }));
         connect();
-        // implement add public chatRoom to the current user conversation
-        userStorageRef.current.addUser(chatRoom);
-        userStorageRef.current.addConversation(createConversation(chatRoom.id, chatRoom.username));
-        chatroomStorage.addConversation(createConversation(chatRoom.id, values.username));
     };
 
     const WS_URL = 'http://localhost:8080/ws';
@@ -188,6 +184,8 @@ const ImprovedChatPage = () => {
     };
 
     useEffect(() => {
+        // create public Chatroom conversation
+
     }, []);
 
     return (
@@ -203,7 +201,7 @@ const ImprovedChatPage = () => {
                         autoDraft: AutoDraft.Save | AutoDraft.Restore,
                     }}
                 >
-                    <Chat user={userData} />
+                    <ImprovChat user={userData} />
                 </ChatProvider>
             ) : (
                 <Card title={<div style={{ textAlign: 'center' }}>Sign up to Chat</div>}>

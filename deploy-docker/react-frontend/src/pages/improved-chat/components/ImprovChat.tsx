@@ -3,10 +3,9 @@ import { ChatMessage, MessageContent, MessageContentType, MessageDirection, Mess
 import { useCallback, useEffect, useMemo } from 'react';
 import ManLogo from '../../../assets/man.png';
 
-const Chat = ({ user }: { user: User; }) => {
+const ImprovChat = ({ user }: { user: User; }) => {
   const { currentMessages, conversations, activeConversation, setActiveConversation,
     sendMessage, getUser, currentMessage, setCurrentMessage, sendTyping, setCurrentUser } = useChat();
-
   useEffect(() => {
     // in the current user, add the public Chatroom that anyone can chat to
 
@@ -114,7 +113,8 @@ const Chat = ({ user }: { user: User; }) => {
                 info={c.draft ? `Draft: ${c.draft.replace(/<br>/g, "\n").replace(/&nbsp;/g, " ")}` : ``}
                 active={activeConversation?.id === c.id}
                 unreadCnt={c.unreadCounter}
-                onClick={() => setActiveConversation(c.id)}>
+                onClick={() => setActiveConversation(c.id)}
+              >
                 {avatar}
               </Conversation>
             );
@@ -156,4 +156,4 @@ const Chat = ({ user }: { user: User; }) => {
   );
 };
 
-export default Chat;
+export default ImprovChat;
