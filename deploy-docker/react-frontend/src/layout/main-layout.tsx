@@ -8,7 +8,7 @@ const MainLayout = () => {
                 color: 'blue',
             }}
             >
-                Gia Lôw
+                Gia Lô
             </h1>
             <ul
                 style={{
@@ -24,6 +24,9 @@ const MainLayout = () => {
                 </li>
                 <li>
                     <Link to={'/chat'}>Chat</Link>
+                </li>
+                <li>
+                    <Link to={'/improved-chat'}>Improved Chat</Link>
                 </li>
             </ul>
             <br />

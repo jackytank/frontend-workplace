@@ -7,6 +7,9 @@ export const myconfig = {
         chat: {
             index: '/chat',
             signup: '/chat/signup'
+        },
+        improvedChat: {
+            index: '/improved-chat'
         }
     }
 };

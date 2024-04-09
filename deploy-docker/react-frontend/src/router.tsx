@@ -1,8 +1,9 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import UserPage, { loader as userLoader } from "./pages/user/user-page";
-import ChatPage from "./pages/chat/chat-page";
+import ChatPage from "./pages/chat/shitty-chat-page";
 import MainLayout from "./layout/main-layout";
 import { myconfig } from "./config";
+import ImprovedChatPage from "./pages/improved-chat/improved-chat-page";
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,15 @@ const router = createBrowserRouter([
                     {
                         index: true,
                         element: <ChatPage />,
+                    },
+                ]
+            },
+            {
+                path: myconfig.api.improvedChat.index,
+                children: [
+                    {
+                        index: true,
+                        element: <ImprovedChatPage />,
                     },
                 ]
             },
