@@ -1,4 +1,4 @@
-package com.examplebe.demo.chat;
+package com.examplebe.demo.websocket.chat;
 
 import java.io.Serializable;
 

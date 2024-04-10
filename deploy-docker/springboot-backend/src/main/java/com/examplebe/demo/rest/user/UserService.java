@@ -1,4 +1,4 @@
-package com.examplebe.demo.user;
+package com.examplebe.demo.rest.user;
 
 import java.util.List;
 import java.util.stream.Collectors;

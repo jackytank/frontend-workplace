@@ -1,4 +1,4 @@
-package com.examplebe.demo.user;
+package com.examplebe.demo.rest.user;
 // entity for table User
 
 import java.util.Date;

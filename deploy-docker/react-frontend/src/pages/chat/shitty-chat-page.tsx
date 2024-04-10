@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList, MessageSeparator,
+  Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList, 
   Search,
   Sidebar,
   TypingIndicator, VideoCallButton, VoiceCallButton
@@ -12,7 +12,6 @@ import { useForm } from 'antd/es/form/Form';
 import { Client, Frame, over } from 'stompjs';
 import SockJS from "sockjs-client/dist/sockjs";
 import ManLogo from '../../assets/man.png';
-import WomanLogo from '../../assets/woman.png';
 import ChatroomLogo from '../../assets/group.png';
 import { ChatMessage, CHAT_ROOM, FormType, UserDataType, GenderEnum, MessageStatus, PositionMessType } from "../../utils/helper";
 
@@ -102,13 +101,13 @@ const ChatPage = () => {
     }
   };
 
-  const handleMessage = (event: { target: { value: string; }; }) => {
-    const { value } = event.target;
-    setUserData({
-      ...userData,
-      message: value
-    });
-  };
+  // const handleMessage = (event: { target: { value: string; }; }) => {
+  //   const { value } = event.target;
+  //   setUserData({
+  //     ...userData,
+  //     message: value
+  //   });
+  // };
 
   const sendValue = () => {
     console.log('sendValue', stompClient);
@@ -210,10 +209,10 @@ const ChatPage = () => {
                   </Conversation.Operations>
                 </Conversation>
                 {[...privateChats.keys()].map((val, idx) => {
-                  let genderSrc: string = '';
-                  if (userData.username === val) {
-                    genderSrc = userData.gender === GenderEnum.MALE ? ManLogo : WomanLogo;
-                  }
+                  // let genderSrc: string = '';
+                  // if (userData.username === val) {
+                  //   genderSrc = userData.gender === GenderEnum.MALE ? ManLogo : WomanLogo;
+                  // }
                   return (
                     <Conversation
                       info="just a sample message..."
