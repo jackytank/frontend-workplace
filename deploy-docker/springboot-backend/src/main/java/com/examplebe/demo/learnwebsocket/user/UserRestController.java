@@ -1,4 +1,4 @@
-package com.examplebe.demo.learnwebsocket.chatuser;
+package com.examplebe.demo.learnwebsocket.user;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class ChatUserRestController {
-    private final ChatUserService chatUserService;
+public class UserRestController {
+    private final UserService chatUserService;
 
     @GetMapping("/chatusers")
-    public ResponseEntity<java.util.List<ChatUser>> findConnectedUsers() {
+    public ResponseEntity<java.util.List<User>> findConnectedUsers() {
         return ResponseEntity.ok(chatUserService.findConnectedUsers());
     }
     

@@ -1,4 +1,4 @@
-package com.examplebe.demo.learnwebsocket.chatuser;
+package com.examplebe.demo.learnwebsocket.user;
 
 import java.util.List;
 
@@ -8,16 +8,16 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ChatUserService {
+public class UserService {
 
-    private final ChatUserRepository chatUserRepository;
+    private final UserRepository chatUserRepository;
 
-    public void saveUser(ChatUser chatUser) {
+    public void saveUser(User chatUser) {
         chatUser.setStatus(Status.ONLINE);
         chatUserRepository.save(chatUser);
     }
 
-    public void disconnect(ChatUser chatUser) {
+    public void disconnect(User chatUser) {
         var existedUser = chatUserRepository.findById(chatUser.getNickName())
                 .orElse(null);
         if (existedUser == null) {
@@ -27,7 +27,7 @@ public class ChatUserService {
         chatUserRepository.save(existedUser);
     }
 
-    public List<ChatUser> findConnectedUsers() {
+    public List<User> findConnectedUsers() {
         return chatUserRepository.findAllByStatus(Status.ONLINE);
     }
 

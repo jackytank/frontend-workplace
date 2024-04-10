@@ -1,4 +1,4 @@
-package com.examplebe.demo.learnwebsocket.chatuser;
+package com.examplebe.demo.learnwebsocket.user;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -9,19 +9,21 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class ChatUserController {
-    private final ChatUserService chatUserService;
+public class UserController {
+    private final UserService chatUserService;
 
     @MessageMapping("/mychatuser.addUser")
-    @SendTo("/mychatuser/topic")
-    public ChatUser saveUser(@Payload ChatUser chatUser) {
+    @SendTo("/mychatroom/public")
+    public User saveUser(@Payload User chatUser) {
         chatUserService.saveUser(chatUser);
+        var users = chatUserService.findConnectedUsers();
+        users.forEach(System.out::println);
         return chatUser;
     }
 
     @MessageMapping("/mychatuser.disconnectUser")
-    @SendTo("/mychatuser/topic")
-    public ChatUser disconnect(@Payload ChatUser chatUser) {
+    @SendTo("/mychatroom/public")
+    public User disconnect(@Payload User chatUser) {
         chatUserService.disconnect(chatUser);
         return chatUser;
     }

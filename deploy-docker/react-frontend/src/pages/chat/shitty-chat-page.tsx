@@ -58,14 +58,14 @@ const ChatPage = () => {
   };
 
   const userJoin = () => {
-    console.log('User join', userData);
     const chatMessage: ChatMessage = {
       senderName: userData.username,
       status: MessageStatus.JOIN
     };
     if (!stompClient) return;
-    console.log('user joining', stompClient);
+    console.log('user joining', userData);
     stompClient.send('/mychatapp/message', {}, JSON.stringify(chatMessage));
+    stompClient?.send('/mychatapp/mychatuser.addUser', {}, JSON.stringify({ nickName: userData.username, status: 'ONLINE' }));
   };
 
   const onMessageReceived = (payload: { body: string; }) => {

@@ -1,4 +1,4 @@
-package com.examplebe.demo.learnwebsocket.chatuser;
+package com.examplebe.demo.learnwebsocket.user;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Document(collection = "users")
-public class ChatUser {
+public class User {
     @Id
     private String nickName;
     private Status status;
