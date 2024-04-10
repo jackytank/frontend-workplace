@@ -31,7 +31,7 @@ const ChatPage = () => {
     connected: false,
     message: ''
   });
-  const WS_URL = 'http://localhost:8080/ws';
+  const WS_URL = import.meta.env.VITE_WS_URL as string;
 
   const connect = () => {
     const sock = new SockJS(WS_URL);
