@@ -1,4 +1,4 @@
-package com.examplebe.demo.rest.user;
+package com.examplebe.demo.learnrest.user;
 
 import java.util.Set;
 
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "roles")
-public class Role {
+public class Role1 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private Long id;
@@ -27,5 +27,5 @@ public class Role {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private Set<UserRole> userRoles;
+    private Set<UserRole1> userRoles;
 }

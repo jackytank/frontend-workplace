@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: Donglao_app
+  flyway:
+    enabled: false
+  datasource:
+    url: jdbc:postgresql://${MY_POSTGRES_HOST:localhost}:${MY_POSTGRES_PORT:5432}/${MY_POSTGRES_DB:postgres}
+    username: ${MY_POSTGRES_USER:postgres}
+    password: ${MY_POSTGRES_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${MY_REDIS_HOST}
+      port: ${MY_REDIS_PORT}
+      password: ${MY_REDIS_PASSWORD}
+    mongodb:
+      username: ${MY_MONGO_USER}
+      password: ${MY_MONGO_PASSWORD}
+      host: ${MY_MONGO_HOST}
+      port: ${MY_MONGO_PORT}
+      database: ${MY_MONGO_DB}
+      authentication-database: admin
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+

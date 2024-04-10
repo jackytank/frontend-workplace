@@ -1,4 +1,4 @@
-package com.examplebe.demo.rest.user;
+package com.examplebe.demo.learnrest.user;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService1 {
 
-    private final UserRepo userRepo;
+    private final UserRepo1 userRepo;
 
     @Cacheable(value = "users")
     public List<UserResponse> getAllUsers() {
@@ -54,7 +54,7 @@ public class UserService {
     // delete cache
     @CacheEvict(value = "users", allEntries = true)
     public ResponseEntity<?> createUser(UserRequestWithPassword userRequestWithPassword) {
-        User userEntity = User.builder()
+        User1 userEntity = User1.builder()
                 .name(userRequestWithPassword.name())
                 .email(userRequestWithPassword.email())
                 .password(userRequestWithPassword.password()).build();

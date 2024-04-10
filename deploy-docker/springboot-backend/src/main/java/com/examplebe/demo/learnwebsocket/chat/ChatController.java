@@ -1,4 +1,4 @@
-package com.examplebe.demo.websocket.chat;
+package com.examplebe.demo.learnwebsocket.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,7 +20,6 @@ public class ChatController {
         return message;
     }
 
-    @SuppressWarnings("null")
     @MessageMapping("/private-message")
     public Message recMessage(@Payload Message message) {
         simpMessagingTemplate.convertAndSendToUser(message.receiverName(), "/private", message);

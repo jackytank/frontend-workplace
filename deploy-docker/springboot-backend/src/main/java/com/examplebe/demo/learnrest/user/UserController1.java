@@ -1,4 +1,4 @@
-package com.examplebe.demo.rest.user;
+package com.examplebe.demo.learnrest.user;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,14 +20,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/v1/users")
-public class UserController {
+public class UserController1 {
 
-    private final UserService userService;
+    private final UserService1 userService;
 
-    // GET request to get all users
     @GetMapping("")
     public ResponseEntity<List<?>> getUsers() {
-        // return list of record UserResponse
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

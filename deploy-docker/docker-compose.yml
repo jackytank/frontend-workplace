@@ -44,6 +44,11 @@ services:
       - MY_REDIS_HOST=myredis
       - MY_REDIS_PORT=6379
       - MY_REDIS_PASSWORD=mysupersecureredispassword42
+      - MY_MONGO_HOST=mymongo
+      - MY_MONGO_PORT=27017
+      - MY_MONGO_DB=chatapp_db
+      - MY_MONGO_USER=myuser
+      - MY_MONGO_PASSWORD=mypassword
     volumes:
       - ./springboot-backend:/mybackend_dir
     ports:
@@ -106,8 +111,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=myuser
       - MONGO_INITDB_ROOT_PASSWORD=mypassword
+      - MONGO_INITDB_DATABASE=chatapp_db
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
       timeout: 10s
       retries: 5

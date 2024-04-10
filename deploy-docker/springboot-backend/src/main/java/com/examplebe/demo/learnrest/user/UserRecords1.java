@@ -1,4 +1,4 @@
-package com.examplebe.demo.rest.user;
+package com.examplebe.demo.learnrest.user;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList, 
+  Avatar, ChatContainer, Conversation, ConversationHeader, ConversationList, InfoButton, MainContainer, Message, MessageInput, MessageList,
   Search,
   Sidebar,
   TypingIndicator, VideoCallButton, VoiceCallButton
@@ -209,10 +209,6 @@ const ChatPage = () => {
                   </Conversation.Operations>
                 </Conversation>
                 {[...privateChats.keys()].map((val, idx) => {
-                  // let genderSrc: string = '';
-                  // if (userData.username === val) {
-                  //   genderSrc = userData.gender === GenderEnum.MALE ? ManLogo : WomanLogo;
-                  // }
                   return (
                     <Conversation
                       info="just a sample message..."
