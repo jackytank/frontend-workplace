@@ -5,7 +5,7 @@ services:
   #     dockerfile: Dockerfile.prod
   #   container_name: myshittyapp-remix-frontend
   #   networks:
-  #     - react-spring
+  #     - fe-be
   #   volumes:
   #     - ./remix-frontend/app:/myremix_dir/app
   #   ports:
@@ -20,7 +20,7 @@ services:
   #     dockerfile: Dockerfile.prod
   #   container_name: myshittyapp-react-frontend
   #   networks:
-  #     - react-spring
+  #     - fe-be
   #   ports:
   #     - "3001:3001"
   #   # volumes:
@@ -36,7 +36,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: myshittyapp-springboot
     environment:
-      - MY_POSTGRES_HOST=db
+      - MY_POSTGRES_HOST=mypostgres
       - MY_POSTGRES_PORT=5432
       - MY_POSTGRES_DB=postgres
       - MY_POSTGRES_USER=postgres
@@ -49,25 +49,27 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - react-spring
-      - spring-postgres
+      - fe-be
+      - be-db
     restart: always
     depends_on:
-      db:
+      mypostgres:
         condition: service_healthy
       myredis:
         condition: service_healthy
+      mymongo:
+        condition: service_healthy
     mem_limit: 1.5G
-  db:
+  mypostgres:
     image: postgres:16.2-alpine
-    container_name: myshittyapp-postgres-db
+    container_name: myshittyapp-postgres
     restart: always
     ports:
       - "5555:5432"
     networks:
-      - spring-postgres
+      - be-db
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
@@ -83,7 +85,7 @@ services:
     container_name: myshittyapp-redis
     command: redis-server --requirepass mysupersecureredispassword42
     networks:
-      - spring-postgres
+      - be-db
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -95,9 +97,45 @@ services:
       - redis-data:/data
     restart: always
     mem_limit: 500M
+  mymongo: 
+    image: mongo
+    container_name: myshittyapp-mongo
+    restart: always
+    networks:
+      - be-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=myuser
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data
+  mymongo-express:
+    image: mongo-express
+    container_name: myshittyapp-mongoexpress
+    restart: always
+    ports:
+      - "8081:8081"
+    networks:
+      - be-db
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mymongo
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=myuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=mypassword
+    depends_on:
+      mymongo:
+        condition: service_healthy
 networks:
-  react-spring: {}
-  spring-postgres: {}
+  fe-be: {}
+  be-db: {}
 volumes:
-  db-data: {}
+  postgres-data: {}
   redis-data: {}
+  mongo-data: {}
+
+  
