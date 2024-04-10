@@ -27,6 +27,7 @@ public class AuthConfig {
                     configuration.setAllowedHeaders(Arrays.asList("*"));
                     return configuration;
                 }))
+                // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/**").permitAll()
