@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +24,18 @@ import lombok.RequiredArgsConstructor;
 public class UserController1 {
 
     private final UserService1 userService;
+    private final AtomicInteger requestCount = new AtomicInteger(0);
 
     @GetMapping("")
     public ResponseEntity<List<?>> getUsers() {
+        int currentCount = requestCount.incrementAndGet();
+        if (currentCount >= 3) {
+            // Simulate a server crash after 3 requests
+            System.exit(1);
+        }
+
+        // Get the process ID (PID)
+        long pid = ProcessHandle.current().pid();
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -48,7 +58,7 @@ public class UserController1 {
             BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-		return userService.createUser(userRequestWithPassword);
+        return userService.createUser(userRequestWithPassword);
     }
 
     @DeleteMapping("/{id}")

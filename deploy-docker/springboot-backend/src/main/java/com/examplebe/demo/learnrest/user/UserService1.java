@@ -16,7 +16,7 @@ public class UserService1 {
 
     private final UserRepo1 userRepo;
 
-    @Cacheable(value = "users")
+    // @Cacheable(value = "users")
     public List<UserResponse> getAllUsers() {
         System.out.println("UserService::getAllUsers - Get all users");
         return userRepo.findAll().stream()
