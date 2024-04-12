@@ -14,26 +14,26 @@ services:
   #   depends_on:
   #     - springboot
   #   mem_limit: 500M
-  # react:
-  #   build: 
-  #     context: ./react-frontend
-  #     dockerfile: Dockerfile.prod
-  #   container_name: myshittyapp-react-frontend
-  #   networks:
-  #     - fe-be
-  #   ports:
-  #     - "3001:3001"
-  #   # volumes:
-  #   #   - ./react-frontend:/myreact_dir
-  #   restart: always
-  #   tty: true
-  #   depends_on:
-  #     - springboot
-  #   mem_limit: 500M
+  react:
+    build: 
+      context: ./react-frontend
+      dockerfile: Dockerfile.prod
+    container_name: myshittyapp-react-frontend
+    networks:
+      - fe-be
+    ports:
+      - "3001:3001"
+    # volumes:
+    #   - ./react-frontend:/myreact_dir
+    restart: always
+    tty: true
+    depends_on:
+      - springboot
+    mem_limit: 500M
   springboot:
     build:
       context: ./springboot-backend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     container_name: myshittyapp-springboot
     environment:
       - MY_POSTGRES_HOST=mypostgres
@@ -49,8 +49,8 @@ services:
       - MY_MONGO_DB=chatapp_db
       - MY_MONGO_USER=myuser
       - MY_MONGO_PASSWORD=mypassword
-    volumes:
-      - ./springboot-backend:/mybackend_dir
+    # volumes:
+    #   - ./springboot-backend:/mybackend_dir
     ports:
       - "8080:8080"
     networks:
