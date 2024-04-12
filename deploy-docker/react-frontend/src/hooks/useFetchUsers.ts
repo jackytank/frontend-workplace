@@ -17,7 +17,6 @@ export const useFetchUsers = (url: string): UseFetchUsersType => {
     const fetchUsers = async () => {
         try {
             const res = await fetch(url, {
-                credentials: 'include'
             });
             if (!res.ok) {
                 throw new Error('Failed to fetch data');

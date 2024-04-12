@@ -52,7 +52,7 @@ services:
     volumes:
       - ./springboot-backend:/mybackend_dir
     ports:
-      - "8081:8080"
+      - "8080:8080"
     networks:
       - fe-be
       - be-db

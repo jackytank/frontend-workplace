@@ -2,7 +2,13 @@ spring:
   application:
     name: Donglao_app
   flyway:
-    enabled: false
+    enabled: true  # Enable Flyway
+    baseline-on-migrate: true  # Baseline on migrate
+    # locations: classpath:db/migration
+    # url: jdbc:postgresql://${MY_POSTGRES_HOST}:${MY_POSTGRES_PORT}/${MY_POSTGRES_DB}
+    # user: ${MY_POSTGRES_USER}
+    # password: ${MY_POSTGRES_PASSWORD}
+    # schemas: public
   datasource:
     url: jdbc:postgresql://${MY_POSTGRES_HOST:localhost}:${MY_POSTGRES_PORT:5432}/${MY_POSTGRES_DB:postgres}
     username: ${MY_POSTGRES_USER:postgres}
@@ -11,7 +17,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate  # Disable Hibernate's automatic DDL generation
     show-sql: true
   cache:
     type: redis
@@ -32,4 +38,3 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
-

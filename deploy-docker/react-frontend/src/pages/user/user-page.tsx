@@ -54,7 +54,6 @@ function UserPage() {
               <Button danger size='small' onClick={async () => {
                 await fetch(`${HOST}/users/${user.id}`, {
                   method: 'DELETE',
-                  credentials: 'include'
                 });
                 refetch();
               }}
@@ -66,7 +65,6 @@ function UserPage() {
           footer={
             <Form<FormType> form={form} onFinish={async (values) => {
               const res = await fetch(`${HOST}/users`, {
-                credentials: 'include',
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
