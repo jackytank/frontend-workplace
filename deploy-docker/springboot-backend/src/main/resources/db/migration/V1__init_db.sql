@@ -1,19 +1,19 @@
 -- TABLE
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL,
+    id BIGSERIAL,
     name VARCHAR(255),
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255) 
 );
 
 CREATE TABLE IF NOT EXISTS roles (
-    id SERIAL,
+    id BIGSERIAL,
     code VARCHAR(255) UNIQUE,
     name VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS user_roles (
-    id SERIAL,
+    id BIGSERIAL,
     user_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL
 );

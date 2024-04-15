@@ -11,7 +11,7 @@ type FormType = {
 };
 
 export const loader = async () => {
-  const message = 'message from loader';
+  const message = 'The Emperor had spoken!';
   return json({ message });
 };
 

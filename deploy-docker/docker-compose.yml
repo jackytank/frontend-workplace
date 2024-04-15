@@ -22,13 +22,14 @@ services:
     networks:
       - fe-be
     ports:
-      - "3001:3001"
+      - "80:80"
     # volumes:
     #   - ./react-frontend:/myreact_dir
     restart: always
     tty: true
     depends_on:
-      - springboot
+      springboot: 
+        condition: service_started
     mem_limit: 500M
   springboot:
     build:
