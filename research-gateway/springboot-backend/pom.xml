@@ -107,10 +107,6 @@
 			<artifactId>jakarta.xml.bind-api</artifactId>
 			<version>${jakarta.xml.bind-api.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -148,35 +144,14 @@
 				</executions>
 				<configuration>
 					<sources>
-						<source>src/main/resources/data_logs.xsd</source>
+						<source>src/main/resources/schemas/data_logs.xsd</source>
 					</sources>
 					<outputDirectory>src/main/java</outputDirectory>
+					<packageName>com.example.demo.model.gen</packageName>
 					<clearOutputDir>false</clearOutputDir>
 				</configuration>
 			</plugin>
 			<!-- end::xsd[] -->
-			<plugin>
-				<groupId>org.jvnet.jaxb</groupId>
-				<artifactId>jaxb-maven-plugin</artifactId>
-				<version>${jaxb-maven-plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<schemaLanguage>WSDL</schemaLanguage>
-					<generateDirectory>${project.basedir}/src/main/java</generateDirectory>
-					<generatePackage>com.example.demo.model.gen</generatePackage>
-					<schemaDirectory>${project.basedir}/src/main/resources</schemaDirectory>
-					<noFileHeader>true</noFileHeader>
-					<schemaIncludes>
-						<include>data_logs.wsdl</include>
-					</schemaIncludes>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
@@ -220,5 +195,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

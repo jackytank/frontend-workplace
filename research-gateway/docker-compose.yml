@@ -30,8 +30,8 @@ services:
       - MY_REDIS_HOST=myredis
       - MY_REDIS_PORT=6379
       - MY_REDIS_PASSWORD=mysupersecureredispassword42
-    # volumes:
-    #   - ./springboot-backend:/mybackend_dir
+    volumes:
+      - ./springboot-backend:/mybackend_build_dir
     ports:
       - "8080:8080"
     networks:
@@ -40,9 +40,9 @@ services:
     restart: always
     depends_on:
       mypostgres:
-        condition: service_healthy
+        condition: service_started
       myredis:
-        condition: service_healthy
+        condition: service_started
     mem_limit: 1.5G
   mypostgres:
     image: postgres:16.2-alpine
