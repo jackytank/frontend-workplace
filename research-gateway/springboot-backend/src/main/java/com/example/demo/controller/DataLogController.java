@@ -17,7 +17,7 @@ public class DataLogController {
     private final DataLogService dataLogService;
 
     @GetMapping("")
-    public String getAll(@RequestParam String param) {
+    public String getAll(@RequestParam(required = false) String param) {
         return dataLogService.getAll(param);
     }
     

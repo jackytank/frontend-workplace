@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataLogService {
 
-    @Cacheable(value = "dataLogCache", key = "#param")
+    @Cacheable(value = "dataLogCache")
     public String getAll(String param) {
         System.out.println("getAll called");
         return "Hello World!";
