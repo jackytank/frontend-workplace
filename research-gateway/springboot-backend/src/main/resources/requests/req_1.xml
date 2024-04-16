@@ -1,0 +1,11 @@
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:my="http://www.example.com/my-soap"
+>
+    <soapenv:Header />
+    <soapenv:Body>
+        <my:getDataLogRequest>
+            <trainId>123</trainId>
+        </my:getDataLogRequest>
+    </soapenv:Body>
+</soapenv:Envelope>
