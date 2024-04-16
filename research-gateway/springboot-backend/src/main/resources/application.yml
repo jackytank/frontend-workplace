@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${MY_POSTGRES_HOST:localhost}:${MY_POSTGRES_PORT:5432}/${MY_POSTGRES_DB:postgres}
     username: ${MY_POSTGRES_USER:postgres}
-    password: ${MY_POSTGRES_PASSWORD:postgres}
+    password: ${MY_POSTGRES_PASSWORD:123123123}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

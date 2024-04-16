@@ -27,6 +27,7 @@ public class DataLogEnpoint {
     @ResponsePayload
     public GetDataLogResponse handleDataLogRequest(@RequestPayload GetDataLogRequest getDataLogRequest)
             throws DatatypeConfigurationException {
+        System.out.println("GetDataLogRequest called: " + getDataLogRequest.getTrainId());
         var response = new GetDataLogResponse();
         var dataLog = new DataLogModel();
         // Create a DatatypeFactory instance
@@ -38,7 +39,6 @@ public class DataLogEnpoint {
         dataLog.setDepartTime(departTime);
         dataLog.setArrivalTime(arrivalTime);
         response.setDataLog(dataLog);
-        System.out.println("GetDataLogRequest called: " + getDataLogRequest.getTrainId());
         return response;
     }
 }
