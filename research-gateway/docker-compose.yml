@@ -1,0 +1,90 @@
+services:
+  # react:
+  #   build: 
+  #     context: ./react-frontend
+  #     dockerfile: Dockerfile.prod
+  #   container_name: myapp-react-frontend
+  #   # volumes:
+  #   #   - ./react-frontend:/myfrontend_dir
+  #   networks:
+  #     - fe-be
+  #   ports:
+  #     - "80:80"
+  #   restart: always
+  #   tty: true
+  #   depends_on:
+  #     springboot: 
+  #       condition: service_started
+  #   mem_limit: 500M
+  springboot:
+    build:
+      context: ./springboot-backend
+      dockerfile: Dockerfile.prod
+    container_name: myapp-springboot
+    environment:
+      - MY_POSTGRES_HOST=mypostgres
+      - MY_POSTGRES_PORT=5432
+      - MY_POSTGRES_DB=postgres
+      - MY_POSTGRES_USER=postgres
+      - MY_POSTGRES_PASSWORD=postgres
+      - MY_REDIS_HOST=myredis
+      - MY_REDIS_PORT=6379
+      - MY_REDIS_PASSWORD=mysupersecureredispassword42
+    # volumes:
+    #   - ./springboot-backend:/mybackend_dir
+    ports:
+      - "8080:8080"
+    networks:
+      - fe-be
+      - be-db
+    restart: always
+    depends_on:
+      mypostgres:
+        condition: service_healthy
+      myredis:
+        condition: service_healthy
+    mem_limit: 1.5G
+  mypostgres:
+    image: postgres:16.2-alpine
+    container_name: myapp-postgres
+    restart: always
+    ports:
+      - "5555:5432"
+    networks:
+      - be-db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    mem_limit: 500M
+  myredis:
+    image: redis:7.2.4-alpine
+    container_name: myapp-redis
+    command: redis-server --requirepass mysupersecureredispassword42
+    networks:
+      - be-db
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "6666:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    mem_limit: 500M
+networks:
+  fe-be: {}
+  be-db: {}
+volumes:
+  postgres-data: {}
+  redis-data: {}
+  mongo-data: {}

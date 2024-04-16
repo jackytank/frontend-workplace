@@ -1,0 +1,11 @@
+# dependency_stage
+FROM node:20-alpine as deps
+WORKDIR /myreact_dir
+COPY package.json .
+RUN yarn
+
+# build_stage
+FROM deps as build
+WORKDIR /myreact_dir
+COPY . .
+ENTRYPOINT [ "yarn", "run", "dev" ]

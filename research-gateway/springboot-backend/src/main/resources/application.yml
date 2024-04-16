@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: Donglao_app
+  # flyway:
+  #   enabled: true
+  #   baseline-on-migrate: true
+  datasource:
+    url: jdbc:postgresql://${MY_POSTGRES_HOST}:${MY_POSTGRES_PORT}/${MY_POSTGRES_DB}
+    username: ${MY_POSTGRES_USER}
+    password: ${MY_POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  cache:
+    type: redis
+  data:
+    redis:
+      host: ${MY_REDIS_HOST}
+      port: ${MY_REDIS_PORT}
+      password: ${MY_REDIS_PASSWORD}
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
