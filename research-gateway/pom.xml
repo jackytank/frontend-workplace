@@ -9,41 +9,48 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>react-frontend</module>
+        <!-- <module>react-frontend</module> -->
         <module>springboot-backend</module>
     </modules>
 
-    <!-- React Frontend Module -->
-    <project>
-        <modelVersion>4.0.0</modelVersion>
-        <artifactId>react-frontend</artifactId>
-        <packaging>pom</packaging>
+    <properties>
+        <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
+        <node.version>v20.0.0</node.version>
+        <npm.version>10.0.0</npm.version>
+    </properties>
 
-        <build>
+    <build>
+        <pluginManagement>
             <plugins>
+                <!-- Frontend Maven Plugin to build the React frontend -->
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.12.0</version>
-                    <configuration>
-                        <nodeVersion>v20.0.0</nodeVersion>
-                        <npmVersion>8.1.0</npmVersion>
-                    </configuration>
+                    <version>${frontend-maven-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>install node and npm</id>
                             <goals>
                                 <goal>install-node-and-npm</goal>
                             </goals>
+                            <configuration>
+                                <nodeVersion>${node.version}</nodeVersion>
+                                <npmVersion>${npm.version}</npmVersion>
+                            </configuration>
                         </execution>
                         <execution>
                             <id>npm install</id>
+                            <phase>generate-resources</phase>
                             <goals>
                                 <goal>npm</goal>
                             </goals>
+                            <configuration>
+                                <arguments>install</arguments>
+                            </configuration>
                         </execution>
                         <execution>
                             <id>npm run build</id>
+                            <phase>generate-resources</phase>
                             <goals>
                                 <goal>npm</goal>
                             </goals>
@@ -53,6 +60,7 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!-- Resources Plugin to copy the React build to the Spring Boot static directory -->
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <executions>
@@ -63,10 +71,10 @@
                                 <goal>copy-resources</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>${project.build.directory}/../springboot-backend/src/main/resources/static</outputDirectory>
+                                <outputDirectory>${project.basedir}/springboot-backend/src/main/resources/static</outputDirectory>
                                 <resources>
                                     <resource>
-                                        <directory>dist</directory>
+                                        <directory>${project.basedir}/react-frontend/build</directory>
                                     </resource>
                                 </resources>
                             </configuration>
@@ -74,33 +82,6 @@
                     </executions>
                 </plugin>
             </plugins>
-        </build>
-    </project>
-
-    <!-- Spring Boot Backend Module -->
-    <project>
-        <modelVersion>4.0.0</modelVersion>
-        <artifactId>springboot-backend</artifactId>
-        <packaging>jar</packaging>
-
-        <parent>
-            <groupId>com.example</groupId>
-            <artifactId>myapp</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </parent>
-
-        <dependencies>
-            <!-- Spring Boot and other dependencies -->
-        </dependencies>
-
-        <build>
-            <finalName>myapp</finalName>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </build>
-    </project>
+        </pluginManagement>
+    </build>
 </project>
