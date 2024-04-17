@@ -30,8 +30,6 @@ public class DataLogService {
     public DataLogArray getAllDataLogs() {
         System.out.println("getAllDataLogs called");
         List<DataLog> dataLogs = dataLogRepository.findAll();
-        // log the dataLogs beautifully using System.out.println
-        dataLogs.forEach(dataLog -> System.out.println("DataLog: " + dataLog));
         List<DataLogModel> dataLogModels = mapDataLogsToDataLogModels(dataLogs);
         DataLogArray dataLogArray = new DataLogArray();
         dataLogArray.getDataLog().addAll(dataLogModels);
@@ -45,8 +43,6 @@ public class DataLogService {
     }
 
     private DataLogModel mapDataLogToDataLogModel(DataLog dataLog) {
-        // log dataLog beautifully using System.out.println
-        System.out.println("DataLog: " + dataLog);
         DataLogModel dataLogModel = new DataLogModel();
         dataLogModel.setLogDate(convertToXMLGregorianCalendar(dataLog.getLogDate()));
         dataLogModel.setLogLevel(dataLog.getLogLevel().name());

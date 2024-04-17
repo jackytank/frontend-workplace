@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
 public enum ELogStatus {
-    SUCCESS, FAILED
+    SUCCESS, FAILURE
 }
+
