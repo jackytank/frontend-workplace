@@ -37,7 +37,7 @@ const MainLayout = () => {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'start',
-                        height: '100vh',
+                        minHeight: '100vh',
                         gap: '1rem',
                     }}>
                         <Outlet />
