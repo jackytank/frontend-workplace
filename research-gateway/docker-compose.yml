@@ -1,21 +1,21 @@
 services:
-  # react:
-  #   build: 
-  #     context: ./react-frontend
-  #     dockerfile: Dockerfile.prod
-  #   container_name: myapp-react-frontend
-  #   # volumes:
-  #   #   - ./react-frontend:/myfrontend_dir
-  #   networks:
-  #     - fe-be
-  #   ports:
-  #     - "80:80"
-  #   restart: always
-  #   tty: true
-  #   depends_on:
-  #     springboot: 
-  #       condition: service_started
-  #   mem_limit: 500M
+  react:
+    build: 
+      context: ./react-frontend
+      dockerfile: Dockerfile.prod
+    container_name: myapp-react-frontend
+    # volumes:
+    #   - ./react-frontend:/myfrontend_dir
+    networks:
+      - fe-be
+    ports:
+      - "80:80"
+    restart: always
+    tty: true
+    depends_on:
+      springboot: 
+        condition: service_started
+    mem_limit: 500M
   springboot:
     build:
       context: ./springboot-backend
@@ -30,8 +30,8 @@ services:
       - MY_REDIS_HOST=myredis
       - MY_REDIS_PORT=6379
       - MY_REDIS_PASSWORD=mysupersecureredispassword42
-    volumes:
-      - ./springboot-backend:/mybackend_build_dir
+    # volumes:
+    #   - ./springboot-backend:/mybackend_build_dir
     ports:
       - "8080:8080"
     networks:
@@ -40,9 +40,9 @@ services:
     restart: always
     depends_on:
       mypostgres:
-        condition: service_started
+        condition: service_healthy
       myredis:
-        condition: service_started
+        condition: service_healthy
     mem_limit: 1.5G
   mypostgres:
     image: postgres:16.2-alpine
@@ -56,7 +56,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 30s
+      interval: 10s
       timeout: 30s
       retries: 3
     environment:

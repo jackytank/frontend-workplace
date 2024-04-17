@@ -2,25 +2,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export type ChatState = {
-    stompClient: unknown | null;
+    dataLogs: unknown | null;
 };
 
 const initialState: ChatState = {
-    stompClient: null,
+    dataLogs: null,
 };
 
 const chatSlice = createSlice({
-    name: 'chatSlice',
+    name: 'analysisSlice',
     initialState: initialState,
     reducers: {
-        setStompClient: (state, action) => {
-            state.stompClient = action.payload;
+        setDataLogs: (state, action) => {
+            state.dataLogs = action.payload;
         },
     },
 });
 
 export const {
-    setStompClient
+    setDataLogs
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

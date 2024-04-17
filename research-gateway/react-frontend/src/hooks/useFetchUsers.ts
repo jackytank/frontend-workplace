@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 
+type UserType = {
+    id: number;
+    name: string;
+    email: string;
+};
+
 export type UseFetchUsersType = {
     data: UserType[];
     loading: boolean;

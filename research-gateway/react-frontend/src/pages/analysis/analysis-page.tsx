@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Col, Row } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import * as xml2js from 'xml2js';
@@ -37,25 +38,8 @@ const rawXml = `
         </ns2:getAllDataLogResponse>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>
-`
+`;
 
-type DataLogsResponseType = {
-  Envelope: {
-    Header: string;
-    Body: {
-      getAllDataLogResponse: {
-        dataLogs: {
-          dataLog: Array<{
-            logDate: string;
-            logLevel: string;
-            logMessage: string;
-            logStatus: string;
-          }>;
-        };
-      };
-    };
-  };
-};
 
 const AnalysisPage = () => {
   const [dataLogs, setDataLogs] = useState<DataLogsResponseType | undefined>();
@@ -75,7 +59,7 @@ const AnalysisPage = () => {
     </soapenv:Envelope>
     `;
     try {
-      const response = await axios.post('http://localhost:8080/ws', soapEnvelope, {
+      const response = await axios.post('/ws', soapEnvelope, {
         headers: {
           'Content-Type': 'text/xml',
         },
@@ -100,9 +84,16 @@ const AnalysisPage = () => {
   return (
     <>
       <h2>AnalysisPage</h2>
-      <pre>{rawXml}</pre>
-      <br />
-      <pre>{JSON.stringify(dataLogs, null, 2)}</pre>
+      <Row gutter={[32, 32]}>
+        <Col span={12}>
+          <h3>Raw XML</h3>
+          <pre>{rawXml}</pre>
+        </Col>
+        <Col span={12}>
+          <h3>Parsed XML -&gt; JSON</h3>
+          <pre>{JSON.stringify(dataLogs, null, 2)}</pre>
+        </Col>
+      </Row>
     </>
   );
 };

@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import chatReducer from "./slice/chat-slice";
+import analysisReducer from "./slice/analysis-slice";
 
 const store = configureStore({
     reducer: {
-        chat: chatReducer,
+        analysis: analysisReducer,
     }
 });
 

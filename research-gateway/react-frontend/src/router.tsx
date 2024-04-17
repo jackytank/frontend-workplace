@@ -1,6 +1,6 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layout/main-layout";
-import { myconfig } from "./config";
+import { myconfig } from "./config/config";
 import AnalysisPage from "./pages/analysis/analysis-page";
 
 const router = createBrowserRouter([
