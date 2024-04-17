@@ -16,10 +16,16 @@
     <xs:element name="getAllDataLogResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="dataLog" type="tns:dataLogModel" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="dataLogs" type="tns:dataLogArray" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="dataLogArray">
+        <xs:sequence>
+            <xs:element name="dataLog" type="tns:dataLogModel" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:element name="getDataLogRequest">
         <xs:complexType>
@@ -37,11 +43,20 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="dataLogModel">
+    <xs:complexType name="test">
         <xs:sequence>
             <xs:element name="trainId" type="xs:long" />
             <xs:element name="arrivalTime" type="xs:dateTime" />
             <xs:element name="departTime" type="xs:dateTime" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="dataLogModel">
+        <xs:sequence>
+            <xs:element name="logDate" type="xs:dateTime" />
+            <xs:element name="logLevel" type="xs:string" />
+            <xs:element name="logMessage" type="xs:string" />
+            <xs:element name="logStatus" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

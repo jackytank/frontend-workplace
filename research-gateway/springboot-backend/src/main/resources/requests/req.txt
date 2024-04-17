@@ -9,3 +9,15 @@
         </my:getDataLogRequest>
     </soapenv:Body>
 </soapenv:Envelope>
+
+
+<soapenv:Envelope
+    xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:my="http://www.example.com/my-soap"
+>
+    <soapenv:Header />
+    <soapenv:Body>
+        <my:getAllDataLogRequest>
+        </my:getAllDataLogRequest>
+    </soapenv:Body>
+</soapenv:Envelope>

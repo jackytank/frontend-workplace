@@ -3,7 +3,7 @@ spring:
     name: Donglao_app
   flyway:
     enabled: true
-    baseline-on-migrate: true
+    baseline-on-migrate: false
   datasource:
     url: jdbc:postgresql://${MY_POSTGRES_HOST:localhost}:${MY_POSTGRES_PORT:5432}/${MY_POSTGRES_DB:postgres}
     username: ${MY_POSTGRES_USER:postgres}

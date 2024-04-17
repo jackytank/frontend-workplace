@@ -11,6 +11,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.demo.config.Constants;
 import com.example.demo.model.gen.DataLogModel;
+import com.example.demo.model.gen.GetAllDataLogRequest;
+import com.example.demo.model.gen.GetAllDataLogResponse;
 import com.example.demo.model.gen.GetDataLogRequest;
 import com.example.demo.model.gen.GetDataLogResponse;
 import com.example.demo.service.DataLogService;
@@ -36,9 +38,18 @@ public class DataLogEnpoint {
         XMLGregorianCalendar departTime = datatypeFactory.newXMLGregorianCalendar("2024-04-19T12:00:00");
         XMLGregorianCalendar arrivalTime = datatypeFactory.newXMLGregorianCalendar("2024-04-20T12:00:00");
         // Create a response object
-        dataLog.setDepartTime(departTime);
-        dataLog.setArrivalTime(arrivalTime);
+        dataLog.setLogMessage(departTime.toString() + " - " + arrivalTime.toString());
         response.setDataLog(dataLog);
         return response;
     }
+
+    @PayloadRoot(namespace = Constants.NAMESPACE_URI, localPart = "getAllDataLogRequest")
+    @ResponsePayload
+    public GetAllDataLogResponse getAllDataLogs() {
+        System.out.println("getAllDataLogs called");
+        var response = new GetAllDataLogResponse();
+        response.setDataLogs(dataLogService.getAllDataLogs());
+        return response;
+    }
+
 }

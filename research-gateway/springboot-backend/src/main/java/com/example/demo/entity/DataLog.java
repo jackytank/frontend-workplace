@@ -10,10 +10,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
 @Builder
 @Entity
 @Table(name = "data_logs")
@@ -27,21 +33,13 @@ public class DataLog implements java.io.Serializable {
     private LocalDateTime logDate;
 
     @Column(name = "log_level")
-    @Enumerated(EnumType.ORDINAL)
-    private LogLevel logLevel;
+    @Enumerated(EnumType.STRING)
+    private ELogLevel logLevel;
 
     @Column(name = "log_message")
     private String logMessage;
 
     @Column(name = "log_status")
-    @Enumerated(EnumType.ORDINAL)
-    private LogStatus logStatus;
-}
-
-enum LogLevel {
-    INFO, WARN, ERROR
-}
-
-enum LogStatus {
-    SUCCESS, FAILED
+    @Enumerated(EnumType.STRING)
+    private ELogStatus logStatus;
 }
