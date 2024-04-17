@@ -2,17 +2,17 @@ spring:
   application:
     name: Donglao_app
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
   datasource:
     url: jdbc:postgresql://${MY_POSTGRES_HOST:localhost}:${MY_POSTGRES_PORT:5432}/${MY_POSTGRES_DB:postgres}
     username: ${MY_POSTGRES_USER:postgres}
-    password: ${MY_POSTGRES_PASSWORD:123123123}
+    password: ${MY_POSTGRES_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
   cache:
     type: simple

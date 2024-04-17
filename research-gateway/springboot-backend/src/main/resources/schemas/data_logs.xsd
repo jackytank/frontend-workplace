@@ -5,6 +5,21 @@
     targetNamespace="http://www.example.com/my-soap"
     elementFormDefault="qualified"
 >
+    <xs:element name="getAllDataLogRequest">
+        <xs:complexType>
+            <xs:sequence>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllDataLogResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dataLog" type="tns:dataLogModel" minOccurs="0" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="getDataLogRequest">
         <xs:complexType>

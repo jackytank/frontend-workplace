@@ -9,6 +9,7 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import com.example.demo.config.Constants;
 import com.example.demo.model.gen.DataLogModel;
 import com.example.demo.model.gen.GetDataLogRequest;
 import com.example.demo.model.gen.GetDataLogResponse;
@@ -19,11 +20,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Endpoint
 public class DataLogEnpoint {
-    private static final String NAMESPACE_URI = "http://www.baeldung.com/springsoap/gen";
 
     private final DataLogService dataLogService;
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getDataLogRequest")
+    @PayloadRoot(namespace = Constants.NAMESPACE_URI, localPart = "getDataLogRequest")
     @ResponsePayload
     public GetDataLogResponse handleDataLogRequest(@RequestPayload GetDataLogRequest getDataLogRequest)
             throws DatatypeConfigurationException {
