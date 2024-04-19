@@ -1,24 +1,30 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layout/main-layout";
-import { myconfig } from "./config/config";
+import { constants } from "./constants/constants";
 import AnalysisPage from "./pages/analysis/analysis-page";
+import NotFound from "./components/NotFound/NotFound";
+import Home from "./pages/home/home";
 
 const router = createBrowserRouter([
     {
-        path: myconfig.API.INDEX,
+        path: constants.ROUTING.INDEX,
         element: <MainLayout />,
         children: [
             {
                 index: true,
-                element: <Navigate to={myconfig.API.ANALYSIS.INDEX} />,
+                element: <Navigate to={constants.ROUTING.HOME} />,
             },
             {
-                path: myconfig.API.ANALYSIS.INDEX,
+                path: constants.ROUTING.HOME,
+                element: <Home />,
+            },
+            {
+                path: constants.ROUTING.ANALYSIS,
                 element: <AnalysisPage />,
             },
             {
                 path: '*',
-                element: <Navigate to={myconfig.API.INDEX} />
+                element: <NotFound />,
             }
         ]
     },

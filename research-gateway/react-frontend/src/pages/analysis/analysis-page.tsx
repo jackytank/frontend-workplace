@@ -1,8 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Col, Row } from "antd";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as xml2js from 'xml2js';
+import { RootState } from "../../redux/store";
+import { setDataLogs } from "../../redux/slice/analysis-slice";
+import { constants } from "../../constants/constants";
+import { axiosClient } from "../../api/axiosClient";
 
 const rawXml = `
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
@@ -42,7 +46,8 @@ const rawXml = `
 
 
 const AnalysisPage = () => {
-  const [dataLogs, setDataLogs] = useState<DataLogsResponseType | undefined>();
+  const dispatch = useDispatch();
+  const { dataLogs } = useSelector((state: RootState) => state.analysis);
   const parser = new xml2js.Parser({
     trim: true,
     explicitArray: false,
@@ -59,7 +64,7 @@ const AnalysisPage = () => {
     </soapenv:Envelope>
     `;
     try {
-      const response = await axios.post('/ws', soapEnvelope, {
+      const response = await axiosClient.post(`${constants.API.WS_PATH}`, soapEnvelope, {
         headers: {
           'Content-Type': 'text/xml',
         },
@@ -76,7 +81,7 @@ const AnalysisPage = () => {
         const data = JSON.stringify(result, null, 2);
         console.log('rawData', soapXmlRes);
         console.log('parsedData', data);
-        setDataLogs(result as DataLogsResponseType);
+        dispatch(setDataLogs(result as DataLogsResponseType));
       });
     });
   }, []);

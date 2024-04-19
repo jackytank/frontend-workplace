@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice } from "@reduxjs/toolkit";
 
-export type ChatState = {
-    dataLogs: unknown | null;
+export type AnalysisState = {
+    dataLogs: DataLogsResponseType | null;
 };
 
-const initialState: ChatState = {
+const initialState: AnalysisState = {
     dataLogs: null,
 };
 
@@ -13,7 +13,7 @@ const chatSlice = createSlice({
     name: 'analysisSlice',
     initialState: initialState,
     reducers: {
-        setDataLogs: (state, action) => {
+        setDataLogs: (state, action: { payload: DataLogsResponseType | null; }) => {
             state.dataLogs = action.payload;
         },
     },

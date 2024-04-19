@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import analysisReducer from "./slice/analysis-slice";
+import commonReducer from "./slice/common-slice";
 
-const store = configureStore({
+export const store = configureStore({
     reducer: {
         analysis: analysisReducer,
+        common: commonReducer,
     }
 });
 
