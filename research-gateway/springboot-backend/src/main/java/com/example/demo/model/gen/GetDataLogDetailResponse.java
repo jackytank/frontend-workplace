@@ -10,6 +10,7 @@ package com.example.demo.model.gen;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -24,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
+ *         &lt;element name="detailDataLog" type="{http://www.example.com/my-soap}dataLogDetailModel"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -33,9 +35,37 @@ import jakarta.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
-@XmlRootElement(name = "getAllDataLogRequest")
-public class GetAllDataLogRequest {
+@XmlType(name = "", propOrder = {
+    "detailDataLog"
+})
+@XmlRootElement(name = "getDataLogDetailResponse")
+public class GetDataLogDetailResponse {
 
+    @XmlElement(required = true)
+    protected DataLogDetailModel detailDataLog;
+
+    /**
+     * Gets the value of the detailDataLog property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link DataLogDetailModel }
+     *     
+     */
+    public DataLogDetailModel getDetailDataLog() {
+        return detailDataLog;
+    }
+
+    /**
+     * Sets the value of the detailDataLog property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link DataLogDetailModel }
+     *     
+     */
+    public void setDetailDataLog(DataLogDetailModel value) {
+        this.detailDataLog = value;
+    }
 
 }

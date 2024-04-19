@@ -6,7 +6,7 @@ import { setLoading } from "../redux/slice/common-slice";
 export const axiosClient = axios.create({
     baseURL: constants.API.HOST_AND_PORT,
     headers: {
-        'Content-Type': constants.CONTENT_TYPE.JSON,
+        'Content-Type': constants.CONTENT_TYPE.XML,
     },
 });
 

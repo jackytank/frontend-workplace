@@ -4,14 +4,14 @@ type DataLogsResponseType = {
         Body: {
             getAllDataLogResponse: {
                 dataLogs: {
-                    dataLog: Array<{
-                        logDate: string;
-                        logLevel: string;
-                        logMessage: string;
-                        logStatus: string;
-                    }>;
+                    dataLog: DataLogAllModel[]
                 };
             };
         };
     };
+};
+
+export type DataLogAllModel = {
+    id: number;
+    logDate: string;
 };

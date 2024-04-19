@@ -16,14 +16,32 @@
     <xs:element name="getAllDataLogResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="dataLogs" type="tns:dataLogArray" />
+                <xs:element name="dataLogs" type="tns:dataLogAllArray" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="dataLogArray">
+    <!-- request & response detail data logs -->
+    <xs:element name="getDataLogDetailRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dataLogId" type="xs:long" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getDataLogDetailResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="detailDataLog" type="tns:dataLogDetailModel" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="dataLogAllArray">
         <xs:sequence>
-            <xs:element name="dataLog" type="tns:dataLogModel" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="dataLog" type="tns:dataLogAllModel" minOccurs="0"
+                maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
 
@@ -38,7 +56,7 @@
     <xs:element name="getDataLogResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="dataLog" type="tns:dataLogModel" />
+                <xs:element name="dataLog" type="tns:dataLogAllModel" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -51,8 +69,16 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="dataLogModel">
+    <xs:complexType name="dataLogAllModel">
         <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="logDate" type="xs:dateTime" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="dataLogDetailModel">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" />
             <xs:element name="logDate" type="xs:dateTime" />
             <xs:element name="logLevel" type="xs:string" />
             <xs:element name="logMessage" type="xs:string" />

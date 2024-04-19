@@ -10,11 +10,10 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.demo.config.Constants;
-import com.example.demo.model.gen.DataLogModel;
 import com.example.demo.model.gen.GetAllDataLogRequest;
 import com.example.demo.model.gen.GetAllDataLogResponse;
-import com.example.demo.model.gen.GetDataLogRequest;
-import com.example.demo.model.gen.GetDataLogResponse;
+import com.example.demo.model.gen.GetDataLogDetailRequest;
+import com.example.demo.model.gen.GetDataLogDetailResponse;
 import com.example.demo.service.DataLogService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,30 +24,23 @@ public class DataLogEnpoint {
 
     private final DataLogService dataLogService;
 
-    @PayloadRoot(namespace = Constants.NAMESPACE_URI, localPart = "getDataLogRequest")
-    @ResponsePayload
-    public GetDataLogResponse handleDataLogRequest(@RequestPayload GetDataLogRequest getDataLogRequest)
-            throws DatatypeConfigurationException {
-        System.out.println("GetDataLogRequest called: " + getDataLogRequest.getTrainId());
-        var response = new GetDataLogResponse();
-        var dataLog = new DataLogModel();
-        // Create a DatatypeFactory instance
-        DatatypeFactory datatypeFactory = DatatypeFactory.newInstance();
-        // Create a mock XMLGregorianCalendar for the arrivalTime field
-        XMLGregorianCalendar departTime = datatypeFactory.newXMLGregorianCalendar("2024-04-19T12:00:00");
-        XMLGregorianCalendar arrivalTime = datatypeFactory.newXMLGregorianCalendar("2024-04-20T12:00:00");
-        // Create a response object
-        dataLog.setLogMessage(departTime.toString() + " - " + arrivalTime.toString());
-        response.setDataLog(dataLog);
-        return response;
-    }
-
+    // for request all data logs
     @PayloadRoot(namespace = Constants.NAMESPACE_URI, localPart = "getAllDataLogRequest")
     @ResponsePayload
-    public GetAllDataLogResponse getAllDataLogs() {
+    public GetAllDataLogResponse getAllDataLogs(@RequestPayload GetAllDataLogRequest getAllDataLogRequest) {
         System.out.println("getAllDataLogs called");
         var response = new GetAllDataLogResponse();
         response.setDataLogs(dataLogService.getAllDataLogs());
+        return response;
+    }
+
+    // for detail request data log by id
+    @PayloadRoot(namespace = Constants.NAMESPACE_URI, localPart = "getDataLogDetailRequest")
+    @ResponsePayload
+    public GetDataLogDetailResponse getDataLog(@RequestPayload GetDataLogDetailRequest getDataLogDetailRequest) {
+        System.out.println("getDataLog called: " + getDataLogDetailRequest.getDataLogId());
+        var response = new GetDataLogDetailResponse();
+        response.setDetailDataLog(dataLogService.getDetailDataLogById(getDataLogDetailRequest.getDataLogId()));
         return response;
     }
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice } from "@reduxjs/toolkit";
+import { DataLogsResponseType } from "../../types/analysis";
 
 export type AnalysisState = {
     dataLogs: DataLogsResponseType | null;

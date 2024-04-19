@@ -14,8 +14,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entity.DataLog;
-import com.example.demo.model.gen.DataLogArray;
-import com.example.demo.model.gen.DataLogModel;
+import com.example.demo.model.gen.DataLogAllArray;
+import com.example.demo.model.gen.DataLogAllModel;
+import com.example.demo.model.gen.DataLogDetailModel;
 import com.example.demo.repository.DataLogRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,29 +27,25 @@ public class DataLogService {
 
     private final DataLogRepository dataLogRepository;
 
-    @Cacheable(value = "dataLogCache")
-    public DataLogArray getAllDataLogs() {
+    @Cacheable(value = "dataLogAllCache")
+    public DataLogAllArray getAllDataLogs() {
         System.out.println("getAllDataLogs called");
         List<DataLog> dataLogs = dataLogRepository.findAll();
-        List<DataLogModel> dataLogModels = mapDataLogsToDataLogModels(dataLogs);
-        DataLogArray dataLogArray = new DataLogArray();
+        List<DataLogAllModel> dataLogModels = mapDataLogsToDataLogAllModels(dataLogs);
+        var dataLogArray = new DataLogAllArray();
         dataLogArray.getDataLog().addAll(dataLogModels);
         return dataLogArray;
     }
 
-    private List<DataLogModel> mapDataLogsToDataLogModels(List<DataLog> dataLogs) {
+    private List<DataLogAllModel> mapDataLogsToDataLogAllModels(List<DataLog> dataLogs) {
         return dataLogs.stream()
-                .map(this::mapDataLogToDataLogModel)
+                .map(e -> {
+                    var dataLogModel = new DataLogAllModel();
+                    dataLogModel.setId(e.getId());
+                    dataLogModel.setLogDate(convertToXMLGregorianCalendar(e.getLogDate()));
+                    return dataLogModel;
+                })
                 .collect(Collectors.toList());
-    }
-
-    private DataLogModel mapDataLogToDataLogModel(DataLog dataLog) {
-        DataLogModel dataLogModel = new DataLogModel();
-        dataLogModel.setLogDate(convertToXMLGregorianCalendar(dataLog.getLogDate()));
-        dataLogModel.setLogLevel(dataLog.getLogLevel().name());
-        dataLogModel.setLogMessage(dataLog.getLogMessage());
-        dataLogModel.setLogStatus(dataLog.getLogStatus().name());
-        return dataLogModel;
     }
 
     private XMLGregorianCalendar convertToXMLGregorianCalendar(LocalDateTime localDateTime) {
@@ -58,5 +55,17 @@ public class DataLogService {
         } catch (DatatypeConfigurationException e) {
             throw new RuntimeException("Error converting LocalDateTime to XMLGregorianCalendar", e);
         }
+    }
+
+    public DataLogDetailModel getDetailDataLogById(long id) {
+        System.out.println("getDetailDataLogById::id called: " + id);
+        var dataLog = dataLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Data log not found"));
+        var detailDataLog = new DataLogDetailModel();
+        detailDataLog.setLogDate(convertToXMLGregorianCalendar(dataLog.getLogDate()));
+        detailDataLog.setLogLevel(dataLog.getLogLevel().name());
+        detailDataLog.setLogMessage(dataLog.getLogMessage());
+        detailDataLog.setLogStatus(dataLog.getLogStatus().name());
+        return detailDataLog;
     }
 }
