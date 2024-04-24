@@ -20,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/v1/users")
-public class UserController1 {
+public class rUserController {
 
-    private final UserService1 userService;
+    private final rUserService userService;
 
     @GetMapping("")
     public ResponseEntity<List<?>> getUsers() {

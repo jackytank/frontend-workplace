@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Document(collection = "users")
-public class User {
+public class wsUser {
     @Id
     private String nickName;
     private Status status;

@@ -8,16 +8,16 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class wsUserService {
 
-    private final UserRepository chatUserRepository;
+    private final wsUserRepository chatUserRepository;
 
-    public void saveUser(User chatUser) {
+    public void saveUser(wsUser chatUser) {
         chatUser.setStatus(Status.ONLINE);
         chatUserRepository.save(chatUser);
     }
 
-    public void disconnect(User chatUser) {
+    public void disconnect(wsUser chatUser) {
         var existedUser = chatUserRepository.findById(chatUser.getNickName())
                 .orElse(null);
         if (existedUser == null) {
@@ -27,7 +27,7 @@ public class UserService {
         chatUserRepository.save(existedUser);
     }
 
-    public List<User> findConnectedUsers() {
+    public List<wsUser> findConnectedUsers() {
         return chatUserRepository.findAllByStatus(Status.ONLINE);
     }
 

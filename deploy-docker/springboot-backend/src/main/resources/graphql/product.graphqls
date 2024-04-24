@@ -1,0 +1,56 @@
+type Product {
+    id: ID
+    name: String!
+    price: Float!
+    description: String
+}
+
+type Customer {
+    id: ID
+    name: String!
+    email: String!
+    phone: String
+}
+
+type Order {
+    id: ID
+    customer: Customer!
+    products: [Product]!
+    total: Float!
+    orderDate: String!
+}
+
+type ProductModel {
+    id: ID
+    name: String!
+    price: Float!
+    description: String
+}
+
+input ProductModelAdd {
+    name: String!
+    price: Float!
+    description: String
+}
+
+input ProductModelUpdate {
+    id: ID!
+    name: String
+    price: Float
+    description: String
+}
+
+type Query {
+    products: [ProductModel]
+    product(id: ID!): ProductModel
+    orders: [Order]
+    order(id: ID!): Order
+}
+
+type Mutation {
+    createProduct(newProduct: ProductModelAdd): ProductModel
+    updateProduct(product: ProductModelUpdate): ProductModel
+    deleteProduct(id: ID!): Boolean
+    createOrder(customer: ID!, products: [ID]!): Order
+    deleteOrder(id: ID!): Boolean
+}

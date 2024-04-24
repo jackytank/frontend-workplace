@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
-    private final UserService chatUserService;
+public class wsUserController {
+    private final wsUserService chatUserService;
 
     @MessageMapping("/mychatuser.addUser")
     @SendTo("/mychatroom/public")
-    public User saveUser(@Payload User chatUser) {
+    public wsUser saveUser(@Payload wsUser chatUser) {
         chatUserService.saveUser(chatUser);
         var users = chatUserService.findConnectedUsers();
         users.forEach(System.out::println);
@@ -23,7 +23,7 @@ public class UserController {
 
     @MessageMapping("/mychatuser.disconnectUser")
     @SendTo("/mychatroom/public")
-    public User disconnect(@Payload User chatUser) {
+    public wsUser disconnect(@Payload wsUser chatUser) {
         chatUserService.disconnect(chatUser);
         return chatUser;
     }

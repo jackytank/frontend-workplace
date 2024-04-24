@@ -10,11 +10,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class UserRestController {
-    private final UserService chatUserService;
+public class wsUserRestController {
+    private final wsUserService chatUserService;
 
     @GetMapping("/chatusers")
-    public ResponseEntity<java.util.List<User>> findConnectedUsers() {
+    public ResponseEntity<java.util.List<wsUser>> findConnectedUsers() {
         return ResponseEntity.ok(chatUserService.findConnectedUsers());
     }
     

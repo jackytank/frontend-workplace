@@ -14,27 +14,27 @@ services:
   #   depends_on:
   #     - springboot
   #   mem_limit: 500M
-  react:
-    build: 
-      context: ./react-frontend
-      dockerfile: Dockerfile.prod
-    container_name: myshittyapp-react-frontend
-    networks:
-      - fe-be
-    ports:
-      - "80:80"
-    # volumes:
-    #   - ./react-frontend:/myreact_dir
-    restart: always
-    tty: true
-    depends_on:
-      springboot: 
-        condition: service_started
-    mem_limit: 500M
+  # react:
+  #   build: 
+  #     context: ./react-frontend
+  #     dockerfile: Dockerfile.prod
+  #   container_name: myshittyapp-react-frontend
+  #   networks:
+  #     - fe-be
+  #   ports:
+  #     - "80:80"
+  #   # volumes:
+  #   #   - ./react-frontend:/myreact_dir
+  #   restart: always
+  #   tty: true
+  #   depends_on:
+  #     springboot: 
+  #       condition: service_started
+  #   mem_limit: 500M
   springboot:
     build:
       context: ./springboot-backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     container_name: myshittyapp-springboot
     environment:
       - MY_POSTGRES_HOST=mypostgres
@@ -50,8 +50,8 @@ services:
       - MY_MONGO_DB=chatapp_db
       - MY_MONGO_USER=myuser
       - MY_MONGO_PASSWORD=mypassword
-    # volumes:
-    #   - ./springboot-backend:/mybackend_dir
+    volumes:
+      - ./springboot-backend:/mybackend_dir
     ports:
       - "8080:8080"
     networks:
@@ -60,9 +60,9 @@ services:
     restart: always
     depends_on:
       mypostgres:
-        condition: service_healthy
+        condition: service_started
       myredis:
-        condition: service_healthy
+        condition: service_started
       mymongo: 
         condition: service_started
     mem_limit: 1.5G
@@ -94,7 +94,7 @@ services:
       - be-db
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
-      interval: 1s
+      interval: 30s
       timeout: 3s
       retries: 30
     ports:

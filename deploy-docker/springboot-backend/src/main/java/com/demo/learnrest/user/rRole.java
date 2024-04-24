@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "roles")
-public class Role1 {
+public class rRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)    
     private Long id;
@@ -27,5 +27,5 @@ public class Role1 {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    private Set<UserRole1> userRoles;
+    private Set<rUserRole> userRoles;
 }

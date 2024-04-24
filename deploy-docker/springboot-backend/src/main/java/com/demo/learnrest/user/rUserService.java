@@ -12,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UserService1 {
+public class rUserService {
 
-    private final UserRepo1 userRepo;
+    private final rUserRepo userRepo;
 
     // @Cacheable(value = "users")
     public List<UserResponse> getAllUsers() {
@@ -54,7 +54,7 @@ public class UserService1 {
     // delete cache
     @CacheEvict(value = "users", allEntries = true)
     public ResponseEntity<?> createUser(UserRequestWithPassword userRequestWithPassword) {
-        User1 userEntity = User1.builder()
+        rUser userEntity = rUser.builder()
                 .name(userRequestWithPassword.name())
                 .email(userRequestWithPassword.email())
                 .password(userRequestWithPassword.password()).build();

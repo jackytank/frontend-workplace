@@ -2,7 +2,7 @@ spring:
   application:
     name: Donglao_app
   flyway:
-    enabled: true  # Enable Flyway
+    enabled: false  # Enable Flyway
     baseline-on-migrate: true  # Baseline on migrate
     # locations: classpath:db/migration
     # url: jdbc:postgresql://${MY_POSTGRES_HOST}:${MY_POSTGRES_PORT}/${MY_POSTGRES_DB}
@@ -17,7 +17,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate  # Disable Hibernate's automatic DDL generation
+      ddl-auto: update  # Disable Hibernate's automatic DDL generation
     show-sql: true
   cache:
     type: redis
@@ -33,6 +33,9 @@ spring:
       port: ${MY_MONGO_PORT}
       database: ${MY_MONGO_DB}
       authentication-database: admin
+  graphql:
+    graphiql:
+      enabled: true
 springdoc:
   api-docs:
     path: /api-docs

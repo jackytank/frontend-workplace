@@ -2,6 +2,6 @@ package com.demo.learnrest.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepo1 extends JpaRepository<User1, Long> {
+public interface rUserRepo extends JpaRepository<rUser, Long> {
     boolean existsByEmail(String email);
 }
