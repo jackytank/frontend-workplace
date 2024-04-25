@@ -14,23 +14,23 @@ services:
   #   depends_on:
   #     - springboot
   #   mem_limit: 500M
-  # react:
-  #   build: 
-  #     context: ./react-frontend
-  #     dockerfile: Dockerfile.prod
-  #   container_name: myshittyapp-react-frontend
-  #   networks:
-  #     - fe-be
-  #   ports:
-  #     - "80:80"
-  #   # volumes:
-  #   #   - ./react-frontend:/myreact_dir
-  #   restart: always
-  #   tty: true
-  #   depends_on:
-  #     springboot: 
-  #       condition: service_started
-  #   mem_limit: 500M
+  react:
+    build: 
+      context: ./react-frontend
+      dockerfile: Dockerfile.prod
+    container_name: myshittyapp-react-frontend
+    networks:
+      - fe-be
+    ports:
+      - "80:80"
+    # volumes:
+    #   - ./react-frontend:/myreact_dir
+    restart: always
+    tty: true
+    depends_on:
+      springboot: 
+        condition: service_started
+    mem_limit: 500M
   springboot:
     build:
       context: ./springboot-backend
@@ -117,6 +117,16 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data
+  mypgadmin_web:
+    image: dpage/pgadmin4
+    container_name: myshittyapp-pgadmin_web
+    networks:
+      - be-db
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
 networks:
   fe-be: {}
   be-db: {}
