@@ -3,7 +3,7 @@ import UserPage, { loader as userLoader } from "./pages/user/user-page";
 import ChatPage from "./pages/chat/shitty-chat-page";
 import MainLayout from "./layout/main-layout";
 import { myconfig } from "./config";
-import ImprovedChatPage from "./pages/improved-chat/improved-chat-page";
+import ImprovedChatPage from "./pages/store/store-page";
 
 const router = createBrowserRouter([
     {
