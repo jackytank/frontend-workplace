@@ -17,8 +17,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<ProductModel> getProducts() {
-        // createProduct();
-        var res = productRepository.findAll().stream()
+        return productRepository.findAll().stream()
                 .map(product -> ProductModel.builder()
                         .id(product.getId())
                         .name(product.getName())
@@ -26,7 +25,6 @@ public class ProductService {
                         .description(product.getDescription())
                         .build())
                 .collect(Collectors.toList());
-        return res;
     }
 
     private void createProduct() {
