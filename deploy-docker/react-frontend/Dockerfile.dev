@@ -1,11 +1,14 @@
 # dependency_stage
-FROM node:20-alpine as deps
-WORKDIR /myreact_dir
-COPY package.json .
-RUN yarn
+FROM oven/bun:1.1.4-alpine AS deps
+WORKDIR /myreact_dep_dir
+COPY package.json bun.lockb ./
+RUN bun install
 
 # build_stage
-FROM deps as build
+FROM oven/bun:1.1.4-alpine
 WORKDIR /myreact_dir
+COPY --from=deps "/myreact_dep_dir/node_modules" "./node_modules"
 COPY . .
-ENTRYPOINT [ "yarn", "run", "dev" ]
+ENTRYPOINT [ "bun", "run", "dev" ]
+
+

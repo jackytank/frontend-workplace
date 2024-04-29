@@ -1,5 +1,5 @@
 # deps_stage
-FROM maven:3.9.6-eclipse-temurin-17-alpine as deps_stage
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS deps_stage
 WORKDIR /mybackend_build_dir
 COPY pom.xml .
 COPY .mvn .mvn
@@ -7,7 +7,7 @@ RUN mvn dependency:go-offline
 
 
 # This layer will be rebuilt when source code changes
-FROM deps_stage as build_stage
+FROM deps_stage AS build_stage
 COPY src src
 
 # run_stage
