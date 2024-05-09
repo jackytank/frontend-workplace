@@ -31,41 +31,41 @@ services:
   #     springboot: 
   #       condition: service_started
   #   mem_limit: 500M
-  springboot:
-    build:
-      context: ./springboot-backend
-      dockerfile: Dockerfile.dev
-    container_name: myshittyapp-springboot
-    environment:
-      - MY_POSTGRES_HOST=mypostgres
-      - MY_POSTGRES_PORT=5432
-      - MY_POSTGRES_DB=postgres
-      - MY_POSTGRES_USER=postgres
-      - MY_POSTGRES_PASSWORD=postgres
-      - MY_REDIS_HOST=myredis
-      - MY_REDIS_PORT=6379
-      - MY_REDIS_PASSWORD=mysupersecureredispassword42
-      - MY_MONGO_HOST=mymongo
-      - MY_MONGO_PORT=27017
-      - MY_MONGO_DB=chatapp_db
-      - MY_MONGO_USER=myuser
-      - MY_MONGO_PASSWORD=mypassword
-    volumes:
-      - ./springboot-backend:/mybackend_dir
-    ports:
-      - "8080:8080"
-    networks:
-      - fe-be
-      - be-db
-    restart: always
-    depends_on:
-      mypostgres:
-        condition: service_started
-      myredis:
-        condition: service_started
-      mymongo: 
-        condition: service_started
-    mem_limit: 1.5G
+  # springboot:
+  #   build:
+  #     context: ./springboot-backend
+  #     dockerfile: Dockerfile.dev
+  #   container_name: myshittyapp-springboot
+  #   environment:
+  #     - MY_POSTGRES_HOST=mypostgres
+  #     - MY_POSTGRES_PORT=5432
+  #     - MY_POSTGRES_DB=postgres
+  #     - MY_POSTGRES_USER=postgres
+  #     - MY_POSTGRES_PASSWORD=postgres
+  #     - MY_REDIS_HOST=myredis
+  #     - MY_REDIS_PORT=6379
+  #     - MY_REDIS_PASSWORD=mysupersecureredispassword42
+  #     - MY_MONGO_HOST=mymongo
+  #     - MY_MONGO_PORT=27017
+  #     - MY_MONGO_DB=chatapp_db
+  #     - MY_MONGO_USER=myuser
+  #     - MY_MONGO_PASSWORD=mypassword
+  #   volumes:
+  #     - ./springboot-backend:/mybackend_dir
+  #   ports:
+  #     - "8081:8080"
+  #   networks:
+  #     - fe-be
+  #     - be-db
+  #   restart: always
+  #   depends_on:
+  #     mypostgres:
+  #       condition: service_started
+  #     myredis:
+  #       condition: service_started
+  #     mymongo: 
+  #       condition: service_started
+  #   mem_limit: 1.5G
   mypostgres:
     image: postgres:16.2-alpine
     container_name: myshittyapp-postgres
@@ -86,53 +86,78 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     mem_limit: 500M
-  myredis:
-    image: redis:7.2.4-alpine
-    container_name: myshittyapp-redis
-    command: redis-server --requirepass mysupersecureredispassword42
+  # myredis:
+  #   image: redis:7.2.4-alpine
+  #   container_name: myshittyapp-redis
+  #   command: redis-server --requirepass mysupersecureredispassword42
+  #   networks:
+  #     - be-db
+  #   healthcheck:
+  #     test: [ "CMD", "redis-cli", "ping" ]
+  #     interval: 30s
+  #     timeout: 3s
+  #     retries: 30
+  #   ports:
+  #     - "6666:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   restart: always
+  #   mem_limit: 500M
+  # mymongo:
+  #   image: mongo
+  #   container_name: myshittyapp-mongo
+  #   restart: always
+  #   networks:
+  #     - be-db
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=myuser
+  #     - MONGO_INITDB_ROOT_PASSWORD=mypassword
+  #     - MONGO_INITDB_DATABASE=chatapp_db
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data
+  # mypgadmin_web:
+  #   image: dpage/pgadmin4
+  #   container_name: myshittyapp-pgadmin_web
+  #   networks:
+  #     - be-db
+  #   user: "${UID}:${GID}"
+  #   ports:
+  #     - "5050:80"
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin
+  #   depends_on:
+  #     - mypostgres
+  #   restart: always
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
+  #     - PGADMIN_DEFAULT_PASSWORD=postgres
+  # myoracledb:
+  #   image: container-registry.oracle.com/database/express:21.3.0-xe
+  #   container_name: myshittyapp-oracledb
+  #   networks:
+  #     - be-db
+  #   ports:
+  #     - "1521:1521"
+  #     - "5500:5500"
+  #   environment:
+  #     - ORACLE_PWD=oracle
+  #   volumes:
+  #     - oracledb-data:/opt/oracle/oradata
+  myoracledb:
+    image: gvenzl/oracle-xe:21.3.0
+    container_name: myshittyapp-oracledb
     networks:
       - be-db
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 30s
-      timeout: 3s
-      retries: 30
     ports:
-      - "6666:6379"
-    volumes:
-      - redis-data:/data
-    restart: always
-    mem_limit: 500M
-  mymongo:
-    image: mongo
-    container_name: myshittyapp-mongo
-    restart: always
-    networks:
-      - be-db
+      - "1521:1521"
+      - "5500:5500"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=myuser
-      - MONGO_INITDB_ROOT_PASSWORD=mypassword
-      - MONGO_INITDB_DATABASE=chatapp_db
-    ports:
-      - "27017:27017"
+      - ORACLE_PASSWORD=oracle
     volumes:
-      - mongo-data:/data
-  mypgadmin_web:
-    image: dpage/pgadmin4
-    container_name: myshittyapp-pgadmin_web
-    networks:
-      - be-db
-    user: "${UID}:${GID}"
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - mypostgres
+      - oracledb-data:/opt/oracle/oradata
     restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=postgres
 networks:
   fe-be: {}
   be-db: {}
@@ -141,3 +166,4 @@ volumes:
   redis-data: {}
   mongo-data: {}
   pgadmin-data: {}
+  oracledb-data: {}
