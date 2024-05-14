@@ -3,7 +3,7 @@ services:
   #   build:
   #     context: ./remix-frontend
   #     dockerfile: Dockerfile.prod
-  #   container_name: myshittyapp-remix-frontend
+  #   container_name: myapp-remix-frontend
   #   networks:
   #     - fe-be
   #   volumes:
@@ -18,7 +18,7 @@ services:
   #   build: 
   #     context: ./react-frontend
   #     dockerfile: Dockerfile.dev
-  #   container_name: myshittyapp-react-frontend
+  #   container_name: myapp-react-frontend
   #   networks:
   #     - fe-be
   #   ports:
@@ -35,7 +35,7 @@ services:
   #   build:
   #     context: ./springboot-backend
   #     dockerfile: Dockerfile.dev
-  #   container_name: myshittyapp-springboot
+  #   container_name: myapp-springboot
   #   environment:
   #     - MY_POSTGRES_HOST=mypostgres
   #     - MY_POSTGRES_PORT=5432
@@ -67,8 +67,8 @@ services:
   #       condition: service_started
   #   mem_limit: 1.5G
   mypostgres:
-    image: postgres:16.2-alpine
-    container_name: myshittyapp-postgres
+    image: postgres:16.3-alpine
+    container_name: myapp-postgres
     restart: always
     ports:
       - "5555:5432"
@@ -86,26 +86,26 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     mem_limit: 500M
-  # myredis:
-  #   image: redis:7.2.4-alpine
-  #   container_name: myshittyapp-redis
-  #   command: redis-server --requirepass mysupersecureredispassword42
-  #   networks:
-  #     - be-db
-  #   healthcheck:
-  #     test: [ "CMD", "redis-cli", "ping" ]
-  #     interval: 30s
-  #     timeout: 3s
-  #     retries: 30
-  #   ports:
-  #     - "6666:6379"
-  #   volumes:
-  #     - redis-data:/data
-  #   restart: always
-  #   mem_limit: 500M
+  myredis:
+    image: redis:7.2.4-alpine
+    container_name: myapp-redis
+    command: redis-server --requirepass mypassword
+    networks:
+      - be-db
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "6666:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    mem_limit: 500M
   # mymongo:
   #   image: mongo
-  #   container_name: myshittyapp-mongo
+  #   container_name: myapp-mongo
   #   restart: always
   #   networks:
   #     - be-db
@@ -119,7 +119,7 @@ services:
   #     - mongo-data:/data
   # mypgadmin_web:
   #   image: dpage/pgadmin4
-  #   container_name: myshittyapp-pgadmin_web
+  #   container_name: myapp-pgadmin_web
   #   networks:
   #     - be-db
   #   user: "${UID}:${GID}"
@@ -135,7 +135,7 @@ services:
   #     - PGADMIN_DEFAULT_PASSWORD=postgres
   # myoracledb:
   #   image: container-registry.oracle.com/database/express:21.3.0-xe
-  #   container_name: myshittyapp-oracledb
+  #   container_name: myapp-oracledb
   #   networks:
   #     - be-db
   #   ports:
@@ -146,15 +146,17 @@ services:
   #   volumes:
   #     - oracledb-data:/opt/oracle/oradata
   myoracledb:
-    image: gvenzl/oracle-xe:21.3.0
-    container_name: myshittyapp-oracledb
+    image: gvenzl/oracle-free
+    container_name: myapp-oracledb
     networks:
       - be-db
     ports:
       - "1521:1521"
       - "5500:5500"
     environment:
-      - ORACLE_PASSWORD=oracle
+      - ORACLE_PASSWORD=system
+      - APP_USER=myuser
+      - APP_USER_PASSWORD=myuser
     volumes:
       - oracledb-data:/opt/oracle/oradata
     restart: always
