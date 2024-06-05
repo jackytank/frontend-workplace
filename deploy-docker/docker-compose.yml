@@ -87,7 +87,7 @@ services:
       - POSTGRES_DB=postgres
     mem_limit: 500M
   myredis:
-    image: redis:7.2.4-alpine
+    image: redis:7.2.5-alpine
     container_name: myapp-redis
     command: redis-server --requirepass mypassword
     networks:
@@ -151,8 +151,8 @@ services:
     networks:
       - be-db
     ports:
-      - "1521:1521"
-      - "5500:5500"
+      - "1515:1521"
+      - "5515:5500"
     environment:
       - ORACLE_PASSWORD=system
       - APP_USER=myuser
