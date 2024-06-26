@@ -146,7 +146,7 @@ services:
       - APP_USER=myuser
       - APP_USER_PASSWORD=myuser
     volumes:
-      - oracledb-main-data:/opt/main/oracle/oradata
+      - oracledb-data:/opt/oracle/oradata
     restart: always
   myoracledb-second:
     image: docker.io/gvenzl/oracle-free
@@ -171,5 +171,5 @@ volumes:
   redis-data: {}
   mongo-data: {}
   pgadmin-data: {}
-  oracledb-main-data: {}
+  oracledb-data: {}
   oracledb-second-data: {}
