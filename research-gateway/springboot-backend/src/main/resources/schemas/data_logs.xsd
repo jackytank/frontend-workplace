@@ -25,7 +25,7 @@
     <xs:element name="getDataLogDetailRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="dataLogId" type="xs:long" />
+                <xs:element name="dataLogId" type="xs:int" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -42,6 +42,23 @@
         <xs:sequence>
             <xs:element name="dataLog" type="tns:dataLogAllModel" minOccurs="0"
                 maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PassaggioTreno">
+        <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="1" name="codLocalita" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="dtArrivo" type="xs:dateTime"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="scostamentoArrivo" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="tipArrivo" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="dtPartenza" type="xs:dateTime"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="tipPartenza" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="scostamentoPartenza" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="codTrattaSucc" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="binario" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="tipCategoria" type="xs:int"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="tipServizio" type="xs:string"/>
+            <xs:element maxOccurs="1" minOccurs="1" name="tipClassifica" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

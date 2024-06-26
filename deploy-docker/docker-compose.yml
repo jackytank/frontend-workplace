@@ -67,7 +67,7 @@ services:
   #       condition: service_started
   #   mem_limit: 1.5G
   mypostgres:
-    image: postgres:16.3-alpine
+    image: docker.io/postgres:16.3-alpine
     container_name: myapp-postgres
     restart: always
     ports:
@@ -87,7 +87,7 @@ services:
       - POSTGRES_DB=postgres
     mem_limit: 500M
   myredis:
-    image: redis:7.2.5-alpine
+    image: docker.io/redis:7.2.5-alpine
     container_name: myapp-redis
     command: redis-server --requirepass mypassword
     networks:
@@ -133,21 +133,9 @@ services:
   #   environment:
   #     - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
   #     - PGADMIN_DEFAULT_PASSWORD=postgres
-  # myoracledb:
-  #   image: container-registry.oracle.com/database/express:21.3.0-xe
-  #   container_name: myapp-oracledb
-  #   networks:
-  #     - be-db
-  #   ports:
-  #     - "1521:1521"
-  #     - "5500:5500"
-  #   environment:
-  #     - ORACLE_PWD=oracle
-  #   volumes:
-  #     - oracledb-data:/opt/oracle/oradata
-  myoracledb:
-    image: gvenzl/oracle-free
-    container_name: myapp-oracledb
+  myoracledb-main:
+    image: docker.io/gvenzl/oracle-free
+    container_name: myapp-oracledb-main
     networks:
       - be-db
     ports:
@@ -158,7 +146,22 @@ services:
       - APP_USER=myuser
       - APP_USER_PASSWORD=myuser
     volumes:
-      - oracledb-data:/opt/oracle/oradata
+      - oracledb-main-data:/opt/main/oracle/oradata
+    restart: always
+  myoracledb-second:
+    image: docker.io/gvenzl/oracle-free
+    container_name: myapp-oracledb-second
+    networks:
+      - be-db
+    ports:
+      - "1551:1521"
+      - "5551:5500"
+    environment:
+      - ORACLE_PASSWORD=system
+      - APP_USER=myuser
+      - APP_USER_PASSWORD=myuser
+    volumes:
+      - oracledb-second-data:/opt/second/oracle/oradata
     restart: always
 networks:
   fe-be: {}
@@ -168,4 +171,5 @@ volumes:
   redis-data: {}
   mongo-data: {}
   pgadmin-data: {}
-  oracledb-data: {}
+  oracledb-main-data: {}
+  oracledb-second-data: {}
