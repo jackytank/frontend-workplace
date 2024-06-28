@@ -75,7 +75,7 @@ services:
     networks:
       - be-db
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/myapp/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 30s
@@ -86,23 +86,23 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
     mem_limit: 500M
-  myredis:
-    image: docker.io/redis:7.2.5-alpine
-    container_name: myapp-redis
-    command: redis-server --requirepass mypassword
-    networks:
-      - be-db
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 30s
-      timeout: 3s
-      retries: 30
-    ports:
-      - "6666:6379"
-    volumes:
-      - redis-data:/data
-    restart: always
-    mem_limit: 500M
+  # myredis:
+  #   image: docker.io/redis:7.2.5-alpine
+  #   container_name: myapp-redis
+  #   command: redis-server --requirepass mypassword
+  #   networks:
+  #     - be-db
+  #   healthcheck:
+  #     test: [ "CMD", "redis-cli", "ping" ]
+  #     interval: 30s
+  #     timeout: 3s
+  #     retries: 30
+  #   ports:
+  #     - "6666:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   restart: always
+  #   mem_limit: 500M
   # mymongo:
   #   image: mongo
   #   container_name: myapp-mongo
@@ -137,7 +137,7 @@ services:
     image: docker.io/gvenzl/oracle-free
     container_name: myapp-oracledb-main
     networks:
-      - be-db
+      - be-oracle1
     ports:
       - "1515:1521"
       - "5515:5500"
@@ -146,13 +146,13 @@ services:
       - APP_USER=myuser
       - APP_USER_PASSWORD=myuser
     volumes:
-      - oracledb-data:/opt/oracle/oradata
+      - oracledb-main-data:/opt/myapp/main/oracle/oradata
     restart: always
   myoracledb-second:
     image: docker.io/gvenzl/oracle-free
     container_name: myapp-oracledb-second
     networks:
-      - be-db
+      - be-oracle2
     ports:
       - "1551:1521"
       - "5551:5500"
@@ -161,15 +161,17 @@ services:
       - APP_USER=myuser
       - APP_USER_PASSWORD=myuser
     volumes:
-      - oracledb-second-data:/opt/second/oracle/oradata
+      - oracledb-second-data:/opt/myapp/second/oracle/oradata
     restart: always
 networks:
   fe-be: {}
   be-db: {}
+  be-oracle1: {}
+  be-oracle2: {}
 volumes:
   postgres-data: {}
   redis-data: {}
   mongo-data: {}
   pgadmin-data: {}
-  oracledb-data: {}
+  oracledb-main-data: {}
   oracledb-second-data: {}
