@@ -71,7 +71,7 @@ services:
     container_name: myapp-postgres
     restart: always
     ports:
-      - "5555:5432"
+      - "5432:5432"
     networks:
       - be-db
     volumes:
@@ -84,7 +84,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=ctccoa
     mem_limit: 500M
   # myredis:
   #   image: docker.io/redis:7.2.5-alpine
@@ -134,32 +134,34 @@ services:
   #     - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
   #     - PGADMIN_DEFAULT_PASSWORD=postgres
   myoracledb-main:
-    image: docker.io/gvenzl/oracle-free
+    image: gvenzl/oracle-xe:21-faststart
     container_name: myapp-oracledb-main
     networks:
       - be-oracle1
     ports:
-      - "1515:1521"
-      - "5515:5500"
+      - "1521:1521"
+      - "5500:5500"
     environment:
-      - ORACLE_PASSWORD=system
-      - APP_USER=myuser
-      - APP_USER_PASSWORD=myuser
+      - ORACLE_PASSWORD=COAoracledbpwd
+      - ORACLE_DATABASE=COA
+      - APP_USER=coa
+      - APP_USER_PASSWORD=coa
     volumes:
       - oracledb-main-data:/opt/myapp/main/oracle/oradata
     restart: always
   myoracledb-second:
-    image: docker.io/gvenzl/oracle-free
+    image: gvenzl/oracle-xe:21-faststart
     container_name: myapp-oracledb-second
     networks:
       - be-oracle2
     ports:
-      - "1551:1521"
-      - "5551:5500"
+      - "1522:1521"
+      - "5501:5500"
     environment:
-      - ORACLE_PASSWORD=system
-      - APP_USER=myuser
-      - APP_USER_PASSWORD=myuser
+      - ORACLE_PASSWORD=COAoracledbpwd
+      - ORACLE_DATABASE=COA
+      - APP_USER=coa
+      - APP_USER_PASSWORD=coa
     volumes:
       - oracledb-second-data:/opt/myapp/second/oracle/oradata
     restart: always
