@@ -36,6 +36,7 @@ spring:
   graphql:
     graphiql:
       enabled: true
+      path: /graphiql
 springdoc:
   api-docs:
     path: /api-docs
