@@ -1,0 +1,13 @@
+﻿
+
+Task 3
+Programming Language Java 8
+Files
+2. Given A = [4, 3, 2, 6, 1], the function should return 1. The array cannot be split into smaller
+slices; it has to be sorted all at once.
+T
+3. Given A = [2, 1, 6, 4, 3, 7], the function should return 3.
+Write an efficient algorithm for the following assumptions:
+• N is an integer within the range [1..100,000];
+⚫ each element of array A is an integer within the range [1..1,000,000,000];
+⚫ the elements of A are all distinct.
