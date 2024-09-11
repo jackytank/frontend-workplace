@@ -165,6 +165,15 @@ services:
     volumes:
       - oracledb-second-data:/opt/myapp/second/oracle/oradata
     restart: always
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./springboot-backend/target:/opt/code/localstack/target
+    restart: always
 networks:
   fe-be: {}
   be-db: {}
