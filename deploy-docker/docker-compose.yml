@@ -66,26 +66,26 @@ services:
   #     mymongo: 
   #       condition: service_started
   #   mem_limit: 1.5G
-  mypostgres:
-    image: docker.io/postgres:16.3-alpine
-    container_name: myapp-postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    networks:
-      - be-db
-    volumes:
-      - postgres-data:/var/lib/myapp/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 30s
-      timeout: 30s
-      retries: 3
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=ctccoa
-    mem_limit: 500M
+  # mypostgres:
+  #   image: docker.io/postgres:16.3-alpine
+  #   container_name: myapp-postgres
+  #   restart: always
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - be-db
+  #   volumes:
+  #     - postgres-data:/var/lib/myapp/postgresql/data
+  #   healthcheck:
+  #     test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+  #     interval: 30s
+  #     timeout: 30s
+  #     retries: 3
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=postgres
+  #     - POSTGRES_DB=ctccoa
+  #   mem_limit: 500M
   # myredis:
   #   image: docker.io/redis:7.2.5-alpine
   #   container_name: myapp-redis
@@ -133,38 +133,47 @@ services:
   #   environment:
   #     - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
   #     - PGADMIN_DEFAULT_PASSWORD=postgres
-  myoracledb-main:
-    image: gvenzl/oracle-xe:21-faststart
-    container_name: myapp-oracledb-main
-    networks:
-      - be-oracle1
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver
     ports:
-      - "1521:1521"
-      - "5500:5500"
-    environment:
-      - ORACLE_PASSWORD=COAoracledbpwd
-      - ORACLE_DATABASE=COA
-      - APP_USER=coa
-      - APP_USER_PASSWORD=coa
+      - "5050:8978"
     volumes:
-      - oracledb-main-data:/opt/myapp/main/oracle/oradata
-    restart: always
-  myoracledb-second:
-    image: gvenzl/oracle-xe:21-faststart
-    container_name: myapp-oracledb-second
-    networks:
-      - be-oracle2
-    ports:
-      - "1522:1521"
-      - "5501:5500"
-    environment:
-      - ORACLE_PASSWORD=COAoracledbpwd
-      - ORACLE_DATABASE=COA
-      - APP_USER=coa
-      - APP_USER_PASSWORD=coa
-    volumes:
-      - oracledb-second-data:/opt/myapp/second/oracle/oradata
-    restart: always
+      - cloudbeaver_data:/opt/cloudbeaver/workspace
+    tty: true
+    stdin_open: true
+  # myoracledb-main:
+  #   image: gvenzl/oracle-xe:21-faststart
+  #   container_name: myapp-oracledb-main
+  #   networks:
+  #     - be-oracle1
+  #   ports:
+  #     - "1521:1521"
+  #     - "5500:5500"
+  #   environment:
+  #     - ORACLE_PASSWORD=COAoracledbpwd
+  #     - ORACLE_DATABASE=COA
+  #     - APP_USER=coa
+  #     - APP_USER_PASSWORD=coa
+  #   volumes:
+  #     - oracledb-main-data:/opt/myapp/main/oracle/oradata
+  #   restart: always
+  # myoracledb-second:
+  #   image: gvenzl/oracle-xe:21-faststart
+  #   container_name: myapp-oracledb-second
+  #   networks:
+  #     - be-oracle2
+  #   ports:
+  #     - "1522:1521"
+  #     - "5501:5500"
+  #   environment:
+  #     - ORACLE_PASSWORD=COAoracledbpwd
+  #     - ORACLE_DATABASE=COA
+  #     - APP_USER=coa
+  #     - APP_USER_PASSWORD=coa
+  #   volumes:
+  #     - oracledb-second-data:/opt/myapp/second/oracle/oradata
+  #   restart: always
 networks:
   fe-be: {}
   be-db: {}
@@ -177,3 +186,4 @@ volumes:
   pgadmin-data: {}
   oracledb-main-data: {}
   oracledb-second-data: {}
+  cloudbeaver-data: {}
