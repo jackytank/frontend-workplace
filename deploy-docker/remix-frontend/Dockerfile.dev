@@ -1,5 +1,5 @@
 # dependency_stage
-FROM node:20-alpine as deps
+FROM node:20-alpine AS deps
 WORKDIR /myremix_deps_dir
 COPY package*.json ./
 RUN npm install

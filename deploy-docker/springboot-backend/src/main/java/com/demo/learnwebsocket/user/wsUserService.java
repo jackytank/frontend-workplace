@@ -18,8 +18,7 @@ public class wsUserService {
     }
 
     public void disconnect(wsUser chatUser) {
-        var existedUser = chatUserRepository.findById(chatUser.getNickName())
-                .orElse(null);
+        var existedUser = chatUserRepository.findById(chatUser.getNickName()).orElse(null);
         if (existedUser == null) {
             return;
         }
