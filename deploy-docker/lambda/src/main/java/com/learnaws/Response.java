@@ -1,6 +1,4 @@
 package com.learnaws;
 
-import java.time.Instant;
-
-public record Response(String responseMessage) {
+public record Response(String responseMsg, String time, boolean isSuccess) {
 }
