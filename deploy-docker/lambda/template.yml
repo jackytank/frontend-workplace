@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+    Research/learning Java AWS Lambda, S3 and SQS
+
+Resources:
+    TriAwsLambdaFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: tri-aws-lambda
+            Description: Research/learning Java AWS Lambda, S3 and SQS
+            Handler: com.learnaws.LambdaHandler::handleRequest
+            Runtime: java17
+            CodeUri: ./target/lambda-0.1.0-SNAPSHOT.jar
+            MemorySize: 512
+            Timeout: 20
+            Architectures:
+                - x86_64
+            Role: arn:aws:iam::033237493133:role/tri-aws-role-full-lambda
+            Environment:
+                Variables:
+                    QUEUE_URL: https://sqs.us-east-1.amazonaws.com/033237493133/tri-aws-queue
+                    BUCKET_NAME: tri-aws-bucket

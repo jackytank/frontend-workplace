@@ -19,9 +19,8 @@ import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
 
 public class LambdaHandler implements RequestHandler<Request, Response> {
 
-    private final String queueUrl =
-            "https://sqs.us-east-1.amazonaws.com/033237493133/tri-aws-queue";
-    private final String bucketName = "tri-aws-bucket";
+    private final String queueUrl = System.getenv("QUEUE_URL");
+    private final String bucketName = System.getenv("BUCKET_NAME");
     private final S3Client s3Client;
     private final SqsClient sqsClient;
 
