@@ -6,9 +6,12 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest;
@@ -35,14 +38,15 @@ public class LambdaHandler implements RequestHandler<Request, Response> {
         logger.log(">> Received request: " + input);
 
         try {
-            int number = receiveAndProcessMessageFromSQS(logger);
+            int number = receiveAndProcessMessageFromSQS();
             sendMessageToSQS(number);
             logger.log(">> Sent message to SQS: " + number);
             logMessagesFromSQS(logger);
             var fileContent = "hello file content: " + input.requestMessage();
-            uploadTextFileToS3(number, fileContent);
+            var uploadedFileName = uploadTextFileToS3(number, fileContent);
             logger.log(
                     ">> Uploaded file to S3, fileContent: " + fileContent + " number: " + number);
+            logLatestFileNameAndContentFromS3(uploadedFileName, logger);
             return new Response("Success", Instant.now().toString(), true);
         } catch (Exception e) {
             logger.log(">> Error processing message: " + e.getMessage());
@@ -50,6 +54,22 @@ public class LambdaHandler implements RequestHandler<Request, Response> {
         }
     }
 
+    protected void logLatestFileNameAndContentFromS3(String fileName, LambdaLogger logger) {
+        GetObjectRequest getObjectRequest =
+                GetObjectRequest.builder().bucket(bucketName).key(fileName).build();
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getObjectRequest);
+        String fileContent = objectBytes.asUtf8String();
+        logger.log("""
+                >> Content of the latest file (%s) from S3: %s
+                """.formatted(fileName, fileContent));
+    }
+
+    protected void logMessagesFromSQS(LambdaLogger logger) {
+        ReceiveMessageRequest receiveMessageRequest =
+                ReceiveMessageRequest.builder().queueUrl(queueUrl).maxNumberOfMessages(10).build();
+        sqsClient.receiveMessage(receiveMessageRequest).messages()
+                .forEach(message -> logger.log(">> Retrieved message from SQS: " + message.body()));
+    }
 
     protected S3Client createS3Client() {
         return S3Client.builder().region(Region.US_EAST_1)
@@ -62,19 +82,12 @@ public class LambdaHandler implements RequestHandler<Request, Response> {
     }
 
 
-    protected void logMessagesFromSQS(LambdaLogger logger) {
-        ReceiveMessageRequest receiveMessageRequest =
-                ReceiveMessageRequest.builder().queueUrl(queueUrl).maxNumberOfMessages(10).build();
-        sqsClient.receiveMessage(receiveMessageRequest).messages()
-                .forEach(message -> logger.log(">> Retrieved message from SQS: " + message.body()));
-    }
-
-    protected int receiveAndProcessMessageFromSQS(LambdaLogger logger) {
+    protected int receiveAndProcessMessageFromSQS() {
         ReceiveMessageRequest receiveMessageRequest =
                 ReceiveMessageRequest.builder().queueUrl(queueUrl).maxNumberOfMessages(1).build();
         ReceiveMessageResponse receiveMessageResponse =
                 sqsClient.receiveMessage(receiveMessageRequest);
-        logger.log(">> Received message response from SQS: " + receiveMessageResponse);
+
         Optional<Message> messageOpt = receiveMessageResponse.messages().stream().findFirst();
         int number = messageOpt.map(message -> {
             int num = Integer.parseInt(message.body());
@@ -91,12 +104,13 @@ public class LambdaHandler implements RequestHandler<Request, Response> {
         sqsClient.sendMessage(sendMessageRequest);
     }
 
-    protected void uploadTextFileToS3(int number, String content) {
+    protected String uploadTextFileToS3(int number, String content) {
         String fileName =
                 "incremented_number_" + number + "_" + "time_" + Instant.now().toString() + ".txt";
         PutObjectRequest putObjectRequest =
                 PutObjectRequest.builder().bucket(bucketName).key(fileName).build();
         s3Client.putObject(putObjectRequest, RequestBody.fromString(content));
+        return fileName;
 
     }
 
