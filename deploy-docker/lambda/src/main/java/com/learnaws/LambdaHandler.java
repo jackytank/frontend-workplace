@@ -35,7 +35,7 @@ public class LambdaHandler implements RequestHandler<Request, Response> {
         logger.log(">> Received request: " + input);
 
         try {
-            int number = receiveAndProcessMessageFromSQS();
+            int number = receiveAndProcessMessageFromSQS(logger);
             sendMessageToSQS(number);
             logger.log(">> Sent message to SQS: " + number);
             logMessagesFromSQS(logger);
@@ -69,12 +69,12 @@ public class LambdaHandler implements RequestHandler<Request, Response> {
                 .forEach(message -> logger.log(">> Retrieved message from SQS: " + message.body()));
     }
 
-    protected int receiveAndProcessMessageFromSQS() {
+    protected int receiveAndProcessMessageFromSQS(LambdaLogger logger) {
         ReceiveMessageRequest receiveMessageRequest =
                 ReceiveMessageRequest.builder().queueUrl(queueUrl).maxNumberOfMessages(1).build();
         ReceiveMessageResponse receiveMessageResponse =
                 sqsClient.receiveMessage(receiveMessageRequest);
-
+        logger.log(">> Received message response from SQS: " + receiveMessageResponse);
         Optional<Message> messageOpt = receiveMessageResponse.messages().stream().findFirst();
         int number = messageOpt.map(message -> {
             int num = Integer.parseInt(message.body());
