@@ -1,0 +1,6 @@
+#制御通番,タイムアウト時間1,タイムアウト時間2,要求電文
+CTRL000001,500,1000,{"request":"data1"}
+CTRL000002,1000,2000,{"request":"data2"}
+CTRL000003,1500,2500,{"request":"data3"}
+CTRL000004,2000,3000,{"request":"data4"}
+CTRL000005,2500,3500,{"request":"data5"}
