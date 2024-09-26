@@ -42,9 +42,9 @@ function App() {
           <AntdApp>
             <DevtoolsProvider>
               <Refine
+                dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
                 notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
-                dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
                 resources={[
                   {
                     name: "blog_posts",
@@ -71,7 +71,7 @@ function App() {
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
                   useNewQueryKeys: true,
-                  projectId: "GZiCCq-cczZQq-U9L6Va",
+                  projectId: "QHDuVa-7rl1Fp-Vsim4a",
                 }}
               >
                 <Routes>
@@ -105,6 +105,7 @@ function App() {
                   </Route>
                 </Routes>
 
+                <RefineKbar />
                 <UnsavedChangesNotifier />
                 <DocumentTitleHandler />
               </Refine>
