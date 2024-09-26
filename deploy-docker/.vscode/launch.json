@@ -9,6 +9,16 @@
             "projectName": "demo",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<boot-react>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.react.boot.Application",
+            "projectName": "boot-react",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
