@@ -32,11 +32,17 @@ import {
   CategoryList,
   CategoryShow,
 } from "./pages/categories";
+import Sim1Page from "./pages/sim1/page";
+import { AmazonOutlined, SettingOutlined } from "@ant-design/icons";
+import Sim2Page from "./pages/sim2/page";
+import Sim3Page from "./pages/sim3/page";
+import Sim4Page from "./pages/sim4/page";
+import SettingsPage from "./pages/settings/page";
 
 function App() {
   return (
     <BrowserRouter>
-      <GitHubBanner />
+      {/* <GitHubBanner /> */}
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <AntdApp>
@@ -46,25 +52,60 @@ function App() {
                 notificationProvider={useNotificationProvider}
                 routerProvider={routerBindings}
                 resources={[
+                  // {
+                  //   name: "blog_posts",
+                  //   list: "/blog-posts",
+                  //   create: "/blog-posts/create",
+                  //   edit: "/blog-posts/edit/:id",
+                  //   show: "/blog-posts/show/:id",
+                  //   meta: {
+                  //     canDelete: true,
+                  //   },
+                  // },
+                  // {
+                  //   name: "categories",
+                  //   list: "/categories",
+                  //   create: "/categories/create",
+                  //   edit: "/categories/edit/:id",
+                  //   show: "/categories/show/:id",
+                  //   meta: {
+                  //     canDelete: true,
+                  //   },
+                  // },
                   {
-                    name: "blog_posts",
-                    list: "/blog-posts",
-                    create: "/blog-posts/create",
-                    edit: "/blog-posts/edit/:id",
-                    show: "/blog-posts/show/:id",
+                    name: "Test Simulator 1",
+                    list: "/sim1",
                     meta: {
-                      canDelete: true,
-                    },
+                      icon: <AmazonOutlined />
+                    }
                   },
                   {
-                    name: "categories",
-                    list: "/categories",
-                    create: "/categories/create",
-                    edit: "/categories/edit/:id",
-                    show: "/categories/show/:id",
+                    name: "Test Simulator 2",
+                    list: "/sim2",
                     meta: {
-                      canDelete: true,
-                    },
+                      icon: <AmazonOutlined />
+                    }
+                  },
+                  {
+                    name: "Test Simulator 3",
+                    list: "/sim3",
+                    meta: {
+                      icon: <AmazonOutlined />
+                    }
+                  },
+                  {
+                    name: "Test Simulator 4",
+                    list: "/sim4",
+                    meta: {
+                      icon: <AmazonOutlined />
+                    }
+                  },
+                  {
+                    name: "Settings",
+                    list: "/settings",
+                    meta: {
+                      icon: <SettingOutlined />
+                    }
                   },
                 ]}
                 options={{
@@ -72,6 +113,11 @@ function App() {
                   warnWhenUnsavedChanges: true,
                   useNewQueryKeys: true,
                   projectId: "QHDuVa-7rl1Fp-Vsim4a",
+                  textTransformers: {
+                    humanize: (text) => text,
+                    plural: (text) => text,
+                    singular: (text) => text
+                  }
                 }}
               >
                 <Routes>
@@ -100,6 +146,21 @@ function App() {
                       <Route path="create" element={<CategoryCreate />} />
                       <Route path="edit/:id" element={<CategoryEdit />} />
                       <Route path="show/:id" element={<CategoryShow />} />
+                    </Route>
+                    <Route path="/sim1">
+                      <Route index element={<Sim1Page />} />
+                    </Route>
+                    <Route path="/sim2">
+                      <Route index element={<Sim2Page />} />
+                    </Route>
+                    <Route path="/sim3">
+                      <Route index element={<Sim3Page />} />
+                    </Route>
+                    <Route path="/sim4">
+                      <Route index element={<Sim4Page />} />
+                    </Route>
+                    <Route path="/settings">
+                      <Route index element={<SettingsPage />} />
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
