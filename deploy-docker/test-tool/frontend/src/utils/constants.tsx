@@ -1,5 +1,5 @@
 // 10 aws regions please
-export const awsRegions = [
+const awsRegions = [
     'us-east-1',
     'us-east-2',
     'us-west-1',
@@ -19,7 +19,10 @@ export const awsRegions = [
     'sa-east-1',
 ];
 
-export const awsConstants = {
+export const constants = {
+    aws: {
+        regions: awsRegions,
+    },
     localStorageKey: {
         selectedProfileKey: 'selectedProfileKey',
         awsProfiles: 'awsProfiles',

@@ -1,0 +1,15 @@
+{
+  "name": "Test User",
+  "email": "testuser@example.com",
+  "age": 30,
+  "address": {
+    "street": "123 Test St",
+    "city": "Testville",
+    "state": "TS",
+    "zip": "12345"
+  },
+  "preferences": {
+    "newsletter": true,
+    "notifications": false
+  }
+}

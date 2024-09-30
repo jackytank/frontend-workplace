@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Radio, Select, Form, Input, Popconfirm, Divider, notification } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { awsConstants, awsRegions } from '../../utils/constants';
+import { constants } from '../../utils/constants';
 
 export interface AwsProfile {
     key: string;
@@ -16,9 +16,9 @@ const SettingsPage: React.FC = () => {
     const [form] = Form.useForm();
 
     useEffect(() => {
-        const savedProfiles = JSON.parse(localStorage.getItem(awsConstants.localStorageKey.awsProfiles) || '[]');
+        const savedProfiles = JSON.parse(localStorage.getItem(constants.localStorageKey.awsProfiles) || '[]');
         setProfiles(savedProfiles);
-        const savedSelectedProfile = localStorage.getItem(awsConstants.localStorageKey.selectedProfileKey);
+        const savedSelectedProfile = localStorage.getItem(constants.localStorageKey.selectedProfileKey);
         setSelectedProfileKey(savedSelectedProfile);
     }, []);
 
@@ -26,31 +26,31 @@ const SettingsPage: React.FC = () => {
         const newProfile = { ...values, key: Date.now().toString() };
         const updatedProfiles = [...profiles, newProfile];
         setProfiles(updatedProfiles);
-        localStorage.setItem(awsConstants.localStorageKey.awsProfiles, JSON.stringify(updatedProfiles));
+        localStorage.setItem(constants.localStorageKey.awsProfiles, JSON.stringify(updatedProfiles));
         form.resetFields();
     };
 
     const handleSelectProfile = (key: string) => {
         setSelectedProfileKey(key);
-        localStorage.setItem(awsConstants.localStorageKey.selectedProfileKey, key);
+        localStorage.setItem(constants.localStorageKey.selectedProfileKey, key);
         showNotification(key);
     };
 
     const handleDeleteProfile = (key: string) => {
         const updatedProfiles = profiles.filter(profile => profile.key !== key);
         setProfiles(updatedProfiles);
-        localStorage.setItem(awsConstants.localStorageKey.awsProfiles, JSON.stringify(updatedProfiles));
+        localStorage.setItem(constants.localStorageKey.awsProfiles, JSON.stringify(updatedProfiles));
         if (selectedProfileKey === key) {
             setSelectedProfileKey(null);
-            localStorage.removeItem(awsConstants.localStorageKey.selectedProfileKey);
+            localStorage.removeItem(constants.localStorageKey.selectedProfileKey);
         }
     };
 
     const handleDeleteAllProfiles = () => {
         setProfiles([]);
-        localStorage.removeItem(awsConstants.localStorageKey.awsProfiles);
+        localStorage.removeItem(constants.localStorageKey.awsProfiles);
         setSelectedProfileKey(null);
-        localStorage.removeItem(awsConstants.localStorageKey.selectedProfileKey);
+        localStorage.removeItem(constants.localStorageKey.selectedProfileKey);
     };
 
     const showNotification = (key: string) => {
@@ -116,7 +116,7 @@ const SettingsPage: React.FC = () => {
                 </Form.Item>
                 <Form.Item name="region" rules={[{ required: true, message: 'Region is required' }]}>
                     <Select placeholder="Select Region">
-                        {awsRegions.map((region) => (
+                        {constants.aws.regions.map((region) => (
                             <Select.Option key={region} value={region}>
                                 {region}
                             </Select.Option>
