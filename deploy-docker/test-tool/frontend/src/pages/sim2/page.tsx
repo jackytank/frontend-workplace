@@ -1,7 +1,6 @@
 import { getSelectedProfile } from '../../utils/helper';
 import { Button, Card, Col, Input, message, notification, Result, Row, Upload } from 'antd';
-import { useMemo, useState } from 'react';
-// sqs client aws sdk v3
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AwsProfile } from '../settings';
 import { UploadOutlined } from '@ant-design/icons';
@@ -9,19 +8,26 @@ import { RcFile } from 'antd/es/upload';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import { SiAmazonsqs } from "react-icons/si";
 import { IoRemoveOutline } from "react-icons/io5";
-import { FaLongArrowAltLeft } from "react-icons/fa";
-import { FaLongArrowAltRight } from "react-icons/fa";
+import { FaLongArrowAltLeft, FaLongArrowAltRight } from "react-icons/fa";
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
+import { constants } from '../../utils/constants';
 
 const Sim2Page = () => {
   const profile: AwsProfile | null = useMemo(() => getSelectedProfile(), []);
-  const [queueUrl, setQueueUrl] = useState('');
+  const [queueUrl, setQueueUrl] = useState(localStorage.getItem(constants.localStorageKey.sim2page.queueUrl) || '');
   const [fileContent, setFileContent] = useState<object | null>(null);
-  const [bucketName, setBucketName] = useState('');
-  const [lambdaName, setLambdaName] = useState('');
-  const [lambdaParams, setLambdaParams] = useState<string>('');
+  const [bucketName, setBucketName] = useState(localStorage.getItem(constants.localStorageKey.sim2page.bucketName) || '');
+  const [lambdaName, setLambdaName] = useState(localStorage.getItem(constants.localStorageKey.sim2page.lambdaName) || '');
+  const [lambdaParams, setLambdaParams] = useState(localStorage.getItem(constants.localStorageKey.sim2page.lambdaParams) || '');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem(constants.localStorageKey.sim2page.queueUrl, queueUrl);
+    localStorage.setItem(constants.localStorageKey.sim2page.bucketName, bucketName);
+    localStorage.setItem(constants.localStorageKey.sim2page.lambdaName, lambdaName);
+    localStorage.setItem(constants.localStorageKey.sim2page.lambdaParams, lambdaParams);
+  }, [queueUrl, bucketName, lambdaName, lambdaParams]);
 
   const beforeUpload = (file: RcFile) => {
     const reader = new FileReader();
@@ -150,7 +156,6 @@ const Sim2Page = () => {
     }
     return lineDash;
   };
-  const rightArrow = <FaLongArrowAltRight size={32} />;
 
   return (
     <>
@@ -228,7 +233,7 @@ const Sim2Page = () => {
                 // onChange={handleFileChange}
 
                 >
-                  <Button icon={<UploadOutlined />}>Upload JSON .txt request</Button>
+                  <Button icon={<UploadOutlined />}>Upload .txt file</Button>
                 </Upload>
                 {fileContent && (
                   <Card title="Uploaded JSON Content" style={{ marginTop: 16 }}>
@@ -247,7 +252,7 @@ const Sim2Page = () => {
                   onClick={handleSubmit}
                   style={{ marginTop: 16 }}
                 >
-                  {genLeftArrow(16)} Send to SQS
+                  {genLeftArrow(16)} Send message to SQS
                 </Button>
               </div>
             </Card>

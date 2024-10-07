@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 // 10 aws regions please
 const awsRegions = [
     'us-east-1',
@@ -26,5 +28,15 @@ export const constants = {
     localStorageKey: {
         selectedProfileKey: 'selectedProfileKey',
         awsProfiles: 'awsProfiles',
+        sim2page: {
+            queueUrl: 'sim2page_queueUrl',
+            bucketName: 'sim2page_bucketName',
+            lambdaName: 'sim2page_lambdaName',
+            lambdaParams: 'sim2page_lambdaParams',
+        },
+    },
+    enc: {
+        secretKey: 'my-super-secure-secret-key-and-no-one-will-know', // don't change this encryption/decryption
+        algorithm: 'aes-256-cbc',
     }
 };

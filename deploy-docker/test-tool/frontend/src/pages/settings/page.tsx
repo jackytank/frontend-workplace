@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Radio, Select, Form, Input, Popconfirm, Divider, notification } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { constants } from '../../utils/constants';
 
 export interface AwsProfile {
@@ -14,7 +14,7 @@ const SettingsPage: React.FC = () => {
     const [profiles, setProfiles] = useState<AwsProfile[]>([]);
     const [selectedProfileKey, setSelectedProfileKey] = useState<string | null>(null);
     const [form] = Form.useForm();
-
+    const [visibleSecretKey, setVisibleSecretKey] = useState<string | null>(null);
     useEffect(() => {
         const savedProfiles = JSON.parse(localStorage.getItem(constants.localStorageKey.awsProfiles) || '[]');
         setProfiles(savedProfiles);
@@ -71,8 +71,17 @@ const SettingsPage: React.FC = () => {
         },
         {
             title: 'AWS Secret Access Key',
-            dataIndex: 'aws_secret_access_key',
             key: 'aws_secret_access_key',
+            render: (_: unknown, record: AwsProfile) => (
+                <div>
+                    {visibleSecretKey === record.key ? record.aws_secret_access_key : '********'}
+                    <Button
+                        type="link"
+                        icon={<EyeOutlined />}
+                        onClick={() => setVisibleSecretKey(visibleSecretKey === record.key ? null : record.key)}
+                    />
+                </div>
+            ),
         },
         {
             title: 'Region',
@@ -142,7 +151,6 @@ const SettingsPage: React.FC = () => {
             </Popconfirm>
             <Divider />
             <Table dataSource={profiles} columns={columns} rowKey="key" />
-
         </div>
     );
 };

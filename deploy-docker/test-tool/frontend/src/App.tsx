@@ -20,6 +20,7 @@ import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
+import { SiAwslambda } from "react-icons/si";
 import {
   BlogPostCreate,
   BlogPostEdit,
@@ -76,28 +77,28 @@ function App() {
                     name: "Test Simulator 1",
                     list: "/sim1",
                     meta: {
-                      icon: <AmazonOutlined />
+                      icon: <SiAwslambda />
                     }
                   },
                   {
                     name: "Test Simulator 2",
                     list: "/sim2",
                     meta: {
-                      icon: <AmazonOutlined />
+                      icon: <SiAwslambda />
                     }
                   },
                   {
                     name: "Test Simulator 3",
                     list: "/sim3",
                     meta: {
-                      icon: <AmazonOutlined />
+                      icon: <SiAwslambda />
                     }
                   },
                   {
                     name: "Test Simulator 4",
                     list: "/sim4",
                     meta: {
-                      icon: <AmazonOutlined />
+                      icon: <SiAwslambda />
                     }
                   },
                   {
