@@ -14,109 +14,109 @@ services:
   #   depends_on:
   #     - springboot
   #   mem_limit: 500M
-  # react:
-  #   build: 
-  #     context: ./react-frontend
-  #     dockerfile: Dockerfile.dev
-  #   container_name: myapp-react-frontend
-  #   networks:
-  #     - fe-be
-  #   ports:
-  #     - "3001:3001"
-  #   volumes:
-  #     - ./react-frontend:/myreact_dir
-  #   restart: always
-  #   tty: true
-  #   depends_on:
-  #     springboot: 
-  #       condition: service_started
-  #   mem_limit: 500M
-  # springboot:
-  #   build:
-  #     context: ./springboot-backend
-  #     dockerfile: Dockerfile.dev
-  #   container_name: myapp-springboot
-  #   environment:
-  #     - MY_POSTGRES_HOST=mypostgres
-  #     - MY_POSTGRES_PORT=5432
-  #     - MY_POSTGRES_DB=postgres
-  #     - MY_POSTGRES_USER=postgres
-  #     - MY_POSTGRES_PASSWORD=postgres
-  #     - MY_REDIS_HOST=myredis
-  #     - MY_REDIS_PORT=6379
-  #     - MY_REDIS_PASSWORD=mysupersecureredispassword42
-  #     - MY_MONGO_HOST=mymongo
-  #     - MY_MONGO_PORT=27017
-  #     - MY_MONGO_DB=chatapp_db
-  #     - MY_MONGO_USER=myuser
-  #     - MY_MONGO_PASSWORD=mypassword
-  #   volumes:
-  #     - ./springboot-backend:/mybackend_dir
-  #   ports:
-  #     - "8081:8080"
-  #   networks:
-  #     - fe-be
-  #     - be-db
-  #   restart: always
-  #   depends_on:
-  #     mypostgres:
-  #       condition: service_started
-  #     myredis:
-  #       condition: service_started
-  #     mymongo: 
-  #       condition: service_started
-  #   mem_limit: 1.5G
-  # mypostgres:
-  #   image: docker.io/postgres:16.3-alpine
-  #   container_name: myapp-postgres
-  #   restart: always
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - be-db
-  #   volumes:
-  #     - postgres-data:/var/lib/myapp/postgresql/data
-  #   healthcheck:
-  #     test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-  #     interval: 30s
-  #     timeout: 30s
-  #     retries: 3
-  #   environment:
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_PASSWORD=postgres
-  #     - POSTGRES_DB=ctccoa
-  #   mem_limit: 500M
-  # myredis:
-  #   image: docker.io/redis:7.2.5-alpine
-  #   container_name: myapp-redis
-  #   command: redis-server --requirepass mypassword
-  #   networks:
-  #     - be-db
-  #   healthcheck:
-  #     test: [ "CMD", "redis-cli", "ping" ]
-  #     interval: 30s
-  #     timeout: 3s
-  #     retries: 30
-  #   ports:
-  #     - "6666:6379"
-  #   volumes:
-  #     - redis-data:/data
-  #   restart: always
-  #   mem_limit: 500M
-  # mymongo:
-  #   image: mongo
-  #   container_name: myapp-mongo
-  #   restart: always
-  #   networks:
-  #     - be-db
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=myuser
-  #     - MONGO_INITDB_ROOT_PASSWORD=mypassword
-  #     - MONGO_INITDB_DATABASE=chatapp_db
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data
+  react:
+    build: 
+      context: ./react-frontend
+      dockerfile: Dockerfile.prod
+    container_name: myapp-react-frontend
+    networks:
+      - fe-be
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./react-frontend:/myreact_dir
+    restart: always
+    tty: true
+    depends_on:
+      springboot: 
+        condition: service_started
+    mem_limit: 500M
+  springboot:
+    build:
+      context: ./springboot-backend
+      dockerfile: Dockerfile.prod
+    container_name: myapp-springboot
+    environment:
+      - MY_POSTGRES_HOST=mypostgres
+      - MY_POSTGRES_PORT=5432
+      - MY_POSTGRES_DB=postgres
+      - MY_POSTGRES_USER=postgres
+      - MY_POSTGRES_PASSWORD=postgres
+      - MY_REDIS_HOST=myredis
+      - MY_REDIS_PORT=6379
+      - MY_REDIS_PASSWORD=mysupersecureredispassword42
+      - MY_MONGO_HOST=mymongo
+      - MY_MONGO_PORT=27017
+      - MY_MONGO_DB=chatapp_db
+      - MY_MONGO_USER=myuser
+      - MY_MONGO_PASSWORD=mypassword
+    volumes:
+      - ./springboot-backend:/mybackend_dir
+    ports:
+      - "8081:8080"
+    networks:
+      - fe-be
+      - be-db
+    restart: always
+    depends_on:
+      mypostgres:
+        condition: service_started
+      myredis:
+        condition: service_started
+      mymongo: 
+        condition: service_started
+    mem_limit: 1.5G
+  mypostgres:
+    image: docker.io/postgres:16.3-alpine
+    container_name: myapp-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - be-db
+    volumes:
+      - postgres-data:/var/lib/myapp/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ctccoa
+    mem_limit: 500M
+  myredis:
+    image: docker.io/redis:7.2.5-alpine
+    container_name: myapp-redis
+    command: redis-server --requirepass mypassword
+    networks:
+      - be-db
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "6666:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    mem_limit: 500M
+  mymongo:
+    image: mongo
+    container_name: myapp-mongo
+    restart: always
+    networks:
+      - be-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=myuser
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+      - MONGO_INITDB_DATABASE=chatapp_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data
   # mypgadmin_web:
   #   image: dpage/pgadmin4
   #   container_name: myapp-pgadmin_web
@@ -133,16 +133,16 @@ services:
   #   environment:
   #     - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
   #     - PGADMIN_DEFAULT_PASSWORD=postgres
-  cloudbeaver:
-    image: dbeaver/cloudbeaver:latest
-    container_name: cloudbeaver
-    ports:
-      - "5050:8978"
-    volumes:
-      - cloudbeaver-data:/opt/cloudbeaver/workspace
-    restart: unless-stopped
-    tty: true
-    stdin_open: true
+  # cloudbeaver:
+  #   image: dbeaver/cloudbeaver:latest
+  #   container_name: cloudbeaver
+  #   ports:
+  #     - "5050:8978"
+  #   volumes:
+  #     - cloudbeaver-data:/opt/cloudbeaver/workspace
+  #   restart: unless-stopped
+  #   tty: true
+  #   stdin_open: true
   # myoracledb-main:
   #   image: gvenzl/oracle-xe:21-faststart
   #   container_name: myapp-oracledb-main
