@@ -20,6 +20,16 @@
             "projectName": "demo",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AwsLearnApplication<aws-learn>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.aws.aws_learn.AwsLearnApplication",
+            "projectName": "aws-learn",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
