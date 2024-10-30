@@ -9,7 +9,6 @@ function App() {
     const fetchMessages = async () => {
       try {
         const response = await fetch('http://54.160.217.119:8080/api/v1/sqs');
-        console.log(response);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
