@@ -8,12 +8,8 @@ function App() {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await fetch('http://54.160.217.119:8080/api/v1/sqs', {
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetch('http://54.160.217.119:8080/api/v1/sqs');
+        console.log(response);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -37,9 +33,7 @@ function App() {
     <div>
       <h1>SQS Messages</h1>
       <ul>
-        {messages.map((message, index) => (
-          <li key={index}>{message}</li>
-        ))}
+        {JSON.stringify(messages, null, 2)}
       </ul>
     </div>
   );
