@@ -14,7 +14,7 @@ export class MyServerlessAppStack extends cdk.Stack {
     });
 
     const myFunction = new lambda.Function(this, 'MyFunction', {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.PYTHON_3_12,
       handler: 'index.handler',
       code: lambda.Code.fromAsset('lambda'),
       environment: {
@@ -25,7 +25,7 @@ export class MyServerlessAppStack extends cdk.Stack {
     // Grant the lambda function read/write permissions to the bucket
     bucket.grantReadWrite(myFunction);
     bucket.addEventNotification(
-      s3.EventType.OBJECT_CREATED,
+      s3.EventType.OBJECT_CREATED_PUT,
       new s3n.LambdaDestination(myFunction)
     );
   }
