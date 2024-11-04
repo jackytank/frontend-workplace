@@ -7,6 +7,14 @@ import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
 export class MyServerlessAppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+    this.initBucketAndModifiedKeyLambda();
+  }
+
+  private initWebsiteBucketAndHostStaticWebsite(): void {
+    // hehe
+  };
+
+  private initBucketAndModifiedKeyLambda(): void {
     const bucket = new s3.Bucket(this, 'LearnCdkBucket', {
       bucketName: 'learn-cdk-bucket',
       removalPolicy: cdk.RemovalPolicy.DESTROY,
