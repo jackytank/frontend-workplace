@@ -3,15 +3,35 @@ import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
+import * as s3Deploy from 'aws-cdk-lib/aws-s3-deployment';
 
 export class MyServerlessAppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     this.initBucketAndModifiedKeyLambda();
+    this.initWebsiteBucketAndHostStaticWebsite();
   }
 
   private initWebsiteBucketAndHostStaticWebsite(): void {
-    // hehe
+    const websiteBucket = new s3.Bucket(this, 'websiteBucket', {
+      bucketName: 'learn-cdk-website-bucket',
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      publicReadAccess: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ACLS,
+      websiteIndexDocument: 'index.html',
+      websiteErrorDocument: 'index.html',
+    });
+
+    new cdk.CfnOutput(this, 'WebsiteBucket', {
+      value: websiteBucket.bucketName,
+      description: 'The bucket to host the static website',
+    });
+
+    new s3Deploy.BucketDeployment(this, 'DeployWebsite', {
+      sources: [s3Deploy.Source.asset('./website/dist')],
+      destinationBucket: websiteBucket,
+    });
   };
 
   private initBucketAndModifiedKeyLambda(): void {
