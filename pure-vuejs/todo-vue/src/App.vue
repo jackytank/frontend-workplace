@@ -38,7 +38,7 @@ const selectedKeys = ref<string[]>(['0']);
       </div>
     </LayoutContent>
     <LayoutFooter style="text-align: center">
-      Ant Design ©2018 Created by Ant UED
+      Ant Design @2024
     </LayoutFooter>
   </Layout>
 </template>
