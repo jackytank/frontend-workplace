@@ -43,7 +43,7 @@ export class MyServerlessAppStack extends cdk.Stack {
 
     const myFunction = new lambda.Function(this, 'MyFunction', {
       runtime: lambda.Runtime.PYTHON_3_12,
-      handler: 'index.handler',
+      handler: 'key_modifier_lambda.handler',
       code: lambda.Code.fromAsset('lambda'),
       environment: {
         BUCKET_NAME: bucket.bucketName
