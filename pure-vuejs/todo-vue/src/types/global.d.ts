@@ -36,3 +36,8 @@ export type ParamsUserPagi = {
     page?: number;
     perPage?: number;
 };
+
+export type TodoType = {
+    done: boolean,
+    content: string;
+};
