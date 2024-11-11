@@ -2,10 +2,19 @@
 import { FacebookOutlined } from '@ant-design/icons-vue';
 import { Breadcrumb, BreadcrumbItem, Layout, LayoutContent, LayoutFooter, LayoutHeader, Menu, MenuItem } from 'ant-design-vue';
 import { MenuTheme } from 'ant-design-vue/es/menu/src/interface';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { sessionKey } from './util/constant';
+import { SettingType } from './types/global';
 
 const theme = ref<MenuTheme>('light');
 const selectedKeys = ref<string[]>(['0']);
+
+onMounted(() => {
+  sessionStorage.setItem(sessionKey.settingOfCommonScreen, JSON.stringify({
+    "StartMonth": 4,
+  } as SettingType));
+})
+
 </script>
 
 <template>
@@ -25,6 +34,9 @@ const selectedKeys = ref<string[]>(['0']);
         </MenuItem>
         <MenuItem key="3">
         <RouterLink to="/todo">Todo</RouterLink>
+        </MenuItem>
+        <MenuItem key="4">
+        <RouterLink to="/ssr">SSR</RouterLink>
         </MenuItem>
       </Menu>
     </LayoutHeader>

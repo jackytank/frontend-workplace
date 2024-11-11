@@ -41,3 +41,7 @@ export type TodoType = {
     done: boolean,
     content: string;
 };
+
+export type SettingType = {
+    StartMonth: number;
+};

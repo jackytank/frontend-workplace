@@ -3,6 +3,7 @@ import UserPage from "../pages/user/user-page.vue";
 import EmployeePage from "../pages/employee/employee-page.vue";
 import NotFound from "../components/NotFound.vue";
 import TodoPage from "../pages/todo/todo-page.vue";
+import SsrPage from "../pages/ssr/SsrPage.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -20,6 +21,10 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/todo',
         component: TodoPage
+    },
+    {
+        path: '/ssr',
+        component: SsrPage
     },
     {
         path: '/:pathMatch(.*)*',
