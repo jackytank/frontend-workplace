@@ -10,8 +10,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('swagger-ui', app, document);
 
-  await app.listen(process.env.PORT ?? 80);
+  // http://localhost:8080/swagger-ui
+  await app.listen(process.env.PORT ?? 8080);
+
 }
 bootstrap();
