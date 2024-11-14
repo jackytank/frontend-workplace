@@ -17,7 +17,7 @@ export class ConfigService {
   }
 
   findOne(config_key: string): Promise<Config> {
-    return this.configRepository.findOneBy({ config_key });
+    return this.configRepository.findOneBy({ user_id: config_key });
   }
 
   create(createConfigDto: CreateConfigDto): Promise<Config> {
@@ -30,11 +30,14 @@ export class ConfigService {
     config_key: string,
     updateConfigDto: UpdateConfigDto,
   ): Promise<Config> {
-    await this.configRepository.update({ config_key }, updateConfigDto);
-    return this.configRepository.findOneBy({ config_key });
+    await this.configRepository.update(
+      { user_id: config_key },
+      updateConfigDto,
+    );
+    return this.configRepository.findOneBy({ user_id: config_key });
   }
 
   async remove(config_key: string): Promise<void> {
-    await this.configRepository.delete({ config_key });
+    await this.configRepository.delete({ user_id: config_key });
   }
 }

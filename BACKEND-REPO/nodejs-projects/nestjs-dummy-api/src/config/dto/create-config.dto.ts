@@ -6,7 +6,7 @@ export class CreateConfigDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  config_key: string;
+  user_id: string;
 
   @ApiProperty()
   @IsString()

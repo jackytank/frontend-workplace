@@ -6,7 +6,7 @@ export class UpdateConfigDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  config_key?: string;
+  user_id?: string;
 
   @ApiProperty()
   @IsString()
