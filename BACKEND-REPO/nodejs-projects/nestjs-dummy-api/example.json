@@ -1,0 +1,6 @@
+[
+    {
+        "user_id": "tenantA",
+        "config_value": "{\"SettingOfCommonScreen\": {\"StartMonth\": 7}}"
+    }
+]
