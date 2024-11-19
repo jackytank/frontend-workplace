@@ -43,5 +43,9 @@ export type TodoType = {
 };
 
 export type SettingType = {
-    StartMonth: number;
-};
+    MyUserSetting: {
+        name: string;
+        private: boolean;
+        StartMonth: number;
+    };
+}
