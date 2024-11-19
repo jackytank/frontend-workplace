@@ -8,7 +8,9 @@
     <Button type="primary" @click="onClick">Change</Button>
   </Card>
   <Card title="Response Data API" size="small" class="my-card">
-    <pre>{{ JSON.stringify(respData, null, 2) }}</pre>
+     <pre>{{ JSON.stringify({
+      ...respData
+     }) }}</pre>
   </Card>
 </template>
 

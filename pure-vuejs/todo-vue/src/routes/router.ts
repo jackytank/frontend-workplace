@@ -3,7 +3,9 @@ import UserPage from "../pages/user/user-page.vue";
 import EmployeePage from "../pages/employee/employee-page.vue";
 import NotFound from "../components/NotFound.vue";
 import TodoPage from "../pages/todo/todo-page.vue";
-import SsrPage from "../pages/ssr/SsrPage.vue";
+import SsrPage from "../pages/ssr/VitePluginApiRoutes.vue";
+import TodoIndexedDBPage from "../pages/todo-idb/TodoIndexedDBPage.vue";
+import VitePluginApiRoutes from "../pages/ssr/VitePluginApiRoutes.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -23,14 +25,20 @@ const routes: RouteRecordRaw[] = [
         component: TodoPage
     },
     {
-        path: '/ssr',
-        component: SsrPage
+        path: '/todo-indexedDB',
+        component: TodoIndexedDBPage
+    },
+    {
+        path: '/vite-plugin-api-routes',
+        component: VitePluginApiRoutes
     },
     {
         path: '/:pathMatch(.*)*',
         component: NotFound
     }
 ];
+
+export const menuItems = routes.filter(route => route.path !== '/:pathMatch(.*)*');
 
 const router = createRouter({
     history: createWebHistory(),
