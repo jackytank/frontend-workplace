@@ -3,9 +3,9 @@ import UserPage from "../pages/user/user-page.vue";
 import EmployeePage from "../pages/employee/employee-page.vue";
 import NotFound from "../components/NotFound.vue";
 import TodoPage from "../pages/todo/todo-page.vue";
-import SsrPage from "../pages/ssr/VitePluginApiRoutes.vue";
-import TodoIndexedDBPage from "../pages/todo-idb/TodoIndexedDBPage.vue";
-import VitePluginApiRoutes from "../pages/ssr/VitePluginApiRoutes.vue";
+import DemoVeeValidatePage from "../pages/vee-validate/DemoVeeValidatePage.vue";
+import TodoIndexedDBPage from "../pages/todo-indexedDB/TodoIndexedDBPage.vue";
+import VitePluginApiRoutesPage from "../pages/vite-plugin-api-routes/VitePluginApiRoutesPage.vue";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -25,12 +25,16 @@ const routes: RouteRecordRaw[] = [
         component: TodoPage
     },
     {
+        path: '/vee-validate',
+        component: DemoVeeValidatePage
+    },
+    {
         path: '/todo-indexedDB',
         component: TodoIndexedDBPage
     },
     {
         path: '/vite-plugin-api-routes',
-        component: VitePluginApiRoutes
+        component: VitePluginApiRoutesPage
     },
     {
         path: '/:pathMatch(.*)*',
