@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "sqlite-db-dir",
+    "type": "java.lang.String",
+    "description": "A description for 'sqlite-db-dir'"
+  },
+  {
+    "name": "demo.db.path",
+    "type": "java.lang.String",
+    "description": "A description for 'demo.db.path'"
+  }
+]}
