@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffalo Rampage</title>
+    <style>
+        body { margin: 0; background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        canvas { border: 1px solid white; } /* Optional: adds a border around the game */
+    </style>
+    <!-- Use Phaser 3 via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+</head>
+<body>
+
+<script>
+// --- Global Game Configuration ---
+const GAME_WIDTH = 1000;
+const GAME_HEIGHT = 600;
+
+// --- Constants ---
+const PLAYER_SPEED = 250;
+const PLAYER_JUMP_VELOCITY = -600;
+const PLAYER_HEALTH_START = 100;
+const PLAYER_AMMO_START = 50;
+const BULLET_SPEED = 500;
+const BULLET_REPLENISH = 25;
+const WOLF_HEALTH_MIN_HITS = 3;
+const WOLF_HEALTH_MAX_HITS = 5;
+const WOLF_SPEED = 80;
+const BONE_SPEED = 500;
+const BONE_DAMAGE_NORMAL = 5;
+const BONE_DAMAGE_BOSS = 10;
+const BOSS_HEALTH_LIFE_1 = 100;
+const BOSS_HEALTH_LIFE_2 = 100;
+const BOSS_AMMO_REWARD = 150;
+const MAX_LEVEL = 5;
+
+// --- Asset Generation (Placeholders) ---
+function createPlaceholderTexture(scene, key, width, height, color) {
+    const graphics = scene.make.graphics({ width: width, height: height }, false);
+    graphics.fillStyle(color);
+    graphics.fillRect(0, 0, width, height);
+    graphics.generateTexture(key, width, height);
+    graphics.destroy();
+}
+
+// --- Preload Scene ---
+class PreloadScene extends Phaser.Scene {
+    constructor() {
+        super('PreloadScene');
+    }
+
+    preload() {
+        console.log('Preloading assets...');
+
+        // Display loading text
+        let loadingText = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 50, 'Loading...', { font: '20px Arial', fill: '#ffffff' }).setOrigin(0.5);
+        let percentText = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2, '0%', { font: '18px Arial', fill: '#ffffff' }).setOrigin(0.5);
+        let assetText = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 50, '', { font: '14px Arial', fill: '#ffffff' }).setOrigin(0.5);
+
+        this.load.on('progress', function (value) {
+            percentText.setText(parseInt(value * 100) + '%');
+        });
+
+        this.load.on('fileprogress', function (file) {
+            assetText.setText('Loading asset: ' + file.key);
+        });
+
+        this.load.on('complete', function () {
+            loadingText.destroy();
+            percentText.destroy();
+            assetText.destroy();
+            console.log('Preload complete.');
+        });
+
+        // --- Generate Placeholder Graphics ---
+        // Backgrounds
+        createPlaceholderTexture(this, 'sky', GAME_WIDTH, GAME_HEIGHT, 0x87CEEB); // Blue Sky
+        createPlaceholderTexture(this, 'buildings', GAME_WIDTH, GAME_HEIGHT / 2, 0x808080); // Grey buildings silhouette
+        createPlaceholderTexture(this, 'cloud', 64, 32, 0xFFFFFF); // White Cloud
+
+        // Ground/Platforms
+        createPlaceholderTexture(this, 'ground', 100, 32, 0x8B4513); // Brown Ground
+        createPlaceholderTexture(this, 'platform_cloud', 128, 32, 0xF0F8FF); // Lighter cloud platform
+
+        // Characters & Items
+        createPlaceholderTexture(this, 'buffalo', 48, 64, 0x1E1E1E); // Black Buffalo
+        createPlaceholderTexture(this, 'wolf', 40, 32, 0x708090); // Grey Wolf
+        createPlaceholderTexture(this, 'boss_wolf', 120, 96, 0x506070); // Darker Grey Boss Wolf
+        createPlaceholderTexture(this, 'bullet', 10, 4, 0xFFFF00); // Yellow Bullet
+        createPlaceholderTexture(this, 'bone', 15, 8, 0xFFFAF0); // White Bone
+        createPlaceholderTexture(this, 'ak47', 30, 10, 0x8B4513); // Brown AK47 (will attach visually)
+    }
+
+    create() {
+        this.scene.start('GameScene');
+    }
+}
+
+// --- Game Scene ---
+class GameScene extends Phaser.Scene {
+    constructor() {
+        super('GameScene');
+
+        // Game State
+        this.player = null;
+        this.playerAk47 = null; // Visual representation
+        this.cursors = null;
+        this.keys = {};
+        this.platforms = null;
+        this.clouds = null; // Jumpable cloud platforms
+        this.bullets = null;
+        this.bones = null;
+        this.wolves = null;
+        this.bossWolf = null;
+
+        this.playerHealth = PLAYER_HEALTH_START;
+        this.playerAmmo = PLAYER_AMMO_START;
+        this.currentLevel = 1;
+        this.wolvesToKill = 0;
+
+        this.healthText = null;
+        this.ammoText = null;
+        this.levelText = null;
+
+        this.lastFired = 0;
+        this.fireRate = 250; // Milliseconds between shots
+
+        this.backgroundSky = null;
+        this.backgroundBuildings = null;
+        this.backgroundClouds = []; // Array for moving cloud sprites
+    }
+
+    create() {
+        console.log(`Starting Level ${this.currentLevel}`);
+        // --- Reset State for New Level/Restart ---
+        this.playerHealth = PLAYER_HEALTH_START;
+        this.playerAmmo = PLAYER_AMMO_START;
+        this.bossWolf = null; // Ensure boss is null unless it's level 5
+
+        // --- Background ---
+        // Sky (static color for now, TileSprite is better for seamless scrolling)
+        this.backgroundSky = this.add.tileSprite(0, 0, GAME_WIDTH, GAME_HEIGHT, 'sky').setOrigin(0, 0).setScrollFactor(0);
+
+        // Add some moving cloud sprites (visual only, not platforms)
+        for (let i = 0; i < 5; i++) {
+            let cloudY = Phaser.Math.Between(50, GAME_HEIGHT / 3);
+            let cloudX = Phaser.Math.Between(0, GAME_WIDTH);
+            let cloudSpeed = Phaser.Math.Between(20, 50);
+            let bgCloud = this.add.sprite(cloudX, cloudY, 'cloud').setScrollFactor(0).setAlpha(0.8);
+            bgCloud.setData('speed', cloudSpeed); // Store speed with the cloud
+            this.backgroundClouds.push(bgCloud);
+        }
+
+        // Building Silhouette (Static)
+        this.backgroundBuildings = this.add.image(GAME_WIDTH / 2, GAME_HEIGHT - (GAME_HEIGHT / 4), 'buildings').setOrigin(0.5, 1).setScrollFactor(0.5); // Some parallax
+        this.backgroundBuildings.setScale(1, 1.5) // Stretch vertically
+
+        // --- Platforms ---
+        this.platforms = this.physics.add.staticGroup();
+        this.clouds = this.physics.add.staticGroup(); // Separate group for jumpable clouds
+
+        // Ground (stretch across the bottom)
+        const groundY = GAME_HEIGHT - 16; // Half height of ground texture
+        const ground = this.platforms.create(GAME_WIDTH / 2, groundY, 'ground');
+        ground.setScale(GAME_WIDTH / 100, 1).refreshBody(); // Scale horizontally and refresh physics body
+
+        // Example Platforms
+        this.platforms.create(600, 450, 'ground').setScale(2,1).refreshBody();
+        this.platforms.create(50, 350, 'ground').setScale(1.5,1).refreshBody();
+        this.platforms.create(750, 280, 'ground').refreshBody();
+
+        // Example Jumpable Clouds (higher up)
+        this.clouds.create(200, 180, 'platform_cloud').refreshBody();
+        this.clouds.create(500, 150, 'platform_cloud').setScale(1.2,1).refreshBody();
+        this.clouds.create(850, 200, 'platform_cloud').refreshBody();
+
+
+        // --- Player ---
+        this.player = this.physics.add.sprite(100, GAME_HEIGHT - 150, 'buffalo');
+        this.player.setBounce(0.1);
+        this.player.setCollideWorldBounds(true);
+        this.player.body.setGravityY(300);
+        this.player.setData('facing', 'right'); // Track direction
+
+        // Attach AK47 visual (adjust offset as needed)
+        this.playerAk47 = this.add.sprite(this.player.x + 15, this.player.y, 'ak47').setOrigin(0, 0.5);
+
+        // --- Groups ---
+        this.bullets = this.physics.add.group({
+            defaultKey: 'bullet',
+            maxSize: 50 // Limit bullets on screen
+        });
+
+        this.bones = this.physics.add.group({
+            defaultKey: 'bone',
+            maxSize: 50
+        });
+
+        this.wolves = this.physics.add.group();
+
+        // --- Physics Colliders ---
+        this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.collider(this.player, this.clouds); // Player can stand on clouds
+        this.physics.add.collider(this.wolves, this.platforms);
+        // Wolves currently *don't* collide with jumpable clouds, they stay on ground platforms
+
+        this.physics.add.overlap(this.bullets, this.wolves, this.handleBulletWolfCollision, null, this);
+        this.physics.add.overlap(this.player, this.bones, this.handlePlayerBoneCollision, null, this);
+        this.physics.add.overlap(this.player, this.wolves, this.handlePlayerWolfCollision, null, this); // Optional: Damage on touch?
+
+        // --- Input ---
+        this.cursors = this.input.keyboard.createCursorKeys(); // Arrow keys (alternative)
+        this.keys = this.input.keyboard.addKeys('W,A,S,D,SPACE,F'); // WASD, Space, F
+
+        // --- UI ---
+        this.healthText = this.add.text(16, 16, `HP: ${this.playerHealth}`, { fontSize: '24px', fill: '#FF0000', fontStyle: 'bold' }).setScrollFactor(0);
+        this.ammoText = this.add.text(16, 50, `Ammo: ${this.playerAmmo}`, { fontSize: '24px', fill: '#FFFF00', fontStyle: 'bold' }).setScrollFactor(0);
+        this.levelText = this.add.text(GAME_WIDTH - 150, 16, `Level: ${this.currentLevel}`, { fontSize: '24px', fill: '#FFFFFF', fontStyle: 'bold' }).setScrollFactor(0);
+
+        // --- Start Level Logic ---
+        this.startLevel(this.currentLevel);
+
+        // --- Camera ---
+        this.cameras.main.setBounds(0, 0, GAME_WIDTH, GAME_HEIGHT); // No camera movement for this simple setup
+        // If the world was larger: this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+    }
+
+    update(time, delta) {
+        // --- Player Movement ---
+        if (this.keys.A.isDown) {
+            this.player.setVelocityX(-PLAYER_SPEED);
+            this.player.setData('facing', 'left');
+             this.playerAk47.setFlipX(true); // Flip AK visual
+        } else if (this.keys.D.isDown) {
+            this.player.setVelocityX(PLAYER_SPEED);
+            this.player.setData('facing', 'right');
+             this.playerAk47.setFlipX(false); // Unflip AK visual
+        } else {
+            this.player.setVelocityX(0);
+        }
+
+        // --- Player Jumping ---
+        // Allow jump only if touching ground/platform or just jumped
+        const canJump = this.player.body.touching.down || this.player.body.onFloor();
+        if ((this.keys.W.isDown || this.keys.SPACE.isDown) && canJump) {
+             this.player.setVelocityY(PLAYER_JUMP_VELOCITY);
+        }
+
+        // Update AK47 position relative to player
+        const akOffsetX = this.player.getData('facing') === 'right' ? 15 : -15;
+        const akOriginX = this.player.getData('facing') === 'right' ? 0 : 1;
+        this.playerAk47.setOrigin(akOriginX, 0.5);
+        this.playerAk47.setPosition(this.player.x + akOffsetX, this.player.y);
+
+
+        // --- Player Shooting ---
+        if (this.keys.F.isDown && time > this.lastFired) {
+            this.playerShoot(time);
+        }
+
+        // --- Enemy AI (Simple) ---
+        this.wolves.children.each(wolf => {
+            if (!wolf.active) return;
+
+            // Basic back-and-forth or towards player
+            if (Math.random() < 0.01) { // Occasionally change direction
+                 wolf.body.velocity.x *= -1;
+            }
+             // Keep velocity if set, otherwise give initial velocity
+            if(Math.abs(wolf.body.velocity.x) < WOLF_SPEED / 2) {
+                wolf.setVelocityX(Phaser.Math.RND.pick([-WOLF_SPEED, WOLF_SPEED]));
+            }
+
+            // Flip sprite based on velocity
+            wolf.setFlipX(wolf.body.velocity.x < 0);
+
+            // Randomly throw bones (use timed events for better control)
+            if (!wolf.getData('throwTimer')) {
+                let delay = Phaser.Math.Between(2000, 5000); // Throw every 2-5 seconds
+                if (wolf.getData('isBoss')) {
+                    delay = Phaser.Math.Between(1500, 3000); // Boss throws more often
+                }
+                 const timer = this.time.addEvent({
+                    delay: delay,
+                    callback: this.wolfThrowBone,
+                    callbackScope: this,
+                    args: [wolf],
+                    loop: true
+                 });
+                 wolf.setData('throwTimer', timer);
+            }
+        });
+
+         // --- Boss Specific Update ---
+        if (this.bossWolf && this.bossWolf.active) {
+            // Ensure boss throws 3 bones if it's its turn
+            // (The wolfThrowBone function handles the quantity for the boss)
+
+             // Flip sprite based on velocity
+            this.bossWolf.setFlipX(this.bossWolf.body.velocity.x < 0);
+        }
+
+        // --- Update Background Clouds ---
+        this.backgroundClouds.forEach(cloud => {
+            cloud.x += cloud.getData('speed') * (delta / 1000); // Move based on delta time
+            if (cloud.x > GAME_WIDTH + cloud.width) { // Wrap around screen
+                cloud.x = -cloud.width;
+                cloud.y = Phaser.Math.Between(50, GAME_HEIGHT / 3); // Randomize Y on wrap
+            }
+        });
+
+        // --- Update UI ---
+        this.healthText.setText(`HP: ${this.playerHealth}`);
+        this.ammoText.setText(`Ammo: ${this.playerAmmo}`);
+
+        // --- Check Game Over ---
+        if (this.playerHealth <= 0) {
+            this.gameOver();
+        }
+    }
+
+    // --- Helper Functions ---
+
+    startLevel(levelNum) {
+        this.currentLevel = levelNum;
+        this.levelText.setText(`Level: ${levelNum}`);
+
+        // Clear previous level elements safely
+        this.bullets.getChildren().forEach(b => b.destroy());
+        this.bones.getChildren().forEach(b => b.destroy());
+        this.wolves.getChildren().forEach(w => {
+             const timer = w.getData('throwTimer');
+             if (timer) timer.remove();
+             w.destroy();
+        });
+         if (this.bossWolf) {
+             const timer = this.bossWolf.getData('throwTimer');
+             if (timer) timer.remove();
+             this.bossWolf.destroy();
+             this.bossWolf = null;
+         }
+
+
+        // Reset player position?
+        // this.player.setPosition(100, GAME_HEIGHT - 150);
+        // this.player.setVelocity(0, 0);
+
+        // Spawn Enemies
+        const numWolves = levelNum + 1;
+        this.wolvesToKill = numWolves; // Base wolves for the level
+
+        console.log(`Spawning ${numWolves} wolves for level ${levelNum}`);
+        for (let i = 0; i < numWolves; i++) {
+            let x = Phaser.Math.Between(300, GAME_WIDTH - 100);
+            let y = GAME_HEIGHT - 100; // Spawn near ground
+            this.spawnWolf(x, y);
+        }
+
+        // Spawn Boss on Level 5
+        if (levelNum === MAX_LEVEL) {
+            console.log("Spawning Boss Wolf!");
+            this.wolvesToKill = 6; // Level 5 has 6 normal wolves + boss
+             // Spawn the 6 regular wolves first
+            this.wolves.clear(true, true); // Clear any previous wolves just in case
+            for (let i = 0; i < 6; i++) {
+                 let x = Phaser.Math.Between(200, GAME_WIDTH - 100);
+                 let y = GAME_HEIGHT - 100;
+                 this.spawnWolf(x, y);
+            }
+            // Spawn the boss - falling from sky
+            let bossX = GAME_WIDTH / 2;
+            let bossY = -150; // Start above screen
+            this.spawnWolf(bossX, bossY, true); // isBoss = true
+             this.wolvesToKill += 1; // Add boss to the kill count
+        }
+         console.log(`Total enemies to kill this level: ${this.wolvesToKill}`);
+
+    }
+
+    spawnWolf(x, y, isBoss = false) {
+        let wolf;
+        if (isBoss) {
+            wolf = this.wolves.create(x, y, 'boss_wolf');
+            wolf.setData('isBoss', true);
+            wolf.setData('health', BOSS_HEALTH_LIFE_1);
+            wolf.setData('maxHealth', BOSS_HEALTH_LIFE_1);
+            wolf.setData('life', 1);
+            wolf.setBounce(0.1);
+            wolf.body.setGravityY(300); // Boss falls initially
+            wolf.setCollideWorldBounds(true);
+            this.physics.add.collider(wolf, this.platforms); // Boss collides with ground too
+             this.bossWolf = wolf; // Store reference
+             console.log(`Boss spawned at ${x}, ${y} with ${BOSS_HEALTH_LIFE_1} HP (Life 1)`);
+
+        } else {
+            wolf = this.wolves.create(x, y, 'wolf');
+            let hitsNeeded = Phaser.Math.Between(WOLF_HEALTH_MIN_HITS, WOLF_HEALTH_MAX_HITS);
+            wolf.setData('isBoss', false);
+            wolf.setData('health', hitsNeeded);
+             wolf.setData('maxHealth', hitsNeeded);
+            wolf.setBounce(0.1);
+            wolf.setCollideWorldBounds(true);
+            wolf.body.setGravityY(300); // Make wolves affected by gravity
+            wolf.setVelocityX(Phaser.Math.RND.pick([-WOLF_SPEED, WOLF_SPEED])); // Initial random direction
+            console.log(`Wolf spawned at ${x}, ${y} requiring ${hitsNeeded} hits.`);
+        }
+
+        wolf.setPushable(false); // Prevent player from easily pushing them
+    }
+
+    playerShoot(time) {
+        if (this.playerAmmo > 0) {
+            const bullet = this.bullets.get(this.player.x, this.player.y);
+
+            if (bullet) {
+                bullet.setActive(true);
+                bullet.setVisible(true);
+                bullet.body.allowGravity = false; // Bullets fly straight
+
+                const direction = this.player.getData('facing');
+                const velocityX = (direction === 'right' ? BULLET_SPEED : -BULLET_SPEED);
+                 const offsetX = (direction === 'right' ? 25 : -25); // Offset from player center
+
+                bullet.setPosition(this.player.x + offsetX, this.player.y); // Start slightly in front
+                bullet.setVelocity(velocityX, 0);
+                bullet.body.world.checkOutOfBounds = true; // Enable world bounds check
+                bullet.body.onWorldBounds = true; // Trigger event on bounds collision
+
+                 // Automatically destroy bullet when it leaves the screen
+                bullet.body.world.on('worldbounds', (body) => {
+                     if (body.gameObject === bullet) {
+                        // console.log('Bullet out of bounds');
+                         bullet.destroy();
+                     }
+                 }, this);
+
+
+                this.playerAmmo--;
+                this.lastFired = time + this.fireRate;
+                // console.log(`Shot! Ammo left: ${this.playerAmmo}`);
+            }
+        } else {
+            // console.log("Out of ammo!");
+            // Optional: Play 'click' sound
+        }
+    }
+
+     wolfThrowBone(wolf) {
+        if (!wolf.active || !this.player.active) return; // Don't throw if wolf or player is inactive
+
+        const isBoss = wolf.getData('isBoss');
+        const boneCount = isBoss ? 3 : 1;
+         const baseDelay = isBoss? 50 : 0; // Slight delay between boss bones
+
+        for (let i = 0; i < boneCount; i++) {
+            this.time.delayedCall(i * baseDelay, () => {
+                if (!wolf.active || !this.player.active) return; // Check again in case wolf died during delay
+
+                const bone = this.bones.get(wolf.x, wolf.y);
+                if (bone) {
+                    bone.setActive(true);
+                    bone.setVisible(true);
+                    bone.body.allowGravity = true; // Bones affected by gravity
+                    bone.body.setGravityY(100); // Less gravity than player/wolves?
+                    bone.body.setBounceY(0.3); // Bounce a little
+
+                    // Aim roughly towards player, with some arc/randomness
+                    const angleToPlayer = Phaser.Math.Angle.Between(wolf.x, wolf.y, this.player.x, this.player.y);
+                    const randomAngleOffset = Phaser.Math.FloatBetween(-0.3, 0.3); // Radians
+                    const launchAngle = angleToPlayer + randomAngleOffset - Math.PI / 6; // Aim slightly upwards
+
+                    this.physics.velocityFromRotation(launchAngle, BONE_SPEED, bone.body.velocity);
+
+                    // Add slight torque/spin
+                     bone.body.setAngularVelocity(Phaser.Math.Between(-100, 100));
+
+                     // Destroy bone if it hits platforms or goes out of bounds
+                     this.physics.add.collider(bone, this.platforms, (b, p) => {
+                         b.destroy();
+                     });
+                     bone.body.world.checkOutOfBounds = true;
+                     bone.body.onWorldBounds = true;
+                     bone.body.world.on('worldbounds', (body) => {
+                         if (body.gameObject === bone) {
+                             bone.destroy();
+                         }
+                     }, this);
+                }
+            });
+        }
+    }
+
+
+    handleBulletWolfCollision(bullet, wolf) {
+        // console.log("Bullet hit wolf");
+        bullet.destroy(); // Destroy the bullet
+
+        if (!wolf.active) return; // Ignore inactive wolves (already dying)
+
+        let currentHealth = wolf.getData('health');
+        currentHealth--;
+        wolf.setData('health', currentHealth);
+
+         // Visual feedback - flash red briefly
+        wolf.setTint(0xff0000);
+        this.time.delayedCall(100, () => {
+            if (wolf.active) { // Only clear tint if wolf still exists
+                 wolf.clearTint();
+            }
+        });
+
+
+        if (currentHealth <= 0) {
+            console.log("Wolf killed!");
+            this.killWolf(wolf);
+        } else {
+             // console.log(`Wolf health: ${currentHealth}`);
+        }
+    }
+
+    handlePlayerBoneCollision(player, bone) {
+         // console.log("Player hit by bone");
+         bone.destroy(); // Destroy the bone
+
+         if (!player.active) return; // Player might already be dead
+
+         const damage = bone.getData('isBossBone') ? BONE_DAMAGE_BOSS : BONE_DAMAGE_NORMAL; // Need to track if it came from boss
+         this.playerHealth -= damage;
+         console.log(`Player hit! Health: ${this.playerHealth}`);
+
+         // Visual feedback - flash red briefly
+         player.setTint(0xff0000);
+         this.playerAk47.setTint(0xff0000); // Also tint weapon
+         this.time.delayedCall(150, () => {
+             player.clearTint();
+             this.playerAk47.clearTint();
+         });
+
+         if (this.playerHealth <= 0) {
+             this.playerHealth = 0; // Prevent negative display
+             this.gameOver();
+         }
+    }
+
+     handlePlayerWolfCollision(player, wolf) {
+         // Optional: Damage player on touch, or just push back
+         // For now, let's just apply a small knockback
+         const pushDirectionX = player.x < wolf.x ? -1 : 1;
+         const pushDirectionY = -1; // Push upwards slightly
+         player.setVelocity(pushDirectionX * 100, pushDirectionY * 150);
+
+          // Minor damage on touch?
+         // this.playerHealth -= 1;
+         // player.setTint(0xffaaaa);
+         // this.time.delayedCall(100, () => player.clearTint());
+         // if (this.playerHealth <= 0) this.gameOver();
+     }
+
+
+    killWolf(wolf) {
+         const isBoss = wolf.getData('isBoss');
+         const bossLife = wolf.getData('life');
+
+         // Stop wolf actions
+         const timer = wolf.getData('throwTimer');
+         if (timer) timer.remove();
+         wolf.setVelocity(0,0);
+         wolf.setActive(false);
+         // Play death animation/effect here if available
+          wolf.setVisible(false); // Hide for now
+
+
+        if (isBoss && bossLife === 1) {
+            console.log("Boss defeated (Life 1)! Resurrecting...");
+            this.playerAmmo += BOSS_AMMO_REWARD;
+            console.log(`Player received ${BOSS_AMMO_REWARD} ammo. Total: ${this.playerAmmo}`);
+
+            // Resurrection effect (e.g., flash, sound)
+             wolf.setTint(0x00ff00); // Flash green
+
+             this.time.delayedCall(1000, () => { // Wait 1 second
+                 if (this.bossWolf === wolf) { // Check if boss still exists
+                    wolf.setActive(true);
+                    wolf.setVisible(true);
+                    wolf.clearTint();
+                    wolf.setData('health', BOSS_HEALTH_LIFE_2);
+                    wolf.setData('life', 2);
+                    wolf.setPosition(GAME_WIDTH / 2, GAME_HEIGHT - 100); // Reposition maybe?
+                    wolf.setVelocityX(WOLF_SPEED * 1.2); // Maybe slightly faster second life?
+                     console.log(`Boss resurrected! HP: ${BOSS_HEALTH_LIFE_2} (Life 2)`);
+
+                     // Restart throwing timer for life 2
+                     let delay = Phaser.Math.Between(1000, 2500); // Faster throwing?
+                     const newTimer = this.time.addEvent({
+                        delay: delay,
+                        callback: this.wolfThrowBone,
+                        callbackScope: this,
+                        args: [wolf],
+                        loop: true
+                     });
+                     wolf.setData('throwTimer', newTimer);
+
+                 } else {
+                      console.warn("Boss reference lost during resurrection timer.");
+                 }
+             });
+             // Don't decrement wolvesToKill yet, only after final life
+
+        } else {
+            // Normal wolf kill or Boss final kill
+            this.playerAmmo += BULLET_REPLENISH;
+            console.log(`Killed enemy. Player received ${BULLET_REPLENISH} ammo. Total: ${this.playerAmmo}`);
+            this.wolvesToKill--;
+            console.log(`Enemies remaining: ${this.wolvesToKill}`);
+
+            wolf.destroy(); // Fully remove the wolf sprite
+
+             if(isBoss && bossLife === 2) {
+                console.log("Boss defeated permanently!");
+                 this.bossWolf = null; // Clear boss reference
+             }
+
+            // Check for level completion
+            if (this.wolvesToKill <= 0) {
+                this.levelComplete();
+            }
+        }
+    }
+
+    levelComplete() {
+        console.log(`Level ${this.currentLevel} Complete!`);
+        if (this.currentLevel < MAX_LEVEL) {
+            this.currentLevel++;
+            // Short delay before starting next level?
+            this.time.delayedCall(2000, () => {
+                this.startLevel(this.currentLevel);
+            });
+        } else {
+            // Beat the final level (level 5)
+            console.log("Final level beaten!");
+            this.time.delayedCall(1000, () => {
+                 this.scene.start('GameOverScene', { win: true }); // Pass win state
+            });
+        }
+    }
+
+    gameOver() {
+        console.log("GAME OVER");
+        this.physics.pause(); // Stop physics simulation
+        this.player.setTint(0xff0000); // Indicate player death
+        this.player.setActive(false); // Stop updates/input
+
+         // Stop all enemy timers
+         this.wolves.children.each(wolf => {
+            const timer = wolf.getData('throwTimer');
+            if (timer) timer.remove();
+            wolf.setVelocity(0, 0); // Stop movement
+         });
+          if (this.bossWolf) {
+             const timer = this.bossWolf.getData('throwTimer');
+             if (timer) timer.remove();
+             this.bossWolf.setVelocity(0, 0);
+          }
+
+
+        // Optional: Camera fade out?
+
+        this.time.delayedCall(1500, () => {
+            this.scene.start('GameOverScene', { win: false }); // Pass lose state
+        });
+    }
+}
+
+// --- Game Over Scene ---
+class GameOverScene extends Phaser.Scene {
+    constructor() {
+        super('GameOverScene');
+    }
+
+    init(data) {
+        // Data passed from GameScene (e.g., { win: true/false })
+        this.didWin = data.win || false;
+    }
+
+    create() {
+        // Background color
+        this.cameras.main.setBackgroundColor('#000000');
+
+        let message = this.didWin ? "YOU WON! THANK FOR PLAYING" : "GAME OVER!"; // Show win message if applicable
+        if (this.didWin) {
+             message = "GAME OVER! THANK FOR PLAYING"; // Requirement is specific
+        }
+
+
+        const gameOverText = this.add.text(
+            GAME_WIDTH / 2,
+            GAME_HEIGHT / 2,
+            message,
+            {
+                fontFamily: 'Arial',
+                fontSize: '48px',
+                color: '#00FF00', // Green text
+                align: 'center',
+                fontStyle: 'bold'
+            }
+        ).setOrigin(0.5);
+
+        if (!this.didWin) {
+            this.add.text(
+                GAME_WIDTH / 2,
+                GAME_HEIGHT / 2 + 60,
+                'Click or Tap to Restart',
+                 { fontSize: '24px', fill: '#ffffff'}
+            ).setOrigin(0.5);
+
+             this.input.once('pointerdown', () => {
+                 // Reset necessary states if restarting the same scene instance is problematic
+                 // It's generally cleaner to restart the whole game or transition properly
+                 this.scene.start('GameScene');
+             });
+        } else {
+             // Maybe just display the win message without restart option, or add one.
+        }
+    }
+}
+
+// --- Phaser Game Configuration ---
+const config = {
+    type: Phaser.AUTO, // Use WebGL if available, otherwise Canvas
+    width: GAME_WIDTH,
+    height: GAME_HEIGHT,
+    parent: 'phaser-game', // ID of the div to contain the game (optional)
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 500 }, // Global gravity affecting player, enemies
+            debug: false // Set to true to see physics bodies/velocities
+        }
+    },
+    scene: [PreloadScene, GameScene, GameOverScene] // Order matters: first scene is the starting one
+};
+
+// --- Initialize Phaser Game ---
+const game = new Phaser.Game(config);
+
+</script>
+
+</body>
+</html>
