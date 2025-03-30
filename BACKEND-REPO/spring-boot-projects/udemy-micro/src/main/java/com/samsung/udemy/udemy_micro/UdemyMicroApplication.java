@@ -66,27 +66,27 @@ public class UdemyMicroApplication implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception {
-		System.out.println("Starting data population...");
-		long startTime = System.currentTimeMillis();
+		// System.out.println("Starting data population...");
+		// long startTime = System.currentTimeMillis();
 
-		// Populate customers
-		System.out.println("Populating customers...");
-		this.populateCustomers();
+		// // Populate customers
+		// System.out.println("Populating customers...");
+		// this.populateCustomers();
 
-		// Populate accounts
-		System.out.println("Populating accounts...");
-		this.populateAccounts();
+		// // Populate accounts
+		// System.out.println("Populating accounts...");
+		// this.populateAccounts();
 
-		// Populate loans
-		System.out.println("Populating loans...");
-		this.populateLoans();
+		// // Populate loans
+		// System.out.println("Populating loans...");
+		// this.populateLoans();
 
-		// Populate transactions
-		System.out.println("Populating transactions...");
-		this.populateTransactions();
+		// // Populate transactions
+		// System.out.println("Populating transactions...");
+		// this.populateTransactions();
 
-		long endTime = System.currentTimeMillis();
-		System.out.printf("Total execution time: %.2f seconds%n", (endTime - startTime) / 1000.0);
+		// long endTime = System.currentTimeMillis();
+		// System.out.printf("Total execution time: %.2f seconds%n", (endTime - startTime) / 1000.0);
 	}
 
 	private void populateCustomers() {
