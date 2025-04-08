@@ -5,19 +5,87 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
 import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Gatherers;
 
 import dto.AnimalCareTaker;
+import utils.MyUtils;
 
 void main() {
     // jep488PrimitiveTypesInPatternsInstanceofAndSwitchSecondPreview();
     // jep492FlexibleConstructorBodiesThirdPreview();
-    // jep485StreamGatherers();
-    jep454ForeignFunctionAndMemoryAPIFinal_C_strlen();
+    jep485StreamGatherers();
+    // jep454ForeignFunctionAndMemoryAPIFinal_C_strlen();
     // jep456UnnamedVariablesAndPatterns(23);
 }
 
 void jep485StreamGatherers() {
-    
+    // Example 1: Gatherers.windowFixed() - You have a stream of sensor readings
+    // taken sequentially. You want to process these readings in non-overlapping
+    // batches (windows) of a fixed size (e.g., groups of 3 readings at a time) to
+    // perform analysis on each batch.
+    final var result1 = List.of("Jakarta", "", "EE", "will", "be", "released", "", "soon", "!")
+            .stream()
+            .filter(Predicate.not(String::isBlank))
+            .gather(Gatherers.windowFixed(2))
+            .collect(Collectors.toCollection(LinkedList::new));
+    // expected: [[Jakarta, EE], [will, be], [released, soon], [!]]
+    System.out.println(result1);
+
+    // Example 2: Gatherers windowSliding() - multiply all elements
+    final var result2 = List.of(1, 2, 3, 4, 5)
+            .stream()
+            .gather(Gatherers.fold(() -> 1, (a, b) -> a * b))
+            .collect(Collectors.toCollection(LinkedList::new));
+    // expected: [120]
+    // Conclude: just like .reduce() but not return Optional
+    System.out.println(result2);
+
+    // Example 3: Gatherers.windowSliding() - You have a stream of daily stock
+    // prices. You need to calculate the 3-day simple moving average. This requires
+    // looking at a sliding window of prices (days 1-2-3, then days 2-3-4, then days
+    // 3-4-5, etc.).
+    final var result3 = List.of(100.0, 102.5, 101.0, 103.0, 105.5, 104.0)
+            .stream()
+            .gather(Gatherers.windowSliding(3));
+    result3.forEach(window -> {
+        final double sum = window.stream().mapToDouble(Double::doubleValue).sum();
+        final double average = window.isEmpty() ? 0 : sum / window.size();
+        System.out.printf("Window: %-15s Average: %.2f%n", window, average);
+    });
+
+    // Example 4: We need to ensure safe distribution of wolves, sheep, and
+    // sheepdogs, avoiding any sequence of three that includes a wolf and a sheep
+    // without a sheepdog. We'll start by defining these types with an enum.
+    var validSequence = List.of(MyUtils.Animal.SHEEP, MyUtils.Animal.SHEEPDOG, MyUtils.Animal.WOLF,
+            MyUtils.Animal.WOLF);
+    validSequence.stream()
+            .gather(MyUtils.isValidSeq())
+            .forEach(seq -> {
+                System.out.println("Valid sequence: " + seq);
+            });
+    var invalidSequence = List.of(MyUtils.Animal.SHEEPDOG, MyUtils.Animal.SHEEP,
+            MyUtils.Animal.WOLF, MyUtils.Animal.WOLF);
+    invalidSequence.stream()
+            .gather(MyUtils.isValidSeq())
+            .forEach(seq -> {
+                System.out.println("Invalid sequence: " + seq);
+            });
+
+    // Example 5: Gatherers.scan
+    var blogPostTitles = List.of("Java 21", "Java 22", "Java 23");
+    blogPostTitles.stream()
+            .gather(Gatherers.scan(
+                    () -> "scan - Java JDK versions: ", (res, title) -> res + title + ", "))
+            .forEach(System.out::println);
+
+    blogPostTitles.stream()
+            .gather(Gatherers.fold(() -> "fold - Java JDK versions: ", (res, title) -> res + title + ", "))
+            .forEach(System.out::println);
+
 }
 
 void jep456UnnamedVariablesAndPatterns(final Object obj) {
