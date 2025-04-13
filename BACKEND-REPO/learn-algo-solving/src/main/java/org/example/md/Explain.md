@@ -98,4 +98,4 @@ To see how the box analogy matches the XOR logic, you can look at the table belo
   </tbody>
 </table>
 
-You can see that the box and the result are always the same, except that the box uses decimal numbers and the result uses binary numbers. This shows that the box analogy is a valid way to understand the XOR logic.
+You can see that the box and the result are always the same, except that the box uses decimal numbers and the result uses binary numbers. This shows that the box analogy is a valid way to understand the XOR logic. 
