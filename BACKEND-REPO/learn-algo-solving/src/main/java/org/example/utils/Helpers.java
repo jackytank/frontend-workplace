@@ -6,15 +6,51 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Helpers {
-    record Vertex<T>(T value, List<Vertex<T>> neighbors) {
+    @Getter
+    @ToString
+    @AllArgsConstructor
+    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+    public static class Node<T> {
+        @EqualsAndHashCode.Include
+        private final T value;
+        private final List<Node<T>> neighbors;
+    }
+
+    public <T> void dfsNoRecursive2(Node<T> start, Predicate<Node<T>> nodeFilter, Consumer<Node<T>> nodeProcessor) {
+        final Set<Node<T>> visited = new HashSet<>();
+        final Deque<Node<T>> stack = new ArrayDeque<>();
+
+        stack.push(start);
+        while (!stack.isEmpty()) {
+            final Node<T> current = stack.pop();
+            if (visited.add(current) && nodeFilter.test(current)) {
+                nodeProcessor.accept(current);
+            }
+
+            // Iterate the list in reverse order (replacing reversed() method)
+            final List<Node<T>> neighbors = current.getNeighbors();
+            for (int i = neighbors.size() - 1; i >= 0; i--) {
+                final Node<T> neighbor = neighbors.get(i);
+                if (!visited.contains(neighbor)) {
+                    stack.push(neighbor);
+                }
+            }
+        }
     }
 
     public void dfsNoRecursive(

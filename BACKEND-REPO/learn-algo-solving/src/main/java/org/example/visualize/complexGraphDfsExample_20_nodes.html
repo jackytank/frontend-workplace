@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Graph Visualization - 20 Nodes</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        #graph-container {
+            width: 100%;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .node {
+            cursor: pointer;
+            transition: r 0.2s;
+        }
+        .node:hover {
+            r: 10;
+        }
+        .node-label {
+            font-size: 10px;
+            pointer-events: none;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            font-weight: bold;
+        }
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            stroke-width: 1.5px;
+        }
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            margin: 5px;
+            padding: 8px 12px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #dfs-animation {
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="graph-container"></div>
+    <div id="controls">
+        <button id="run-dfs">Run DFS Animation</button>
+        <button id="reset">Reset Graph</button>
+        <div id="dfs-animation">Path: <span id="dfs-path"></span></div>
+    </div>
+
+    <script>
+        // Define graph data structure based on our Java implementation
+        const graphData = {
+            nodes: Array.from({ length: 20 }, (_, i) => ({ id: `Node${i}` })),
+            links: [
+                // Node0 connections
+                { source: "Node0", target: "Node1" },
+                { source: "Node0", target: "Node2" },
+                { source: "Node0", target: "Node3" },
+                
+                // Node1 connections
+                { source: "Node1", target: "Node4" },
+                { source: "Node1", target: "Node5" },
+                
+                // Node2 connections
+                { source: "Node2", target: "Node6" },
+                { source: "Node2", target: "Node7" },
+                { source: "Node2", target: "Node8" },
+                
+                // Node3 connections
+                { source: "Node3", target: "Node9" },
+                
+                // Node4 connections
+                { source: "Node4", target: "Node10" },
+                { source: "Node4", target: "Node11" },
+                
+                // Node5 connections
+                { source: "Node5", target: "Node12" },
+                
+                // Node6 connections
+                { source: "Node6", target: "Node13" },
+                
+                // Node7 connections
+                { source: "Node7", target: "Node14" },
+                { source: "Node7", target: "Node15" },
+                
+                // Node8 connections
+                { source: "Node8", target: "Node16" },
+                
+                // Node9 connections
+                { source: "Node9", target: "Node17" },
+                
+                // Add cycles and complex relationships
+                { source: "Node10", target: "Node18" },
+                { source: "Node11", target: "Node19" },
+                { source: "Node12", target: "Node5" },   // Cycle between 5 and 12
+                { source: "Node13", target: "Node2" },   // Cycle back to 2
+                { source: "Node14", target: "Node0" },   // Cycle back to root
+                { source: "Node15", target: "Node9" },   // Cross connection
+                { source: "Node16", target: "Node3" },   // Cross connection
+                { source: "Node17", target: "Node11" },  // Cross connection
+                { source: "Node18", target: "Node4" },   // Cycle between 4, 10, and 18
+                { source: "Node19", target: "Node1" }    // Cycle between 1, 4, 11, and 19
+            ]
+        };
+
+        // Initialize D3 visualization
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        // Create SVG
+        const svg = d3.select("#graph-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+            
+        // Create force simulation
+        const simulation = d3.forceSimulation(graphData.nodes)
+            .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(30));
+            
+        // Create arrows for directed edges
+        svg.append("defs").selectAll("marker")
+            .data(["end"])
+            .enter().append("marker")
+            .attr("id", d => d)
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 22)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("fill", "#999")
+            .attr("d", "M0,-5L10,0L0,5");
+            
+        // Create links
+        const link = svg.append("g")
+            .selectAll(".link")
+            .data(graphData.links)
+            .enter().append("line")
+            .attr("class", "link")
+            .attr("marker-end", "url(#end)");
+            
+        // Create node groups
+        const nodeGroup = svg.append("g")
+            .selectAll(".node-group")
+            .data(graphData.nodes)
+            .enter().append("g")
+            .attr("class", "node-group")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+            
+        // Add circles to node groups
+        const node = nodeGroup.append("circle")
+            .attr("class", "node")
+            .attr("r", 8)
+            .attr("fill", d => `hsl(${(parseInt(d.id.substring(4)) * 18) % 360}, 80%, 60%)`)
+            .on("click", highlightConnections);
+            
+        // Add labels to node groups
+        const labels = nodeGroup.append("text")
+            .attr("class", "node-label")
+            .text(d => d.id);
+            
+        // Update positions on tick
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+                
+            nodeGroup
+                .attr("transform", d => `translate(${d.x}, ${d.y})`);
+        });
+        
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+        
+        // Function to highlight connections on node click
+        function highlightConnections(event, d) {
+            // Reset all links and nodes
+            link.style("stroke", "#999").style("stroke-width", 1.5);
+            node.style("stroke", null).style("stroke-width", null);
+            
+            // Highlight connected links and nodes
+            link.filter(l => l.source.id === d.id || l.target.id === d.id)
+                .style("stroke", "#ff4500")
+                .style("stroke-width", 3);
+                
+            // Highlight the selected node
+            d3.select(this)
+                .style("stroke", "#ff4500")
+                .style("stroke-width", 2);
+        }
+        
+        // Reset function
+        document.getElementById("reset").addEventListener("click", () => {
+            link.style("stroke", "#999").style("stroke-width", 1.5);
+            node.style("stroke", null).style("stroke-width", null).style("fill", d => `hsl(${(parseInt(d.id.substring(4)) * 18) % 360}, 80%, 60%)`);
+            document.getElementById("dfs-path").textContent = "";
+        });
+        
+        // DFS animation
+        document.getElementById("run-dfs").addEventListener("click", () => {
+            runDFSAnimation("Node0");
+        });
+        
+        function runDFSAnimation(startNodeId) {
+            // Reset graph appearance
+            link.style("stroke", "#999").style("stroke-width", 1.5);
+            node.style("stroke", null).style("stroke-width", null).style("fill", d => `hsl(${(parseInt(d.id.substring(4)) * 18) % 360}, 80%, 60%)`);
+            
+            const visited = new Set();
+            const stack = [startNodeId];
+            const path = [];
+            const visitOrder = [];
+            
+            // Create adjacency list
+            const adjacencyList = {};
+            graphData.nodes.forEach(node => {
+                adjacencyList[node.id] = [];
+            });
+            
+            graphData.links.forEach(link => {
+                adjacencyList[link.source.id || link.source].push(link.target.id || link.target);
+            });
+            
+            // DFS algorithm
+            while (stack.length > 0) {
+                const currentNodeId = stack.pop();
+                
+                if (!visited.has(currentNodeId)) {
+                    visited.add(currentNodeId);
+                    visitOrder.push(currentNodeId);
+                    path.push(currentNodeId);
+                    
+                    // Get neighbors in reverse order to match the Java implementation
+                    const neighbors = [...adjacencyList[currentNodeId]].reverse();
+                    
+                    for (const neighbor of neighbors) {
+                        if (!visited.has(neighbor)) {
+                            stack.push(neighbor);
+                        }
+                    }
+                }
+            }
+            
+            // Animate DFS traversal
+            let i = 0;
+            const pathText = document.getElementById("dfs-path");
+            
+            function animateStep() {
+                if (i < visitOrder.length) {
+                    const currentNodeId = visitOrder[i];
+                    
+                    // Highlight current node
+                    node.filter(n => n.id === currentNodeId)
+                        .style("fill", "#ff4500")
+                        .style("stroke", "#000")
+                        .style("stroke-width", 2);
+                    
+                    // Update path text
+                    pathText.textContent = path.slice(0, i + 1).join(" -> ");
+                    
+                    i++;
+                    setTimeout(animateStep, 1000);
+                }
+            }
+            
+            animateStep();
+        }
+    </script>
+</body>
+</html> 
