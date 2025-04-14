@@ -38,18 +38,6 @@ pub mod how_to_cp_rust {
     use std::io;
 
     pub fn main() {
-        // let number1 = take_int();
-        // let number2 = take_int();
-        // println!("{}", number1 * number2);
-
-        // let arr = take_vector();
-        // let mut sum = 0;
-        // for i in 0..arr.len() {
-        //     sum += arr[i];
-        // }
-        // println!("{}", sum);
-        // string_to_vec_char("hello");
-
         let str1 = take_string();
         println!("{:?}", str1);
         println!(

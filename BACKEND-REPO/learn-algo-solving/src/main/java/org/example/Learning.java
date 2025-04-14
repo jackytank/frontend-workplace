@@ -5,6 +5,8 @@ import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
 
+import org.example.utils.Helpers;
+
 import lombok.*;
 
 import static java.util.Map.Entry.*;
@@ -22,7 +24,28 @@ public class Learning {
 
 class LearnDSA {
     public static void main(String[] args) throws IOException {
+        dfsSimpleExample1();
     }
+
+    public static void dfsSimpleExample1() {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(0, Arrays.asList(1, 2));
+        graph.put(1, Arrays.asList(0, 3, 4));
+        graph.put(2, Arrays.asList(0, 5));
+        graph.put(3, Arrays.asList(1));
+        graph.put(4, Arrays.asList(-1));
+        graph.put(5, Arrays.asList(9));
+
+        System.out.println("DFS Traversal:");
+        Helpers.dfsNoRecursive(
+            graph,
+            0,
+            x -> x >= 0,
+            x -> System.out.print(x + " ")
+        );
+    }
+
+
 
     public static void guessTheNumber() {
         System.out.println("Guess the number");
