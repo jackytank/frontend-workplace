@@ -31,12 +31,16 @@ class LearnDSA {
 
     public static void complexGraphDfsExample() {
         final List<Node<String>> nodes = Helpers.createComplexGraph();
-        System.out.println("Complex Graph DFS Traversal:");
+        System.out.println("Complex Graph DFS Traversal (no recursive):");
         Helpers.dfsNoRecur2(
                 nodes.get(0),
                 _ -> true,
                 node -> System.out.print(node.getValue() + " -> "));
-        System.out.println("END");
+        System.out.println("END\n");
+
+        System.out.println("Complex Graph DFS Traversal (recursive):");
+        Helpers.dfsRecur(nodes.get(0), _ -> true, node -> System.out.print(node.getValue() + " -> "));
+        System.out.println("END\n");
     }
 
     public static void dfsSimpleExample1() {

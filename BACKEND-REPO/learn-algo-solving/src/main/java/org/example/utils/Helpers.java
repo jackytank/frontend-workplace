@@ -13,6 +13,8 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 
+import org.w3c.dom.Node;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,6 +31,28 @@ public class Helpers {
         @EqualsAndHashCode.Include
         private final T value;
         private final List<Node<T>> neighbors;
+    }
+
+    public <T> void dfsRecur(Node<T> start, Predicate<Node<T>> nodeFilter, Consumer<Node<T>> nodeProcessor,
+            Set<Node<T>> visited) {
+        if (visited.contains(start)) {
+            return;
+        }
+        visited.add(start);
+        if (nodeFilter.test(start)) {
+            nodeProcessor.accept(start);
+        }
+        // Iterate the list in reverse order
+        for (final Node<T> neighbor : start.getNeighbors()) {
+            if (!visited.contains(neighbor)) {
+                dfsRecur(neighbor, nodeFilter, nodeProcessor, visited);
+            }
+        }
+    }
+
+    public <T> void dfsRecur(Node<T> start, Predicate<Node<T>> nodeFilter, Consumer<Node<T>> nodeProcessor) {
+        final Set<Node<T>> visited = new HashSet<>();
+        dfsRecur(start, nodeFilter, nodeProcessor, visited);
     }
 
     public <T> void dfsNoRecur2(Node<T> start, Predicate<Node<T>> nodeFilter, Consumer<Node<T>> nodeProcessor) {
