@@ -1,0 +1,5 @@
+- Use final keyword for immutable variables.
+- Use Lombok extensively to reduce boilerplate, prefer Java class with Lombok, not Java Record
+- Generate optimized and performant code please otherwise I will fine you 1000$.
+- Don't generate unit tests unless I tell you to.
+- In Java always use keyword "this." when calling same class methods.

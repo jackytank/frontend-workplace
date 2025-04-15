@@ -30,7 +30,7 @@ public class Helpers {
         private final List<Node<T>> neighbors;
     }
 
-    public <T> void dfsNoRecursive2(Node<T> start, Predicate<Node<T>> nodeFilter, Consumer<Node<T>> nodeProcessor) {
+    public <T> void dfsNoRecursive(Node<T> start, Predicate<Node<T>> nodeFilter, Consumer<Node<T>> nodeProcessor) {
         final Set<Node<T>> visited = new HashSet<>();
         final Deque<Node<T>> stack = new ArrayDeque<>();
 

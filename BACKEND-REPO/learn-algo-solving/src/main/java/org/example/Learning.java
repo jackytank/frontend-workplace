@@ -19,22 +19,22 @@ import java.text.*;
 
 public class Learning {
     public static void main(String[] args) {
+        // do something
     }
-
 }
 
+@SuppressWarnings("java:S106")
 class LearnDSA {
-    public static void main(String[] args) throws IOException {
-        // dfsSimpleExample1();
+    public static void main(String[] args) {
         complexGraphDfsExample();
     }
 
     public static void complexGraphDfsExample() {
         final List<Node<String>> nodes = createComplexGraph();
         System.out.println("Complex Graph DFS Traversal:");
-        Helpers.dfsNoRecursive2(
+        Helpers.dfsNoRecursive(
                 nodes.get(0),
-                node -> true,
+                _ -> true,
                 node -> System.out.print(node.getValue() + " -> "));
         System.out.println("END");
     }
