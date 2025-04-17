@@ -7,6 +7,12 @@ import java.util.stream.*;
 
 import org.example.utils.Helpers;
 import org.example.utils.Helpers.Node;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.traverse.DepthFirstIterator;
 
 import lombok.*;
 
@@ -26,7 +32,39 @@ public class Learning {
 @SuppressWarnings("java:S106")
 class LearnDSA {
     public static void main(String[] args) {
-        complexGraphDfsExample();
+        // complexGraphDfsExample();
+        jgraphtExample1();
+    }
+
+    public static void jgraphtExample1() {
+        final List<Node<String>> nodes = Helpers.createComplexGraph();
+        // using jgrapht
+        final Graph<String, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+
+        // Add all nodes to the graph
+        nodes.forEach(node -> graph.addVertex(node.getValue()));
+        // Add edges between nodes
+        nodes.forEach(
+                node -> node.getNeighbors().forEach(neighbor -> graph.addEdge(node.getValue(), neighbor.getValue())));
+
+        final var startNode = graph.vertexSet().stream()
+                .filter(node -> node.equals("Node0"))
+                .findFirst()
+                .orElseThrow();
+        // dfs
+        final Iterator<String> dfsIterator = new DepthFirstIterator<>(graph, startNode);
+        while (dfsIterator.hasNext()) {
+            final var vertex = dfsIterator.next();
+            System.out.println("Vertex %s connected to %s"
+                    .formatted(vertex, graph.edgesOf(vertex)));
+        }
+
+        // shortest path between two nodes
+        final var source = "Node0";
+        final var destination = "Node8";
+        final var shortestPath = new DijkstraShortestPath<>(graph);
+        final SingleSourcePaths<String, DefaultEdge> node0Path = shortestPath.getPaths(source);
+        System.out.println("Shortest path from %s to %s: %s".formatted(source, destination, node0Path.getPath(destination)));
     }
 
     public static void complexGraphDfsExample() {

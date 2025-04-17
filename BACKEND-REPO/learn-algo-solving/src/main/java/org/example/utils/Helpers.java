@@ -2,6 +2,7 @@ package org.example.utils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -12,9 +13,7 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-
-import org.w3c.dom.Node;
-
+import java.util.stream.IntStream;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -105,62 +104,16 @@ public class Helpers {
     }
 
     public List<Node<String>> createComplexGraph() {
-        // Creating nodes with initial values (without connections)
-        final List<Node<String>> nodes = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            nodes.add(new Node<>("Node" + i, new ArrayList<>()));
-        }
-
-        // Connect nodes to create a complex graph structure
-        // Node0 connections
-        nodes.get(0).getNeighbors().add(nodes.get(1));
-        nodes.get(0).getNeighbors().add(nodes.get(2));
-        nodes.get(0).getNeighbors().add(nodes.get(3));
-
-        // Node1 connections
-        nodes.get(1).getNeighbors().add(nodes.get(4));
-        nodes.get(1).getNeighbors().add(nodes.get(5));
-
-        // Node2 connections
-        nodes.get(2).getNeighbors().add(nodes.get(6));
-        nodes.get(2).getNeighbors().add(nodes.get(7));
-        nodes.get(2).getNeighbors().add(nodes.get(8));
-
-        // Node3 connections
-        nodes.get(3).getNeighbors().add(nodes.get(9));
-
-        // Node4 connections
-        nodes.get(4).getNeighbors().add(nodes.get(10));
-        nodes.get(4).getNeighbors().add(nodes.get(11));
-
-        // Node5 connections
-        nodes.get(5).getNeighbors().add(nodes.get(12));
-
-        // Node6 connections
-        nodes.get(6).getNeighbors().add(nodes.get(13));
-
-        // Node7 connections
-        nodes.get(7).getNeighbors().add(nodes.get(14));
-        nodes.get(7).getNeighbors().add(nodes.get(15));
-
-        // Node8 connections
-        nodes.get(8).getNeighbors().add(nodes.get(16));
-
-        // Node9 connections
-        nodes.get(9).getNeighbors().add(nodes.get(17));
-
-        // Add some cycles and complex relationships
-        nodes.get(10).getNeighbors().add(nodes.get(18));
-        nodes.get(11).getNeighbors().add(nodes.get(19));
-        nodes.get(12).getNeighbors().add(nodes.get(5)); // Cycle between 5 and 12
-        nodes.get(13).getNeighbors().add(nodes.get(2)); // Cycle back to 2
-        nodes.get(14).getNeighbors().add(nodes.get(0)); // Cycle back to root
-        nodes.get(15).getNeighbors().add(nodes.get(9)); // Cross connection
-        nodes.get(16).getNeighbors().add(nodes.get(3)); // Cross connection
-        nodes.get(17).getNeighbors().add(nodes.get(11)); // Cross connection
-        nodes.get(18).getNeighbors().add(nodes.get(4)); // Cycle between 4, 10, and 18
-        nodes.get(19).getNeighbors().add(nodes.get(1)); // Cycle between 1, 4, 11, and 19
-
+        final List<Node<String>> nodes = IntStream.range(0, 20)
+                .mapToObj(i -> new Node<>("Node" + i, new ArrayList<>()))
+                .toList();
+        final int[][] connections = {
+                { 0, 1 }, { 0, 2 }, { 0, 3 }, { 1, 4 }, { 1, 5 }, { 2, 6 }, { 2, 7 }, { 2, 8 }, { 3, 9 },
+                { 4, 10 }, { 4, 11 }, { 5, 12 }, { 6, 13 }, { 7, 14 }, { 7, 15 }, { 8, 16 }, { 9, 17 },
+                { 10, 18 }, { 11, 19 }, { 12, 5 }, { 13, 2 }, { 14, 0 }, { 15, 9 }, { 16, 3 }, { 17, 11 }, { 18, 4 },
+                { 19, 1 }
+        };
+        Arrays.stream(connections).forEach(c -> nodes.get(c[0]).getNeighbors().add(nodes.get(c[1])));
         return nodes;
     }
 }
