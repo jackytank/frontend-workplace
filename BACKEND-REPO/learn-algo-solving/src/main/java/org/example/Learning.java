@@ -10,6 +10,7 @@ import org.example.utils.Helpers.Node;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
@@ -39,7 +40,7 @@ class LearnDSA {
     public static void jgraphtExample1() {
         final List<Node<String>> nodes = Helpers.createComplexGraph();
         // using jgrapht
-        final Graph<String, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+        final Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
 
         // Add all nodes to the graph
         nodes.forEach(node -> graph.addVertex(node.getValue()));
@@ -65,6 +66,9 @@ class LearnDSA {
         final var shortestPath = new DijkstraShortestPath<>(graph);
         final SingleSourcePaths<String, DefaultEdge> node0Path = shortestPath.getPaths(source);
         System.out.println("Shortest path from %s to %s: %s".formatted(source, destination, node0Path.getPath(destination)));
+
+        // export graph to Graphviz DOT format
+        Helpers.exportGraph(graph);
     }
 
     public static void complexGraphDfsExample() {

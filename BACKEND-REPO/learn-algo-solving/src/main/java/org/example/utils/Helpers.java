@@ -1,11 +1,19 @@
 package org.example.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +22,13 @@ import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
+
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.nio.Attribute;
+import org.jgrapht.nio.DefaultAttribute;
+import org.jgrapht.nio.dot.DOTExporter;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -115,5 +130,28 @@ public class Helpers {
         };
         Arrays.stream(connections).forEach(c -> nodes.get(c[0]).getNeighbors().add(nodes.get(c[1])));
         return nodes;
+    }
+
+    public <T> void exportGraph(Graph<T, DefaultEdge> graph) {
+        final var fileName = "exported_Graphviz.dot";
+        final var exporter = new DOTExporter<T, DefaultEdge>();
+
+        // Configure the exporter to use the vertex's toString() as the label
+        exporter.setVertexAttributeProvider(v -> {
+            final Map<String, Attribute> map = new LinkedHashMap<>();
+            map.put("label", DefaultAttribute.createAttribute(v.toString()));
+            return map;
+        });
+
+        final Writer writer = new StringWriter();
+        exporter.exportGraph(graph, writer);
+
+        // write to file
+        final var file = new File(fileName);
+        try (final var fos = new FileOutputStream(file)) {
+            fos.write(writer.toString().getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
