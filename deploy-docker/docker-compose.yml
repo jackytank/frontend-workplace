@@ -71,37 +71,37 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ctccoa
     mem_limit: 500M
-  # myredis:
-  #   image: docker.io/redis
-  #   container_name: myapp-redis
-  #   command: redis-server --requirepass mypassword
-  #   networks:
-  #     - be-db
-  #   healthcheck:
-  #     test: [ "CMD", "redis-cli", "ping" ]
-  #     interval: 30s
-  #     timeout: 3s
-  #     retries: 30
-  #   ports:
-  #     - "6666:6379"
-  #   volumes:
-  #     - redis-data:/data
-  #   restart: always
-  #   mem_limit: 500M
-  # mymongo:
-  #   image: mongo
-  #   container_name: myapp-mongo
-  #   restart: always
-  #   networks:
-  #     - be-db
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=myuser
-  #     - MONGO_INITDB_ROOT_PASSWORD=mypassword
-  #     - MONGO_INITDB_DATABASE=chatapp_db
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data
+  myredis:
+    image: docker.io/redis
+    container_name: myapp-redis
+    command: redis-server --requirepass mypassword
+    networks:
+      - be-db
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "6666:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    mem_limit: 500M
+  mymongo:
+    image: mongo
+    container_name: myapp-mongo
+    restart: always
+    networks:
+      - be-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=myuser
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+      - MONGO_INITDB_DATABASE=chatapp_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data
   # mypgadmin_web:
   #   image: dpage/pgadmin4
   #   container_name: myapp-pgadmin_web
@@ -160,16 +160,31 @@ services:
   #   volumes:
   #     - oracledb-second-data:/opt/myapp/second/oracle/oradata
   #   restart: always
-  lobe-chat:
-    image: lobehub/lobe-chat
-    container_name: lobe-chat
+  # lobe-chat:
+  #   image: lobehub/lobe-chat
+  #   container_name: lobe-chat
+  #   restart: always
+  #   ports:
+  #     - '3210:3210'
+  #   environment:
+  #     OPENAI_API_KEY: ${OPENAI_API_KEY}
+  #     OPENAI_PROXY_URL: ${OPENAI_PROXY_URL:-"https://openrouter.ai/api/v1"}
+  #     ACCESS_CODE: ${ACCESS_CODE:-"1221"}
+
+  # neo4j
+  myneo4j:
+    image: neo4j:latest
+    container_name: myapp-neo4j
     restart: always
     ports:
-      - '3210:3210'
+      - "7474:7474"
+      - "7687:7687"
     environment:
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
-      OPENAI_PROXY_URL: ${OPENAI_PROXY_URL:-"https://openrouter.ai/api/v1"}
-      ACCESS_CODE: ${ACCESS_CODE:-"1221"}
+      - NEO4J_AUTH=neo4j/password
+    volumes:
+      - neo4j-data:/myneo4j/data
+    networks:
+      - be-db
 networks:
   fe-be: {}
   be-db: {}
@@ -177,8 +192,9 @@ networks:
   # be-oracle2: {}
 volumes:
   postgres-data: {}
-  # redis-data: {}
-  # mongo-data: {}
+  neo4j-data: {}
+  redis-data: {}
+  mongo-data: {}
   # pgadmin-data: {}
   # oracledb-main-data: {}
   # oracledb-second-data: {}
