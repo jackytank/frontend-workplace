@@ -30,17 +30,17 @@ public class DemoDbConfig {
                 .build();
     }
 
-    @Bean
-    DataSourceInitializer demoDataSourceInitializer(DataSource demoDataSource) {
-        final var initializer = new DataSourceInitializer();
-        initializer.setDataSource(demoDataSource);
+    // @Bean
+    // DataSourceInitializer demoDataSourceInitializer(DataSource demoDataSource) {
+    //     final var initializer = new DataSourceInitializer();
+    //     initializer.setDataSource(demoDataSource);
 
-        final var databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.addScript(new ClassPathResource("db/demo/schema.sql"));
-        databasePopulator.addScript(new ClassPathResource("db/demo/data.sql"));
-        databasePopulator.setSqlScriptEncoding("UTF-8");
+    //     final var databasePopulator = new ResourceDatabasePopulator();
+    //     databasePopulator.addScript(new ClassPathResource("db/demo/schema.sql"));
+    //     databasePopulator.addScript(new ClassPathResource("db/demo/data.sql"));
+    //     databasePopulator.setSqlScriptEncoding("UTF-8");
 
-        initializer.setDatabasePopulator(databasePopulator);
-        return initializer;
-    }
+    //     initializer.setDatabasePopulator(databasePopulator);
+    //     return initializer;
+    // }
 }

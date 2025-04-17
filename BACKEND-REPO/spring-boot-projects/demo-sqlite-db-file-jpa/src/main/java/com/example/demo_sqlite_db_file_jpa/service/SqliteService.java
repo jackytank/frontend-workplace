@@ -11,8 +11,8 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo_sqlite_db_file_jpa.entity.Employee;
-import com.example.demo_sqlite_db_file_jpa.repository.EmployeeRepository;
+import com.example.demo_sqlite_db_file_jpa.entity.sqlite.Employee;
+import com.example.demo_sqlite_db_file_jpa.repository.sqlite.EmployeeRepository;
 import com.example.demo_sqlite_db_file_jpa.util.DynamicDataSourceFactory;
 
 import jakarta.persistence.EntityManager;

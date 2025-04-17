@@ -14,7 +14,7 @@ public class DynamicDataSourceFactory {
     public LocalContainerEntityManagerFactoryBean createEntityManagerFactory(String dbPath) {
         final var em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(createDataSource(dbPath));
-        em.setPackagesToScan("com.example.demo_sqlite_db_file_jpa.entity");
+        em.setPackagesToScan("com.example.demo_sqlite_db_file_jpa.entity.sqlite");
         
         final var vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

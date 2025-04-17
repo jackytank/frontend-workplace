@@ -1,4 +1,4 @@
-package com.example.demo_sqlite_db_file_jpa.entity;
+package com.example.demo_sqlite_db_file_jpa.entity.sqlite;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
