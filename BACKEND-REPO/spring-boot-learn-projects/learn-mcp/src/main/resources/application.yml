@@ -1,6 +1,8 @@
 spring:
   application:
     name: learn-mcp
+  main:
+    banner-mode: off
   threads:
     virtual:
       enabled: true
@@ -8,8 +10,15 @@ spring:
     mcp:
       server:
         name: my-super-mcp-server
+        version: 0.0.1
         enabled: true
         type: sync
         sse-endpoint: /my-sse
         sse-message-endpoint: /my-sse-messages
         base-url: /api/v1/mcp 
+
+logging:
+  pattern:
+    console:
+  file:
+    name: logs/learn-mcp.log
