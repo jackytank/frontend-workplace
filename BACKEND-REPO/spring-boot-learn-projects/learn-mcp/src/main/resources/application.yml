@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: learn-mcp
+  threads:
+    virtual:
+      enabled: true
+  ai:
+    mcp:
+      server:
+        name: my-super-mcp-server
+        enabled: true
+        type: sync
+        sse-endpoint: /my-sse
+        sse-message-endpoint: /my-sse-messages
+        base-url: /api/v1/mcp 
