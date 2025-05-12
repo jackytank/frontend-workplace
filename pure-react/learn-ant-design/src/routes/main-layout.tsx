@@ -3,11 +3,11 @@ import { Col, Layout, Menu, MenuProps, Row, Spin, Switch } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/ReactToastify.min.css';
+import { Link, Outlet } from "react-router";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 type MenuItem = Required<MenuProps>['items'][number];
 

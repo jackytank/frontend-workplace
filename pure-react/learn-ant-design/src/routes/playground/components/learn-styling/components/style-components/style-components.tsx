@@ -1,7 +1,7 @@
 import { Divider, Space } from "antd";
 import styled, { ThemeProvider, createGlobalStyle, css, keyframes } from "styled-components";
 import AuthorBox from "./author-box.component";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const LearnStyleComponents = () => {
     return (

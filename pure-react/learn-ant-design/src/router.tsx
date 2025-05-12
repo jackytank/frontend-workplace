@@ -2,7 +2,7 @@ import ErrorPage from './error-page.tsx';
 import MainLayout from './routes/main-layout.tsx';
 import PlayGround from './routes/playground/playground.tsx';
 import Home from './routes/home.tsx';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router';
 import ChartJs from './routes/visualization/chartjs/chartjs.tsx';
 
 export const router = createBrowserRouter([{
