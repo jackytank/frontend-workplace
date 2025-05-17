@@ -42,6 +42,10 @@
                 <configuration>
                     <source>24</source>
                     <target>24</target>
+                    <!-- enable 24 preview features -->
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>

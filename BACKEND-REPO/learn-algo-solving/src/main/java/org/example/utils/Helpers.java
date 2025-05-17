@@ -1,25 +1,9 @@
 package org.example.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.IntConsumer;
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
+import java.io.*;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.Attribute;
@@ -149,5 +133,26 @@ public class Helpers {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public enum Animal {
+        WOLF, SHEEP, SHEEPDOG
+    }
+
+    public static Gatherer<Animal, ?, Boolean> isValidSeq() {
+        final Predicate<List<Animal>> validTriplePredicate = triple -> {
+            boolean hasSheep = triple.contains(Animal.SHEEP);
+            boolean hasWolf = triple.contains(Animal.WOLF);
+            boolean hasSheepDog = triple.contains(Animal.SHEEPDOG);
+
+            return !(hasSheep && hasWolf && !hasSheepDog);
+        };
+
+        final var tripleWindowGatherer = Gatherers.<Animal>windowSliding(3);
+        final var areAllTriplesValidGatherer = Gatherers.<List<Animal>, Boolean>fold(
+                () -> true,
+                (result, triple) -> result && validTriplePredicate.test(triple));
+        return tripleWindowGatherer.andThen(areAllTriplesValidGatherer);
+
     }
 }
