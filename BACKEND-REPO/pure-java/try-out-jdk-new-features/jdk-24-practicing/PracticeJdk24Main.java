@@ -5,6 +5,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SymbolLookup;
 import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -17,12 +18,12 @@ import utils.MyUtils;
 void main() {
     // jep488PrimitiveTypesInPatternsInstanceofAndSwitchSecondPreview();
     // jep492FlexibleConstructorBodiesThirdPreview();
-    jep485StreamGatherers();
+    jep485StreamGatherers_1();
     // jep454ForeignFunctionAndMemoryAPIFinal_C_strlen();
     // jep456UnnamedVariablesAndPatterns(23);
 }
 
-void jep485StreamGatherers() {
+void jep485StreamGatherers_1() {
     // Example 1: Gatherers.windowFixed() - You have a stream of sensor readings
     // taken sequentially. You want to process these readings in non-overlapping
     // batches (windows) of a fixed size (e.g., groups of 3 readings at a time) to
@@ -75,7 +76,8 @@ void jep485StreamGatherers() {
                 System.out.println("Invalid sequence: " + seq);
             });
 
-    // Example 5: Gatherers.scan
+    // Example 5: Gatherers.scan just like reduce but return all intermediate
+    // Gatherers.fold just like reduce but return only the final result
     var blogPostTitles = List.of("Java 21", "Java 22", "Java 23");
     blogPostTitles.stream()
             .gather(Gatherers.scan(
