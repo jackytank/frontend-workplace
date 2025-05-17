@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
-
 import org.example.utils.Helpers;
 import org.example.utils.Helpers.Node;
 import org.example.utils.dto.AnimalCareTaker;
@@ -13,14 +12,10 @@ import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
-
 import lombok.*;
-
 import static java.util.Map.Entry.*;
 import static java.util.stream.Collectors.*;
-
 import java.io.*;
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
