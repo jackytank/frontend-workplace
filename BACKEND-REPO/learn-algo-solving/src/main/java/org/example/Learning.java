@@ -34,7 +34,33 @@ public class Learning {
     }
 }
 
+class Boxing {
+    public static void main(String[] args) {
+        testIntegerCache();
+    }
+
+    static void testIntegerCache() {
+        final Integer a = 127;
+        final Integer b = 127;
+        System.out.println(a == b); // true, because of Integer cache
+        // best practice to compare Integer
+        System.out.println(a.equals(b)); // true, because we compare the value
+        final Integer c = 128;
+        final Integer d = 128;
+        System.out.println(c == d); // false, because of no Integer cache
+        // best practice to compare Integer
+        System.out.println(c.equals(d)); // true, because we compare the value
+    }
+}
+
 class Jdk24NewFeatures {
+    public static void main(String[] args) {
+        // jep485StreamGatherers_1();
+        // jep456UnnamedVariablesAndPatterns("Hello");
+        // jep492FlexibleConstructorBodiesThirdPreview();
+        // jep488PrimitiveTypesInPatternsInstanceofAndSwitchSecondPreview();
+        // jep454ForeignFunctionAndMemoryAPIFinal_C_strlen();
+    }
     void jep485StreamGatherers_1() {
         // Example 1: Gatherers.windowFixed() - You have a stream of sensor readings
         // taken sequentially. You want to process these readings in non-overlapping
