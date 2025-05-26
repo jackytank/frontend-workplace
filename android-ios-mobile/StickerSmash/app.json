@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "StickerSmash-expo-beginner-tutorial",
-    "slug": "StickerSmash-expo-beginner-tutorial",
+    "name": "StickerSmash",
+    "slug": "StickerSmash",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "stickersmashexpobeginnertutorial",
+    "scheme": "stickersmash",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
