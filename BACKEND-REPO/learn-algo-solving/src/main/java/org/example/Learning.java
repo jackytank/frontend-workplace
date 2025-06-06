@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
+
+import org.apache.commons.lang3.StringUtils;
 import org.example.utils.Helpers;
 import org.example.utils.Helpers.Node;
 import org.example.utils.dto.AnimalCareTaker;
@@ -25,12 +27,50 @@ import java.lang.foreign.SymbolLookup;
 import java.lang.foreign.ValueLayout;
 import java.lang.invoke.MethodHandle;
 import java.math.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.*;
 import java.time.LocalDateTime;
 
 public class Learning {
     public static void main(String[] args) {
         // do something
+    }
+}
+
+class JavaFileIO {
+    public static void main(String[] args) {
+        accessingResourcesUsingPaths();
+    }
+
+    static void accessingResourcesUsingClazz() {
+    }
+
+    static void accessingResourcesUsingPaths() {
+        // 1. read data.csv then deserialize it to a List Employee (use Path)
+        final var dataCsvFile = Paths.get("src", "main", "resources", "mockdata", "data.csv");
+        // read all lines from the file
+        try (final var lines = Files.lines(dataCsvFile)) {
+            // deserialize each line to Employee object
+            // ignore header line
+            final List<Employee> employees = lines.skip(1)
+                    .map(Employee::fromCsvLine)
+                    .collect(Collectors.toList());
+            // print out the employees
+            employees.forEach(System.out::println);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private record Employee(long employeeId, String name, short age) {
+        public static Employee fromCsvLine(final String line) {
+            final String[] parts = line.split(",");
+            return new Employee(
+                    Long.parseLong(parts[0].trim()),
+                    parts[1].trim(),
+                    Short.parseShort(parts[2].trim()));
+        }
     }
 }
 
@@ -61,6 +101,7 @@ class Jdk24NewFeatures {
         // jep488PrimitiveTypesInPatternsInstanceofAndSwitchSecondPreview();
         // jep454ForeignFunctionAndMemoryAPIFinal_C_strlen();
     }
+
     void jep485StreamGatherers_1() {
         // Example 1: Gatherers.windowFixed() - You have a stream of sensor readings
         // taken sequentially. You want to process these readings in non-overlapping
