@@ -71,37 +71,37 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ctccoa
     mem_limit: 500M
-  myredis:
-    image: docker.io/redis
-    container_name: myapp-redis
-    command: redis-server --requirepass mypassword
-    networks:
-      - be-db
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 30s
-      timeout: 3s
-      retries: 30
-    ports:
-      - "6666:6379"
-    volumes:
-      - redis-data:/data
-    restart: always
-    mem_limit: 500M
-  mymongo:
-    image: mongo
-    container_name: myapp-mongo
-    restart: always
-    networks:
-      - be-db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=myuser
-      - MONGO_INITDB_ROOT_PASSWORD=mypassword
-      - MONGO_INITDB_DATABASE=chatapp_db
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data
+  # myredis:
+  #   image: docker.io/redis
+  #   container_name: myapp-redis
+  #   command: redis-server --requirepass mypassword
+  #   networks:
+  #     - be-db
+  #   healthcheck:
+  #     test: [ "CMD", "redis-cli", "ping" ]
+  #     interval: 30s
+  #     timeout: 3s
+  #     retries: 30
+  #   ports:
+  #     - "6666:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   restart: always
+  #   mem_limit: 500M
+  # mymongo:
+  #   image: mongo
+  #   container_name: myapp-mongo
+  #   restart: always
+  #   networks:
+  #     - be-db
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=myuser
+  #     - MONGO_INITDB_ROOT_PASSWORD=mypassword
+  #     - MONGO_INITDB_DATABASE=chatapp_db
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data
   # mypgadmin_web:
   #   image: dpage/pgadmin4
   #   container_name: myapp-pgadmin_web
@@ -172,19 +172,19 @@ services:
   #     ACCESS_CODE: ${ACCESS_CODE:-"1221"}
 
   # neo4j
-  myneo4j:
-    image: neo4j:latest
-    container_name: myapp-neo4j
-    restart: always
-    ports:
-      - "7474:7474"
-      - "7687:7687"
-    environment:
-      - NEO4J_AUTH=neo4j/password
-    volumes:
-      - neo4j-data:/myneo4j/data
-    networks:
-      - be-db
+  # myneo4j:
+  #   image: neo4j:latest
+  #   container_name: myapp-neo4j
+  #   restart: always
+  #   ports:
+  #     - "7474:7474"
+  #     - "7687:7687"
+  #   environment:
+  #     - NEO4J_AUTH=neo4j/password
+  #   volumes:
+  #     - neo4j-data:/myneo4j/data
+  #   networks:
+  #     - be-db
 networks:
   fe-be: {}
   be-db: {}
