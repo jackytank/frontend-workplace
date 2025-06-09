@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
+
 import org.example.utils.Helpers;
 import org.example.utils.Helpers.Node;
 import org.example.utils.dto.AnimalCareTaker;
@@ -17,20 +18,70 @@ import lombok.*;
 import static java.util.Map.Entry.*;
 import static java.util.stream.Collectors.*;
 import java.io.*;
-import java.lang.foreign.Arena;
-import java.lang.foreign.FunctionDescriptor;
-import java.lang.foreign.Linker;
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.SymbolLookup;
-import java.lang.foreign.ValueLayout;
+import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.math.*;
+import static java.nio.charset.StandardCharsets.*;
+import java.nio.file.*;
 import java.text.*;
 import java.time.LocalDateTime;
 
 public class Learning {
     public static void main(String[] args) {
         // do something
+    }
+}
+
+class JavaFileIO {
+    public static void main(String[] args) {
+        // accessingResourcesUsingPaths();
+        accessingResourcesUsingClazz();
+    }
+
+    @SneakyThrows(IOException.class)
+    static void accessingResourcesUsingClazz() {
+        @Cleanup
+        final var is = JavaFileIO.class.getResourceAsStream("/mockdata/data.csv");
+        if (is == null) {
+            throw new IOException("Resource not found: /mockdata/data.csv");
+        }
+        // read all lines from the input stream
+        @Cleanup
+        final var reader = new BufferedReader(new InputStreamReader(is, UTF_8));
+        // deserialize each line to Employee object
+        final List<Employee> employees = reader.lines()
+                .skip(1)
+                .map(Employee::fromCsvLine)
+                .toList();
+        // print out the employees
+        employees.forEach(System.out::println);
+    }
+
+    static void accessingResourcesUsingPaths() {
+        // 1. read data.csv then deserialize it to a List Employee (use Path)
+        final Path dataCsvFile = Paths.get("src", "main", "resources", "mockdata", "data.csv");
+        // read all lines from the file
+        try (final Stream<String> lines = Files.lines(dataCsvFile)) {
+            // deserialize each line to Employee object
+            // ignore header line
+            final List<Employee> employees = lines.skip(1)
+                    .map(Employee::fromCsvLine)
+                    .toList();
+            // print out the employees
+            employees.forEach(System.out::println);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private record Employee(long employeeId, String name, short age) {
+        public static Employee fromCsvLine(final String line) {
+            final String[] parts = line.split(",");
+            return new Employee(
+                    Long.parseLong(parts[0].trim()),
+                    parts[1].trim(),
+                    Short.parseShort(parts[2].trim()));
+        }
     }
 }
 
@@ -61,6 +112,7 @@ class Jdk24NewFeatures {
         // jep488PrimitiveTypesInPatternsInstanceofAndSwitchSecondPreview();
         // jep454ForeignFunctionAndMemoryAPIFinal_C_strlen();
     }
+
     void jep485StreamGatherers_1() {
         // Example 1: Gatherers.windowFixed() - You have a stream of sensor readings
         // taken sequentially. You want to process these readings in non-overlapping

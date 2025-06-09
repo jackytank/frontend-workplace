@@ -71,53 +71,53 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ctccoa
     mem_limit: 500M
-  # myredis:
-  #   image: docker.io/redis
-  #   container_name: myapp-redis
-  #   command: redis-server --requirepass mypassword
-  #   networks:
-  #     - be-db
-  #   healthcheck:
-  #     test: [ "CMD", "redis-cli", "ping" ]
-  #     interval: 30s
-  #     timeout: 3s
-  #     retries: 30
-  #   ports:
-  #     - "6666:6379"
-  #   volumes:
-  #     - redis-data:/data
-  #   restart: always
-  #   mem_limit: 500M
-  # mymongo:
-  #   image: mongo
-  #   container_name: myapp-mongo
-  #   restart: always
-  #   networks:
-  #     - be-db
-  #   environment:
-  #     - MONGO_INITDB_ROOT_USERNAME=myuser
-  #     - MONGO_INITDB_ROOT_PASSWORD=mypassword
-  #     - MONGO_INITDB_DATABASE=chatapp_db
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data
-  # mypgadmin_web:
-  #   image: dpage/pgadmin4
-  #   container_name: myapp-pgadmin_web
-  #   networks:
-  #     - be-db
-  #   user: "${UID}:${GID}"
-  #   ports:
-  #     - "5050:80"
-  #   volumes:
-  #     - pgadmin-data:/var/lib/pgadmin
-  #   depends_on:
-  #     - mypostgres
-  #   restart: always
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
-  #     - PGADMIN_DEFAULT_PASSWORD=postgres
+  myredis:
+    image: docker.io/redis
+    container_name: myapp-redis
+    command: redis-server --requirepass mypassword
+    networks:
+      - be-db
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 3s
+      retries: 30
+    ports:
+      - "6666:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    mem_limit: 500M
+  mymongo:
+    image: mongo
+    container_name: myapp-mongo
+    restart: always
+    networks:
+      - be-db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=myuser
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+      - MONGO_INITDB_DATABASE=chatapp_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data
+  mypgadmin_web:
+    image: dpage/pgadmin4
+    container_name: myapp-pgadmin_web
+    networks:
+      - be-db
+    user: "${UID}:${GID}"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - mypostgres
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgres@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=postgres
   # cloudbeaver:
   #   image: dbeaver/cloudbeaver:latest
   #   container_name: cloudbeaver
@@ -195,7 +195,7 @@ volumes:
   neo4j-data: {}
   redis-data: {}
   mongo-data: {}
-  # pgadmin-data: {}
+  pgadmin-data: {}
   # oracledb-main-data: {}
   # oracledb-second-data: {}
   # cloudbeaver-data: {}
