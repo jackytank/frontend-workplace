@@ -185,6 +185,12 @@ services:
   #     - neo4j-data:/myneo4j/data
   #   networks:
   #     - be-db
+  qdrant:
+    image: qdrant/qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_storage:/qdrant/storage
 networks:
   fe-be: {}
   be-db: {}
@@ -199,3 +205,4 @@ volumes:
   # oracledb-main-data: {}
   # oracledb-second-data: {}
   # cloudbeaver-data: {}
+  qdrant_storage:
