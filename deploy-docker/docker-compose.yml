@@ -185,12 +185,28 @@ services:
   #     - neo4j-data:/myneo4j/data
   #   networks:
   #     - be-db
-  qdrant:
-    image: qdrant/qdrant
-    ports:
-      - "6333:6333"
+  hbbs:
+    container_name: hbbs
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs
     volumes:
-      - qdrant_storage:/qdrant/storage
+      # - ./data:/root
+      hbbs-data:/root
+    network_mode: "host"
+
+    depends_on:
+      - hbbr
+    restart: unless-stopped
+
+  hbbr:
+    container_name: hbbr
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    volumes:
+      # - ./data:/root
+      hbbr-data:/root
+    network_mode: "host"
+    restart: unless-stopped
 networks:
   fe-be: {}
   be-db: {}
@@ -205,4 +221,5 @@ volumes:
   # oracledb-main-data: {}
   # oracledb-second-data: {}
   # cloudbeaver-data: {}
-  qdrant_storage:
+  hbbs-data: {}
+  hbbr-data: {}
