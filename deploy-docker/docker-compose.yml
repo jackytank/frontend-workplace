@@ -187,31 +187,42 @@ services:
   #     - be-db
   hbbs:
     container_name: hbbs
+    ports:
+      - 21115:21115
+      - 21116:21116
+      - 21116:21116/udp
+      - 21118:21118
     image: rustdesk/rustdesk-server:latest
-    command: hbbs
+    command: hbbs -r rustdesk.example.com:21117
     volumes:
       # - ./data:/root
-      hbbs-data:/root
-    network_mode: "host"
-
+      - hbbs-data:/root
+    networks:
+      - rustdesk-net
     depends_on:
       - hbbr
     restart: unless-stopped
 
   hbbr:
     container_name: hbbr
+    ports:
+      - 21117:21117
+      - 21119:21119
     image: rustdesk/rustdesk-server:latest
     command: hbbr
     volumes:
       # - ./data:/root
-      hbbr-data:/root
-    network_mode: "host"
+      - hbbr-data:/root
+    networks:
+      - rustdesk-net
     restart: unless-stopped
 networks:
   fe-be: {}
   be-db: {}
   # be-oracle1: {}
   # be-oracle2: {}
+  rustdesk-net:
+    external: false
 volumes:
   postgres-data: {}
   neo4j-data: {}
