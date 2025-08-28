@@ -193,10 +193,9 @@ services:
       - 21116:21116/udp
       - 21118:21118
     image: rustdesk/rustdesk-server:latest
-    command: hbbs -r rustdesk.example.com:21117
+    command: hbbs -r 120.72.83.34:21117
     volumes:
-      # - ./data:/root
-      - hbbs-data:/root
+      - ./data:/root
     networks:
       - rustdesk-net
     depends_on:
@@ -211,8 +210,7 @@ services:
     image: rustdesk/rustdesk-server:latest
     command: hbbr
     volumes:
-      # - ./data:/root
-      - hbbr-data:/root
+      - ./data:/root
     networks:
       - rustdesk-net
     restart: unless-stopped
@@ -232,5 +230,3 @@ volumes:
   # oracledb-main-data: {}
   # oracledb-second-data: {}
   # cloudbeaver-data: {}
-  hbbs-data: {}
-  hbbr-data: {}
