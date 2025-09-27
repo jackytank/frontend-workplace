@@ -1,21 +1,31 @@
-class Singleton {
-    private static instance: Singleton;
-    private constructor() { } // prevent external instantionation
+class DatabaseConnection {
+    private static instance: DatabaseConnection;
+    private connectionId: number;
 
-    static getInstance(): Singleton {
-        if (!Singleton.instance) {
-            Singleton.instance = new Singleton;
-        }
-        return Singleton.instance;
+    private constructor() { // prevent outside direct instantiation
+        this.connectionId = Math.random() * 1000;
+        console.log("Database connected. Connection ID: " + this.connectionId);
     }
 
-    public doSomething() {
-        console.log("Singleton doing its things!");
+    public static getInstance(): DatabaseConnection {
+        if (!DatabaseConnection.instance) {
+            DatabaseConnection.instance = new DatabaseConnection();
+        }
+        return DatabaseConnection.instance;
+    }
+
+    public query(sql: string): void {
+        console.log(`Executing query "${sql}" with connection ID: ${this.connectionId}`);
+        
     }
 }
 
-const s1 = Singleton.getInstance();
-const s2 = Singleton.getInstance();
+console.log('---SIngleton Pattern---');
 
-// check if 2 instnace are same instnace
-console.log(s1 === s2); // true
+const db1 = DatabaseConnection.getInstance();
+const db2 = DatabaseConnection.getInstance();
+
+console.log('Are both instances the same?', db1 === db2); // true
+db1.query("SELECT * FROM users"); // Both
+db2.query("SELECT * FROM products"); // will use the same connection
+
