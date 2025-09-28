@@ -24,10 +24,24 @@ abstract class FurnitureFactory {
 
 class ConcreteFurnitureFactory extends FurnitureFactory {
     public createFurniture(type: string): Furniture {
+        if (type == 'chair') {
+            return new Chair();
+        } else if (type == 'table') {
+            return new Table();
+        } else {
+            throw new Error('Furniture type is not supported');
+        }
     }
 }
 
 function factoryClient() {
+    const factory = new ConcreteFurnitureFactory();
+
+    const chair = factory.createFurniture('chair');
+    chair.assemble();
+
+    const table = factory.createFurniture('table');
+    table.assemble();
 
 }
-factoryClient()
+factoryClient();

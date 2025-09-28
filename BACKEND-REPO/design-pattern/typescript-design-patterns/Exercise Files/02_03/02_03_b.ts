@@ -1,78 +1,78 @@
 class Burger {
-    name: string
-    cheese: boolean
-    bacon: boolean
-    lettuce: boolean
-    tomato: boolean
-    
-    constructor(name: string, cheese: boolean, bacon: boolean, 
+    name: string;
+    cheese: boolean;
+    bacon: boolean;
+    lettuce: boolean;
+    tomato: boolean;
+
+    constructor(name: string, cheese: boolean, bacon: boolean,
         lettuce: boolean, tomato: boolean) {
-        this.name = name
-        this.cheese = cheese
-        this.bacon = bacon
-        this.lettuce = lettuce
-        this.tomato = tomato
+        this.name = name;
+        this.cheese = cheese;
+        this.bacon = bacon;
+        this.lettuce = lettuce;
+        this.tomato = tomato;
     }
 
-    showDetails() : string {
-        let details = "This " + this.name  + " Burger has: "
+    showDetails(): string {
+        let details = "This " + this.name + " Burger has: ";
 
-        if(this.cheese) {
-            details = details + " Cheese, "
+        if (this.cheese) {
+            details = details + " Cheese, ";
         }
 
-        if(this.bacon) {
-            details = details + " Bacon, "
+        if (this.bacon) {
+            details = details + " Bacon, ";
         }
 
-        if(this.lettuce) {
-            details = details + " Lettuce, "
+        if (this.lettuce) {
+            details = details + " Lettuce, ";
         }
 
-        if(this.tomato) {
-            details = details + " Tomato "
+        if (this.tomato) {
+            details = details + " Tomato ";
         }
 
-        return details
+        return details;
 
     }
 }
 
 class BurgerBuilder {
 
-    private name: string
-    private cheese: boolean = false
-    private bacon: boolean = false
-    private lettuce: boolean = false
-    private tomato: boolean = false
-    
+    private name: string;
+    private cheese: boolean = false;
+    private bacon: boolean = false;
+    private lettuce: boolean = false;
+    private tomato: boolean = false;
+
     constructor(name: string) {
-        this.name = name
+        this.name = name;
     }
-    
+
     addCheese(): BurgerBuilder {
-        this.cheese = true
-        return this
+        this.cheese = true;
+        return this;
     }
-    
+
     addBacon(): BurgerBuilder {
-        this.bacon = true
-        return this
+        this.bacon = true;
+        return this;
     }
-    
+
     addLettuce(): BurgerBuilder {
-        this.lettuce = true
-        return this
+        this.lettuce = true;
+        return this;
     }
-    
+
     addTomato(): BurgerBuilder {
-        this.tomato = true
-        return this
+        this.tomato = true;
+        return this;
     }
-    
+
     build(): Burger {
-        return new Burger(this.name, this.cheese, this.bacon, 
-            this.lettuce, this.tomato)
+        return new Burger(this.name, this.cheese, this.bacon,
+            this.lettuce, this.tomato);
     }
 }
 
@@ -81,10 +81,17 @@ class BurgerBuilder {
 function builderClient() {
 
     // Everything Burger 
-
+    const everythingBurgerBuilder = new BurgerBuilder("everything");
+    everythingBurgerBuilder.addBacon().addCheese().addLettuce().addTomato();
+    const everythingBurger = everythingBurgerBuilder.build();
+    console.log(everythingBurger.showDetails());
 
     // Cheese Burger
+    const cheeseBurgerBuilder = new BurgerBuilder('Cheese');
+    cheeseBurgerBuilder.addCheese().addLettuce();
 
+    const cheeseBurger = cheeseBurgerBuilder.build();
+    console.log(cheeseBurger.showDetails());
 
 }
 builderClient()
