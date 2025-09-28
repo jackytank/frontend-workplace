@@ -42,6 +42,8 @@ class TikTokAdapter extends Platform {
     }
 
     postMedia() {
+       this.tikTok.scheduleMedia()
+       console.log('Adapter has posted to tiktok');
        
     }
 }
@@ -49,7 +51,7 @@ class TikTokAdapter extends Platform {
 function adapterClient() {
 
     let publisher = new Publisher()
-    let instagram = new Instagram()
+    let instagram = new Instagram() 
 
     publisher.publishContentOnPlatform(instagram)
 
