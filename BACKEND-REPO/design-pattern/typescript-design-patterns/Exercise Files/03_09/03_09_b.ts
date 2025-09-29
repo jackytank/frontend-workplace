@@ -1,47 +1,49 @@
 // Subsystem Class
-abstract class Post  {
-	abstract post() : void
+abstract class Post {
+    abstract post(): void;
 }
 
 
 
 class InstagramPost extends Post {
 
-    post() : void {
-        console.log(("Posting to Instagram")) 
+    post(): void {
+        console.log(("Posting to Instagram"));
     }
 }
 
 class TikTokPost extends Post {
 
-    post() : void {
-        console.log(("Posting to TikTok")) 
+    post(): void {
+        console.log(("Posting to TikTok"));
     }
 }
 
 class TwitterPost extends Post {
 
-    post() : void {
-        console.log(("Posting to Twitter")) 
+    post(): void {
+        console.log(("Posting to Twitter"));
     }
 }
 
 // Facade
-class Publisher  {
-	private instagram = new InstagramPost()
-	private tikTok = new TikTokPost()
-	private twitter = new TwitterPost()
+class Publisher {
+    private readonly instagram = new InstagramPost();
+    private readonly tikTok = new TikTokPost();
+    private readonly twitter = new TwitterPost();
 
-    
-    publish() : void {
-
+    publish(): void {
+        this.instagram.post();
+        this.tikTok.post();
+        this.twitter.post();
     }
 }
 
 // Client
 function publisherClient() {
-
+    const publisher = new Publisher();
+    publisher.publish();
 }
 
 
-publisherClient()
+publisherClient();

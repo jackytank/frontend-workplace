@@ -67,6 +67,12 @@ class Syrup extends IceCreamDecorator {
 
 // Decorator Client
 function decoratorClient() {
+    const iceCream = new IceCream('Chocolate');
+    const iceCreamWithSprinkles = new Sprinkles(iceCream);
+    iceCreamWithSprinkles.makeIceCream();
+
+    const iceCreamSprinklessAndChocolate = new Syrup(iceCreamWithSprinkles);
+    iceCreamSprinklessAndChocolate.makeIceCream();
 }
 
 decoratorClient()
