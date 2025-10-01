@@ -1,7 +1,7 @@
 // State Interface 
 abstract class ShapeState {
-    abstract drawShape() : void
-    abstract eraseShape() : void 
+    abstract drawShape(): void;
+    abstract eraseShape(): void;
 }
 
 
@@ -10,22 +10,22 @@ abstract class ShapeState {
 class CircleState extends ShapeState {
 
     drawShape(): void {
-        console.log("Drawing Circle")
+        console.log("Drawing Circle");
     }
 
     eraseShape(): void {
-        console.log("Erasing Circle")
+        console.log("Erasing Circle");
     }
 }
 // Concrete State 
 class RectangleState extends ShapeState {
 
     drawShape(): void {
-        console.log("Drawing Rectangle")
+        console.log("Drawing Rectangle");
     }
 
     eraseShape(): void {
-        console.log("Erasing Rectangle")
+        console.log("Erasing Rectangle");
     }
 
 }
@@ -33,26 +33,32 @@ class RectangleState extends ShapeState {
 
 // Context 
 class Shape {
-    state : ShapeState
+    state: ShapeState;
 
-    constructor(state : ShapeState) {
-        this.state = state
+    constructor(state: ShapeState) {
+        this.state = state;
     }
 
- 
+    draw(): void {
+        this.state.drawShape();
+    }
+
+    erase(): void {
+        this.state.eraseShape();
+    }
 }
 
 
 // Client 
 function stateClient() {
-    let circle = new Shape(new CircleState())
-    circle.draw()
-    circle.erase()
+    let circle = new Shape(new CircleState());
+    circle.draw();
+    circle.erase();
 
-    let rectangle = new Shape(new RectangleState())
-    rectangle.draw()
-    rectangle.erase()
+    let rectangle = new Shape(new RectangleState());
+    rectangle.draw();
+    rectangle.erase();
 
 }
 
-stateClient()
+stateClient();

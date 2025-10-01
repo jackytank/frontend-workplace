@@ -1,17 +1,19 @@
 abstract class Car {
 
-    abstract drive() : void 
+    abstract drive(): void;
     startEngine(): void {
-        console.log("Starting Engine")
+        console.log("Starting Engine");
     }
 
     stopEngine(): void {
-        console.log("Stoping Engine")
+        console.log("Stoping Engine");
     }
 
     // template method 
-    run() : void {
-
+    run(): void {
+        this.startEngine();
+        this.drive();
+        this.stopEngine();
     }
 
 }
@@ -20,15 +22,16 @@ abstract class Car {
 class Sedan extends Car {
 
     drive() {
-       
+        console.log('Driving a sedan');
     }
 }
 
 
 class SUV extends Car {
 
-    drive(){
-       
+    drive() {
+        console.log('Driving an SUV');
+        
     }
 }
 
@@ -36,11 +39,11 @@ class SUV extends Car {
 
 function templateMethodClient() {
 
-    let sedan = new Sedan()
-	sedan.run()
+    let sedan = new Sedan();
+    sedan.run();
 
-	let suv = new SUV()
-	suv.run()
+    let suv = new SUV();
+    suv.run();
 }
 
 templateMethodClient()

@@ -1,12 +1,12 @@
 class Train {
-    name : string
-    location : string
-    passengers : string[]
+    name: string;
+    location: string;
+    passengers: string[];
 
-    constructor(name : string, location : string , passengers : string[]){
-        this.name = name
-        this.location = location
-        this.passengers = passengers
+    constructor(name: string, location: string, passengers: string[]) {
+        this.name = name;
+        this.location = location;
+        this.passengers = passengers;
     }
 }
 
@@ -14,39 +14,39 @@ class Train {
 
 // Command Interface 
 abstract class Command {
-    abstract execute(train: Train) : void
+    abstract execute(train: Train): void;
 }
 
 
 
 // Concrete Command 1
-class AddPassengerCommand extends Command  {
-    passenger : string 
+class AddPassengerCommand extends Command {
+    passenger: string;
 
-    constructor(passenger : string) {
-        super()
-        this.passenger = passenger
+    constructor(passenger: string) {
+        super();
+        this.passenger = passenger;
     }
 
-    execute(train : Train) {
-        train.passengers.push(this.passenger)
-        console.log("New passenger on board: " + this.passenger)
+    execute(train: Train) {
+        train.passengers.push(this.passenger);
+        console.log("New passenger on board: " + this.passenger);
     }
 }
 
 
 // Concrete Command 2 
-class MoveTrainCommand extends Command  {
-    location : string 
+class MoveTrainCommand extends Command {
+    location: string;
 
-    constructor(location : string) {
-        super()
-        this.location = location
+    constructor(location: string) {
+        super();
+        this.location = location;
     }
 
-    execute(train : Train) {
-        train.location = this.location
-        console.log("The train is locatied at: " + train.location)
+    execute(train: Train) {
+        train.location = this.location;
+        console.log("The train is locatied at: " + train.location);
     }
 }
 
@@ -54,15 +54,15 @@ class MoveTrainCommand extends Command  {
 // Invoker
 class Invoker {
 
-    command! : Command
-    
+    command!: Command;
+
 
     setCommand(command: Command) {
-        this.command = command
+        this.command = command;
     }
 
-    executeCommand(train : Train) {
-        this.command.execute(train)
+    executeCommand(train: Train) {
+        this.command.execute(train);
     }
 }
 
@@ -71,12 +71,19 @@ class Invoker {
 
 // Client
 function commandClient() {
-    let train = new Train("Express", "Station A", [])
+    let train = new Train("Express", "Station A", []);
 
-	
-	let addPassengerCommand = new AddPassengerCommand("Alice")
-	let moveTrainCommand = new MoveTrainCommand("Station B")
-	
+
+    let addPassengerCommand = new AddPassengerCommand("Alice");
+    let moveTrainCommand = new MoveTrainCommand("Station B");
+
+    const invoker = new Invoker();
+    invoker.setCommand(addPassengerCommand);
+    invoker.executeCommand(train);
+
+    invoker.setCommand(moveTrainCommand);
+    invoker.executeCommand(train);
+
 }
 
-commandClient()
+commandClient();
