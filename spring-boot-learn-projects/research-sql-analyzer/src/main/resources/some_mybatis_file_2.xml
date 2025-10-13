@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AnotherMapper">
+
+  <!-- Complex UPDATE example from your requirement -->
+  <update id="update01">
+    <![CDATA[
+    update TABLE_A
+       set STATUS_CODE = '8',
+           UPDATED_DATE = TO_CHAR(SYSDATE,'YYYYMMDD'),
+           UPDATED_TIME = TO_CHAR(SYSTIMESTAMP,'hh24missff6')
+    where exists (
+      select 1
+      from TABLE_A CAU
+      join (
+        select
+           to_char(add_months(to_date(concat(NKS.YEAR_COL,NKS.MONTH_COL), 'YYYYMM'),-1),'YYYYMM') as YM,
+          NKS.DATE_COL
+        from TABLE_B NKS
+        where NKS.CODE = '0001'
+          and NKS.SCHEDULE_CODE = #{scdCode, jdbcType=CHAR}
+          and NKS.DATE_TYPE = 'D0011'
+      ) D0011
+      on D0011.YM = CAU.CALC_MONTH
+      where D0011.DATE_COL < #{businessDay, jdbcType=CHAR}
+        and CAU.STATUS_CODE = '0'
+        and CAU.REG_NUMBER = TABLE_A.REG_NUMBER
+    )
+    ]]>
+  </update>
+
+  <!-- SELECT that actually reads columns -->
+  <select id="select01" resultType="map">
+    select 
+      A.ID,
+      A.NAME,
+      B.VALUE
+    from MASTER_TABLE A
+    left join DETAIL_TABLE B on A.ID = B.MASTER_ID
+    where A.ACTIVE = 'Y'
+  </select>
+
+  <!-- SELECT with "select 1" pattern -->
+  <select id="select03" resultType="int">
+    select 1
+    from CHECK_TABLE
+    where CODE = #{code}
+  </select>
+
+</mapper>

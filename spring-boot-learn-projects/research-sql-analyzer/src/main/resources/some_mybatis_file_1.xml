@@ -1,35 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mapper.SampleMapper1">
+<mapper namespace="com.example.mapper.SampleMapper">
 
-    <sql id="Entity_Column_List">
-        TEST_COL, ANOTHER_COL, YET_ANOTHER_COL
-    </sql>
+  <!-- SQL Fragment for column list -->
+  <sql id="Entity_Column_List">
+      COLUMN_1,
+      COLUMN_2,
+      COLUMN_3,
+      COLUMN_4,
+      COLUMN_5,
+      COLUMN_6,
+      COLUMN_7,
+      COLUMN_8,
+      COLUMN_9,
+      COLUMN_10,
+      COLUMN_11,
+      COLUMN_12,
+      COLUMN_13,
+      COLUMN_14,
+      COLUMN_15,
+      COLUMN_16,
+      COLUMN_17,
+      COLUMN_18,
+      COLUMN_19,
+      COLUMN_20,
+      COLUMN_21,
+      COLUMN_22,
+      TO_CHAR(CREATED_DATE,'yyyyMMdd'),
+      TO_CHAR(UPDATED_DATE,'yyyyMMdd')
+  </sql>
 
-    <select id="test02" resultType="map">
-        select
-            <include refid="Entity_Column_List" />
-        from
-            TEST_TABLE
-        where TEST_COL = #{srvCtrNo}
-        for update nowait
-    </select>
+  <!-- Example SELECT with include - should mark MASTER_TABLE as R -->
+  <select id="select01" resultType="map">
+    select
+      <include refid="Entity_Column_List" />
+    from
+      MASTER_TABLE
+    where ID = #{id}
+  </select>
 
-    <update id="test01">
-        update CUSTOMER_TABLE
-        set NAME = #{name},
-            EMAIL = #{email}
-        where ID = #{id}
-    </update>
+  <!-- Example SELECT with "select 1" - should NOT mark TEST_TABLE_1 as R -->
+  <select id="select03" resultType="String">
+    select 1
+    from TEST_TABLE_1
+    where SOME_COL = #{id}
+  </select>
+  
+  <!-- Example INSERT with SELECT - should mark NEW_TABLE as C and SOURCE_TABLE as R -->
+  <insert id="insert01">
+    insert into NEW_TABLE (ID, NAME, VALUE)
+    select 
+      SRC.ID,
+      SRC.NAME,
+      SRC.VALUE
+    from SOURCE_TABLE SRC
+    where SRC.ACTIVE = 'Y'
+  </insert>
 
-    <select id="test03" resultType="map">
-        select 
-            c.CUSTOMER_ID,
-            c.CUSTOMER_NAME,
-            o.ORDER_ID
-        from CUSTOMER_TABLE c
-        join ORDER_TABLE o on c.CUSTOMER_ID = o.CUSTOMER_ID
-        where c.STATUS = 'ACTIVE'
-    </select>
+  <!-- Example UPDATE with subquery -->
+  <update id="update01">
+    <![CDATA[
+    update TARGET_TABLE
+       set STATUS = '1',
+           UPDATED_DATE = SYSDATE
+    where exists (
+      select ABC.CODE, ABC.NAME
+      from REFERENCE_TABLE ABC
+      where ABC.ID = TARGET_TABLE.ID
+        and ABC.ACTIVE = 'Y'
+    )
+    ]]>
+  </update>
 
 </mapper>

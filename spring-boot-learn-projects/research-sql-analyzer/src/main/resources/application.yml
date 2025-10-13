@@ -2,4 +2,12 @@ app:
   analyze-config:
     - filename: 'some_mybatis_file_1.xml'
       methodsToFind:
-        - 'test01'
+        - 'update01'
+        - 'select01'
+        - 'select03'
+        - 'insert01'
+    - filename: 'some_mybatis_file_2.xml'
+      methodsToFind:
+        - 'update01'
+        - 'select01'
+        - 'select03'
