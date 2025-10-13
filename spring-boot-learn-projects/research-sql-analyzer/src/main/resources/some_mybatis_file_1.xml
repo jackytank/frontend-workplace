@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SampleMapper1">
+
+    <sql id="Entity_Column_List">
+        TEST_COL, ANOTHER_COL, YET_ANOTHER_COL
+    </sql>
+
+    <select id="test02" resultType="map">
+        select
+            <include refid="Entity_Column_List" />
+        from
+            TEST_TABLE
+        where TEST_COL = #{srvCtrNo}
+        for update nowait
+    </select>
+
+    <update id="test01">
+        update CUSTOMER_TABLE
+        set NAME = #{name},
+            EMAIL = #{email}
+        where ID = #{id}
+    </update>
+
+    <select id="test03" resultType="map">
+        select 
+            c.CUSTOMER_ID,
+            c.CUSTOMER_NAME,
+            o.ORDER_ID
+        from CUSTOMER_TABLE c
+        join ORDER_TABLE o on c.CUSTOMER_ID = o.CUSTOMER_ID
+        where c.STATUS = 'ACTIVE'
+    </select>
+
+</mapper>

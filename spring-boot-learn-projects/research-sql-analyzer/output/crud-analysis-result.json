@@ -1,0 +1,15 @@
+[
+  {
+    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_1.xml",
+    "methods": [
+      {
+        "name": "test01",
+        "analysis": [
+          {
+            "CUSTOMER_TABLE": "U"
+          }
+        ]
+      }
+    ]
+  }
+]

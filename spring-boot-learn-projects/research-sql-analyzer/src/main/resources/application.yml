@@ -1,0 +1,5 @@
+app:
+  analyze-config:
+    - filename: 'some_mybatis_file_1.xml'
+      methodsToFind:
+        - 'test01'
