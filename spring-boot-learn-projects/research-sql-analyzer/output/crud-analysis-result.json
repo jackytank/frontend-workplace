@@ -8,6 +8,11 @@
       "REFERENCE_TABLE" : "R"
     } ]
   }, {
+    "name" : "select01",
+    "analysis" : [ {
+      "MASTER_TABLE" : "R"
+    } ]
+  }, {
     "name" : "insert01",
     "analysis" : [ {
       "NEW_TABLE" : "C"
