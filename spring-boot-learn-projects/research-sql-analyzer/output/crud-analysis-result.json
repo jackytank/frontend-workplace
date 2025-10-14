@@ -25,7 +25,7 @@
   "methods" : [ {
     "name" : "update01",
     "analysis" : [ {
-      "TABLE_A" : "U"
+      "TABLE_A" : "RU"
     }, {
       "TABLE_B" : "R"
     } ]

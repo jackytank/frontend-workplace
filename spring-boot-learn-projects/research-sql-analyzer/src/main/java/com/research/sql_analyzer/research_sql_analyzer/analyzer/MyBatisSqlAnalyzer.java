@@ -274,24 +274,22 @@ public class MyBatisSqlAnalyzer {
      * Analyze UPDATE statements
      */
     private void analyzeUpdate(String sql, Map<String, String> tableOperations) {
-        Set<String> updateTargets = new HashSet<>();
         Matcher matcher = UPDATE_PATTERN.matcher(sql);
         while (matcher.find()) {
             String tableName = matcher.group(1);
-            updateTargets.add(tableName.toUpperCase());
             addOperation(tableOperations, tableName, "U");
         }
 
         // Check for subqueries (may read from other tables)
-        // But exclude tables that are UPDATE targets from being marked as READ
+        // If UPDATE target table appears in subquery and reads columns, mark it as READ
+        // too
         Map<String, String> subqueryOperations = new LinkedHashMap<>();
         analyzeSelect(sql, subqueryOperations);
 
-        // Only add READ operations for tables that are NOT UPDATE targets
+        // Add READ operations for all tables found in subqueries
+        // This includes UPDATE target tables if they're reading columns in subqueries
         for (Map.Entry<String, String> entry : subqueryOperations.entrySet()) {
-            if (!updateTargets.contains(entry.getKey().toUpperCase())) {
-                addOperation(tableOperations, entry.getKey(), entry.getValue());
-            }
+            addOperation(tableOperations, entry.getKey(), entry.getValue());
         }
     }
 
@@ -299,24 +297,22 @@ public class MyBatisSqlAnalyzer {
      * Analyze DELETE statements
      */
     private void analyzeDelete(String sql, Map<String, String> tableOperations) {
-        Set<String> deleteTargets = new HashSet<>();
         Matcher matcher = DELETE_PATTERN.matcher(sql);
         while (matcher.find()) {
             String tableName = matcher.group(1);
-            deleteTargets.add(tableName.toUpperCase());
             addOperation(tableOperations, tableName, "D");
         }
 
         // Check for subqueries (may read from other tables)
-        // But exclude tables that are DELETE targets from being marked as READ
+        // If DELETE target table appears in subquery and reads columns, mark it as READ
+        // too
         Map<String, String> subqueryOperations = new LinkedHashMap<>();
         analyzeSelect(sql, subqueryOperations);
 
-        // Only add READ operations for tables that are NOT DELETE targets
+        // Add READ operations for all tables found in subqueries
+        // This includes DELETE target tables if they're reading columns in subqueries
         for (Map.Entry<String, String> entry : subqueryOperations.entrySet()) {
-            if (!deleteTargets.contains(entry.getKey().toUpperCase())) {
-                addOperation(tableOperations, entry.getKey(), entry.getValue());
-            }
+            addOperation(tableOperations, entry.getKey(), entry.getValue());
         }
     }
 
