@@ -30,7 +30,7 @@
       TO_CHAR(UPDATED_DATE,'yyyyMMdd')
   </sql>
 
-  <!-- Example SELECT with include - should mark MASTER_TABLE as R -->
+  <!-- Example SELECT with include - should mark MASTER_TABLE as R if <include> is present even if present or not present in this file  -->
   <select id="select01" resultType="map">
     select
       <include refid="Entity_Column_List" />
@@ -38,6 +38,8 @@
       MASTER_TABLE
     where ID = #{id}
   </select>
+
+  <!-- Example SELECT with include that does NOT exist in this file - still should mark all tables as R -->
   <select id="select02" resultType="map">
     select
       <include refid="Not_Exist_In_This_File_Maybe_In_Parent_Or_Java_Class" />
@@ -46,7 +48,7 @@
     where ID = #{id}
   </select>
 
-  <!-- Example SELECT with "select 1" - should NOT mark TEST_TABLE_1 as R -->
+  <!-- Example SELECT with "select 1" - should NOT mark TEST_TABLE_1 as R because "select 1" is just a simple existence check -->
   <select id="select03" resultType="String">
     select 1
     from TEST_TABLE_1
@@ -64,7 +66,7 @@
     where SRC.ACTIVE = 'Y'
   </insert>
 
-  <!-- Example UPDATE with subquery -->
+  <!-- Example UPDATE with subquery, should mark TARGET_TABLE as U and REFERENCE_TABLE as R -->
   <update id="update01">
     <![CDATA[
     update TARGET_TABLE
