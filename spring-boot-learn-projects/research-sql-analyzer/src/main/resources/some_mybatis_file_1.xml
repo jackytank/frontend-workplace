@@ -38,6 +38,13 @@
       MASTER_TABLE
     where ID = #{id}
   </select>
+  <select id="select02" resultType="map">
+    select
+      <include refid="Not_Exist_In_This_File_Maybe_In_Parent_Or_Java_Class" />
+    from
+      FIRST_TABLE A, SECOND_TABLE B, THIRD_TABLE C, FOURTH_TABLE, FIFTH_TABLE E
+    where ID = #{id}
+  </select>
 
   <!-- Example SELECT with "select 1" - should NOT mark TEST_TABLE_1 as R -->
   <select id="select03" resultType="String">

@@ -31,10 +31,10 @@
 
   <!-- SELECT that actually reads columns -->
   <select id="select01" resultType="map">
-    select 
-      A.ID,
-      A.NAME,
-      B.VALUE
+    select
+    A.ID,
+    A.NAME,
+    B.VALUE
     from MASTER_TABLE A
     left join DETAIL_TABLE B on A.ID = B.MASTER_ID
     where A.ACTIVE = 'Y'
@@ -46,5 +46,17 @@
     from CHECK_TABLE
     where CODE = #{code}
   </select>
+
+  <update id="updateGeneric"> UPDATE SOME_TABLE T <set>
+      T.COLUMN_A = #{valueA, jdbcType=GENERIC_TYPE},
+      T.COLUMN_B = #{valueB, jdbcType=GENERIC_TYPE},
+      T.COLUMN_C = #{valueC, jdbcType=GENERIC_TYPE},
+      T.COLUMN_D = #{valueD, jdbcType=GENERIC_TYPE}
+    </set>
+    WHERE ( T.KEY_1, T.KEY_2, T.KEY_3, T.KEY_4, T.KEY_5, T.KEY_6 ) IN ( SELECT T2.KEY_1, T2.KEY_2,
+    T2.KEY_3, T2.KEY_4, T2.KEY_5, MAX(T2.KEY_6) FROM SOME_TABLE T2 WHERE T2.KEY_1 = #{param1,
+    jdbcType=GENERIC_TYPE} AND T2.KEY_2 = #{param2, jdbcType=GENERIC_TYPE} AND T2.KEY_3 = #{param3,
+    jdbcType=GENERIC_TYPE} AND T2.KEY_4 = #{param4, jdbcType=GENERIC_TYPE} AND T2.KEY_5 = #{param5,
+    jdbcType=GENERIC_TYPE} GROUP BY T2.KEY_1, T2.KEY_2, T2.KEY_3, T2.KEY_4, T2.KEY_5 ) </update>
 
 </mapper>

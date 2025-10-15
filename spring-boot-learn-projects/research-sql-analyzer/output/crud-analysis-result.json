@@ -1,40 +1,72 @@
-[ {
-  "file" : "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_1.xml",
-  "methods" : [ {
-    "name" : "update01",
-    "analysis" : [ {
-      "TARGET_TABLE" : "U"
-    }, {
-      "REFERENCE_TABLE" : "R"
-    } ]
-  }, {
-    "name" : "select01",
-    "analysis" : [ {
-      "MASTER_TABLE" : "R"
-    } ]
-  }, {
-    "name" : "insert01",
-    "analysis" : [ {
-      "NEW_TABLE" : "C"
-    }, {
-      "SOURCE_TABLE" : "R"
-    } ]
-  } ]
-}, {
-  "file" : "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_2.xml",
-  "methods" : [ {
-    "name" : "update01",
-    "analysis" : [ {
-      "TABLE_A" : "RU"
-    }, {
-      "TABLE_B" : "R"
-    } ]
-  }, {
-    "name" : "select01",
-    "analysis" : [ {
-      "DETAIL_TABLE" : "R"
-    }, {
-      "MASTER_TABLE" : "R"
-    } ]
-  } ]
-} ]
+[
+  {
+    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_1.xml",
+    "methods": [
+      {
+        "name": "update01",
+        "analysis": [
+          {
+            "TARGET_TABLE": "U"
+          },
+          {
+            "REFERENCE_TABLE": "R"
+          }
+        ]
+      },
+      {
+        "name": "select01",
+        "analysis": [
+          {
+            "MASTER_TABLE": "R"
+          }
+        ]
+      },
+      {
+        "name": "insert01",
+        "analysis": [
+          {
+            "NEW_TABLE": "C"
+          },
+          {
+            "SOURCE_TABLE": "R"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_2.xml",
+    "methods": [
+      {
+        "name": "update01",
+        "analysis": [
+          {
+            "TABLE_A": "RU"
+          },
+          {
+            "TABLE_B": "R"
+          }
+        ]
+      },
+      {
+        "name": "select01",
+        "analysis": [
+          {
+            "DETAIL_TABLE": "R"
+          },
+          {
+            "MASTER_TABLE": "R"
+          }
+        ]
+      },
+      {
+        "name": "updateGeneric",
+        "analysis": [
+          {
+            "SOME_TABLE": "RU"
+          }
+        ]
+      }
+    ]
+  }
+]
