@@ -1,23 +1,32 @@
 [
   {
-    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_1.xml",
+    "file": "C:\\Users\\tminhto\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\mybatis_1.xml",
     "methods": [
-      {
-        "name": "update01",
-        "analysis": [
-          {
-            "TARGET_TABLE": "U"
-          },
-          {
-            "REFERENCE_TABLE": "R"
-          }
-        ]
-      },
       {
         "name": "select01",
         "analysis": [
           {
             "MASTER_TABLE": "R"
+          }
+        ]
+      },
+      {
+        "name": "select02",
+        "analysis": [
+          {
+            "FIRST_TABLE": "R"
+          },
+          {
+            "SECOND_TABLE": "R"
+          },
+          {
+            "THIRD_TABLE": "R"
+          },
+          {
+            "FOURTH_TABLE": "R"
+          },
+          {
+            "FIFTH_TABLE": "R"
           }
         ]
       },
@@ -29,22 +38,56 @@
           },
           {
             "SOURCE_TABLE": "R"
+          },
+          {
+            "SRC": "R"
+          }
+        ]
+      },
+      {
+        "name": "update01",
+        "analysis": [
+          {
+            "TARGET_TABLE": "U"
+          },
+          {
+            "REFERENCE_TABLE": "R"
+          },
+          {
+            "ABC": "R"
           }
         ]
       }
     ]
   },
   {
-    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\some_mybatis_file_2.xml",
+    "file": "C:\\Users\\tminhto\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\mybatis_2.xml",
     "methods": [
       {
         "name": "update01",
         "analysis": [
           {
-            "TABLE_A": "RU"
+            "TABLE_A": "U"
           },
           {
             "TABLE_B": "R"
+          },
+          {
+            "NKS": "R"
+          }
+        ]
+      },
+      {
+        "name": "update02",
+        "analysis": [
+          {
+            "SOME_TABLE": "RU"
+          },
+          {
+            "T2": "R"
+          },
+          {
+            "MAX": "R"
           }
         ]
       },
@@ -52,18 +95,16 @@
         "name": "select01",
         "analysis": [
           {
+            "MASTER_TABLE": "R"
+          },
+          {
             "DETAIL_TABLE": "R"
           },
           {
-            "MASTER_TABLE": "R"
-          }
-        ]
-      },
-      {
-        "name": "updateGeneric",
-        "analysis": [
+            "A": "R"
+          },
           {
-            "SOME_TABLE": "RU"
+            "B": "R"
           }
         ]
       }
