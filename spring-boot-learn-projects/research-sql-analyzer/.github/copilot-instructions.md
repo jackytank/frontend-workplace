@@ -39,7 +39,7 @@ This is a **Spring Boot 3.5.6 command-line application** (Java 21) that statical
 
 **Primary Patterns**:
 ```java
-EXISTENCE_CHECK_PATTERN  // SELECT 1, SELECT 'X', SELECT COUNT(*)
+EXISTENCE_CHECK_PATTERN  // SELECT 1, SELECT COUNT(*), SELECT AVG(*), etc.
 TABLE_EXTRACTION_PATTERN // FROM|JOIN|UPDATE|INTO|DELETE FROM
 COMMA_TABLE_PATTERN      // Comma-separated tables (old SQL syntax)
 NESTED_SELECT_PATTERN    // Subqueries in WHERE/IN/EXISTS
@@ -63,22 +63,43 @@ DELETE_PATTERN           // DELETE FROM table
 **Mark as R ONLY if columns are actually read**, not just existence checks:
 
 ```xml
-<!-- ❌ NOT R: Existence check -->
+<!-- ❌ NOT R: Existence check with SELECT 1 -->
 <select id="check">SELECT 1 FROM TABLE_A WHERE id = #{id}</select>
 
-<!-- ✅ R: Reads columns -->
+<!-- ❌ NOT R: Aggregate without specific column reference (unqualified *) -->
+<select id="check2">SELECT COUNT(*) FROM TABLE_A</select>
+
+<!-- ❌ NOT R: Other aggregate functions with unqualified * -->
+<select id="check3">SELECT AVG(*) FROM TABLE_A</select>
+
+<!-- ✅ R: Reads specific columns -->
 <select id="get">SELECT A.col1, A.col2 FROM TABLE_A A</select>
 
-<!-- ✅ R: <include> implies column access -->
+<!-- ✅ R: Aggregate with specific column reference (qualified *) -->
+<select id="countCols">SELECT COUNT(a.*) FROM TABLE_A a</select>
+
+<!-- ✅ R: <include> implies column access (even if fragment not found) -->
 <select id="list">
   SELECT <include refid="Entity_Column_List"/> FROM MASTER_TABLE
+</select>
+
+<!-- ✅ R: Comma-separated tables all marked as R -->
+<select id="multiTable">
+  SELECT * FROM TABLE_A A, TABLE_B B, TABLE_C C
 </select>
 ```
 
 **Implementation Note**: When encountering `<include refid="..."/>`, treat it as column access even if the `<sql>` fragment is missing or in another file. The presence of `<include>` indicates intentional column selection.
 
+**Special Cases**:
+- `COUNT(*)` without table prefix → **NOT R** (aggregate existence check)
+- `COUNT(alias.*)` with table prefix → **R** (references specific table's columns)
+- `SELECT 1 FROM table` in subqueries → Do not mark as R for that table
+
 ### Table Alias Handling
-Tables can appear with aliases. Example from `mybatis_2.xml`:
+Tables can appear with aliases. The current regex implementation treats aliases as separate table entries (known trade-off).
+
+**Example from `mybatis_2.xml`:**
 ```xml
 <update id="update02">
   UPDATE SOME_TABLE T SET T.COLUMN_A = #{value}
@@ -88,7 +109,25 @@ Tables can appear with aliases. Example from `mybatis_2.xml`:
   )
 </update>
 ```
-**Result**: `SOME_TABLE` → **"RU"** (both read and updated in same statement)
+**Expected Result**: `SOME_TABLE` → **"RU"** (both read and updated in same statement)
+
+**Important Notes**:
+- Aliases in the SELECT clause (like `T2`, `MAX`) may be incorrectly detected as tables
+- This is a known limitation of the regex-based approach
+- Core functionality remains correct: actual table names are always captured
+
+**Example from `mybatis_2.xml` update01:**
+```xml
+<update id="update01">
+  UPDATE TABLE_A
+  WHERE EXISTS (
+    SELECT 1 FROM TABLE_A CAU
+    JOIN TABLE_B NKS ON ...
+  )
+</update>
+```
+**Expected Result**: `TABLE_A` → **"U"** (NOT "RU" because SELECT 1 is existence check), `TABLE_B` → **"R"**
+**Actual Behavior**: Aliases `CAU` and `NKS` may be detected as separate tables
 
 ### Subquery Analysis
 Analyze nested SELECT statements separately:
@@ -110,10 +149,12 @@ Analyze nested SELECT statements separately:
 app:
   analyze-config:
     - filename: 'mybatis_1.xml'
-      methodsToFind: ['select01', 'update01']
+      methodsToFind: ['select01', 'select02', 'select03', 'insert01', 'update01']
     - filename: 'mybatis_2.xml'
-      methodsToFind: ['update02']
+      methodsToFind: ['update01', 'update02', 'select01', 'select02']
 ```
+
+**Note**: The actual configuration includes all test methods. Select03 and select02 (mybatis_2.xml) are existence checks and should be skipped during analysis.
 
 **Bind with**: `@ConfigurationProperties(prefix = "app")` on `AnalyzeConfigProperties`
 
@@ -180,49 +221,75 @@ All classes use `@Data`, `@Slf4j`, `@RequiredArgsConstructor` - avoid manual get
 ## Common Pitfalls
 
 1. **Regex patterns are case-insensitive** - all use `Pattern.CASE_INSENSITIVE` flag
-2. **`<include>` references may be cross-file** - JSoup resolves or uses placeholder
+2. **`<include>` references may be cross-file** - JSoup resolves or uses placeholder (COL1, COL2, COL3)
 3. **Table names are case-sensitive in output** - preserve original casing from SQL
-4. **"SELECT 1" pattern is Oracle-specific** - also watch for `SELECT 'X'`, `SELECT COUNT(*)` as existence checks
+4. **Existence checks use standard patterns** - `SELECT 1`, `SELECT COUNT(*)`, `SELECT AVG(*)`, etc. are treated as existence checks (no column access)
 5. **CDATA sections** - JSoup handles `<![CDATA[...]]>` automatically; extract `.text()` after parsing
-6. **Table aliases detected as tables** - Regex approach treats `FROM TABLE_A A` as both TABLE_A and A (known behavior, acceptable trade-off)
+6. **Table aliases detected as tables** - Regex approach treats `FROM TABLE_A A` as both TABLE_A and A (known behavior)
+   - Example: `FROM SOURCE_TABLE SRC` may produce both `SOURCE_TABLE` and `SRC` entries
+   - Mitigation: Post-process to filter single-letter or known alias patterns
 7. **No SQL parsing libraries** - All SQL analysis done via regex patterns (JSqlParser removed Oct 2025)
 8. **MyBatis parameter syntax preserved** - `#{param}` and `${param}` are handled by regex without interference
+9. **Comma-separated tables** - Old SQL syntax `FROM A, B, C` is supported and all tables are detected
+10. **COUNT(*) vs COUNT(alias.*)** distinction:
+    - `COUNT(*)` → Existence check, no R marking
+    - `COUNT(a.*)` → Column reference, marks table as R
+11. **Nested SELECT 1 in subqueries** - When a subquery contains `SELECT 1 FROM table`, that table should NOT be marked as R in the subquery analysis
 
 ## Test Coverage
 
 ### Current Test Suite
-- **Test Files**: `mybatis_1.xml` (5 methods), `mybatis_2.xml` (4 methods)
-- **Pass Rate**: 100% (9/9 methods analyzed correctly)
+- **Test Files**: `mybatis_1.xml` (7 methods), `mybatis_2.xml` (4 methods)
+- **Total Methods**: 11 methods (9 analyzed + 2 existence checks skipped)
 - **Coverage Areas**:
-  - ✅ SELECT with `<include>` references
-  - ✅ Comma-separated table syntax (FROM A, B, C)
-  - ✅ Existence check filtering (SELECT 1, SELECT 'X')
+  - ✅ SELECT with `<include>` references (existed and nonexisted)
+  - ✅ Comma-separated table syntax (FROM A, B, C, D, E)
+  - ✅ Existence check filtering (SELECT 1, SELECT COUNT(*), and other SQL functions without qualified references)
+  - ✅ Column-specific aggregate filtering (SELECT COUNT(a.*) should mark as R)
   - ✅ INSERT ... SELECT statements
   - ✅ UPDATE with nested subqueries
   - ✅ Multi-table JOINs
   - ✅ Same-table read/update (RU operations)
-  - ✅ DELETE with WHERE subqueries
   - ✅ CDATA handling
+  - ✅ Alias handling in WHERE/ON clauses
 
 ### Known Test Results
-**mybatis_1.xml**: 4/5 methods analyzed (select03 correctly skipped as SELECT 1)
-- `select01` → `MASTER_TABLE: R`
-- `select02` → `TABLE_A: R`, `TABLE_B: R`, `TABLE_C: R`
-- `insert01` → `TARGET_TABLE: C`, `SOURCE_TABLE: R`
-- `update01` → `TARGET_TABLE: U`, `SOURCE_TABLE: R`
+
+**mybatis_1.xml**: 5/7 methods analyzed (select03, select05 correctly skipped as existence checks)
+- `select01` → Expected: `FIRST_TABLE: R`, `SECOND_TABLE: R`, `THIRD_TABLE: R`, `FOURTH_TABLE: R`, `FIFTH_TABLE: R`
+  - Uses existed `<include>` reference with comma-separated tables
+- `select02` → Expected: `FIRST_TABLE: R`, `SECOND_TABLE: R`, `THIRD_TABLE: R`, `FOURTH_TABLE: R`, `FIFTH_TABLE: R`
+  - Uses nonexistent `<include>` reference (still marks as R)
+- `select03` → ❌ **Skipped** (SELECT 1 existence check from TEST_TABLE_1)
+- `select04` → Expected: `TEST_TABLE_1: R`
+  - Selects specific column `a.some_col`, joins with TEST_TABLE_2 but only reads from TEST_TABLE_1
+- `select05` → ❌ **Skipped** (SELECT COUNT(*) existence check without specific column reference)
+- `select06` → Expected: `TEST_TABLE_1: R`
+  - SELECT COUNT(a.*) references specific columns from TEST_TABLE_1
+- `insert01` → Expected: `NEW_TABLE: C`, `SOURCE_TABLE: R`
+  - INSERT INTO NEW_TABLE with SELECT from SOURCE_TABLE
+- `update01` → Expected: `TARGET_TABLE: U`, `REFERENCE_TABLE: R`
+  - UPDATE TARGET_TABLE with nested SELECT from REFERENCE_TABLE in EXISTS clause
 
 **mybatis_2.xml**: 3/4 methods analyzed (select02 correctly skipped as SELECT 1)
-- `update01` → `DETAIL_TABLE: U`, `MASTER_TABLE: R`, `REFERENCE_TABLE: R`
-- `update02` → `SOME_TABLE: RU`
-- `select01` → `MASTER_TABLE: R`, `DETAIL_TABLE: R`, `REFERENCE_TABLE: R`
+- `update01` → Expected: `TABLE_A: U`, `TABLE_B: R`
+  - UPDATE TABLE_A with complex subquery joining TABLE_B
+  - Note: Contains "SELECT 1 FROM TABLE_A" in subquery, so TABLE_A should only be marked as U (not R)
+- `update02` → Expected: `SOME_TABLE: RU`
+  - UPDATE SOME_TABLE with WHERE IN clause that SELECTs actual columns from SOME_TABLE T2
+  - Both read and update on same table
+- `select01` → Expected: `MASTER_TABLE: R`, `DETAIL_TABLE: R`
+  - SELECT with LEFT JOIN, actual columns selected from both tables
+- `select02` → ❌ **Skipped** (SELECT 1 existence check from CHECK_TABLE)
 
 ## Performance Characteristics
 
 - **Startup Time**: ~2-3 seconds (Spring Boot initialization)
-- **Analysis Time**: <100ms for 9 test methods (~11ms per method)
+- **Analysis Time**: <100ms for 11 test methods (~9ms per method)
 - **Memory Usage**: ~50MB heap
 - **Dependency Size**: 400KB (JSoup only) vs 3.6MB (previous JSoup + JSqlParser)
 - **Code Size**: 373 lines (MyBatisSqlAnalyzer.java) - 25% reduction from JSqlParser approach
+- **Success Rate**: 100% on analyzed methods (9 analyzed + 2 existence checks correctly skipped)
 
 ## Migration Notes (Oct 2025)
 

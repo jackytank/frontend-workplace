@@ -18,8 +18,11 @@ import java.util.regex.Pattern;
 public class MyBatisSqlAnalyzer {
 
     // Pattern to detect existence checks (SELECT 1, SELECT 'X', SELECT COUNT(*))
+    // Pattern to detect existence checks or aggregate queries without qualified column references
+    // Matches: SELECT 1, SELECT COUNT(*), SELECT AVG(*), SELECT SUM(*), etc.
+    // Note: Intentionally excludes SELECT 'X' pattern as it's Oracle-specific and not universally understood
     private static final Pattern EXISTENCE_CHECK_PATTERN = Pattern.compile(
-            "^\\s*SELECT\\s+(?:['\"]?[1X]['\"]?|COUNT\\s*\\(\\s*\\*\\s*\\))\\s+FROM\\s+",
+            "^\\s*SELECT\\s+(?:1|(?:COUNT|AVG|SUM|MIN|MAX)\\s*\\(\\s*\\*\\s*\\))\\s+FROM\\s+",
             Pattern.CASE_INSENSITIVE);
 
     // Pattern to extract table names from SQL statements
@@ -50,6 +53,21 @@ public class MyBatisSqlAnalyzer {
     // Pattern for DELETE FROM
     private static final Pattern DELETE_PATTERN = Pattern.compile(
             "DELETE\\s+FROM\\s+([A-Z_][A-Z0-9_]*)",
+            Pattern.CASE_INSENSITIVE);
+
+    // Pattern to extract SELECT clause content (between SELECT and FROM)
+    private static final Pattern SELECT_CLAUSE_PATTERN = Pattern.compile(
+            "SELECT\\s+(.+?)\\s+FROM",
+            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+
+    // Pattern to extract table with alias (FROM/JOIN table [AS] alias)
+    private static final Pattern TABLE_WITH_ALIAS_PATTERN = Pattern.compile(
+            "(?:FROM|JOIN)\\s+([A-Z_][A-Z0-9_]*)(?:\\s+(?:AS\\s+)?([A-Z_][A-Z0-9_]*))?",
+            Pattern.CASE_INSENSITIVE);
+
+    // More flexible pattern for qualified column references (alias.column)
+    private static final Pattern QUALIFIED_COLUMN_PATTERN = Pattern.compile(
+            "\\b([a-z0-9_][a-z0-9_\\-\\.]*)\\.",
             Pattern.CASE_INSENSITIVE);
 
     // SQL keywords to exclude from table names
@@ -183,16 +201,30 @@ public class MyBatisSqlAnalyzer {
 
     /**
      * Analyze SELECT statement using regex patterns
+     * Enhanced to handle qualified column references for accurate Read detection
      */
     private void analyzeSelectStatement(String sql, Map<String, Set<String>> tableOperations) {
-        // Check if it's an existence check (SELECT 1, SELECT 'X', SELECT COUNT(*))
+        // Check if it's an existence check (SELECT 1, SELECT COUNT(*), etc.)
         if (isExistenceCheck(sql)) {
             log.debug("Detected existence check, skipping table marking: {}",
                     sql.substring(0, Math.min(50, sql.length())));
             return;
         }
 
-        // Extract tables from FROM and JOIN clauses
+        // Try smart analysis if SELECT has qualified columns (e.g., a.column_name)
+        if (hasQualifiedColumns(sql)) {
+            boolean success = analyzeQualifiedSelect(sql, tableOperations);
+            if (success) {
+                log.debug("Smart qualified column analysis successful");
+                // Note: Don't call analyzeNestedSelects() here because NESTED_SELECT_PATTERN
+                // will match the main SELECT itself, causing duplicate table extraction
+                // Only analyze actual subqueries in WHERE/IN/EXISTS clauses
+                return;
+            }
+        }
+
+        // Fallback: Conservative marking (current behavior)
+        log.debug("Using conservative table marking (SELECT * or unqualified columns)");
         extractTablesFromSql(sql, tableOperations, "R");
 
         // Analyze nested SELECT statements (subqueries)
@@ -303,13 +335,16 @@ public class MyBatisSqlAnalyzer {
 
         while (selectMatcher.find()) {
             String selectSql = selectMatcher.group();
+            log.debug("Found nested SELECT: {}", selectSql.substring(0, Math.min(60, selectSql.length())));
 
             // Skip if it's an existence check
             if (isExistenceCheck(selectSql)) {
+                log.debug("Skipping nested SELECT (existence check)");
                 continue;
             }
 
             // Extract tables from the nested SELECT
+            log.debug("Extracting tables from nested SELECT");
             extractTablesFromSql(selectSql, tableOperations, "R");
         }
     }
@@ -319,6 +354,168 @@ public class MyBatisSqlAnalyzer {
      */
     private boolean isSqlKeyword(String word) {
         return SQL_KEYWORDS.contains(word.toUpperCase());
+    }
+
+    /**
+     * Check if SELECT clause has qualified column references (alias.column or table.column)
+     */
+    private boolean hasQualifiedColumns(String sql) {
+        String selectClause = extractSelectClause(sql);
+        if (selectClause == null || selectClause.trim().equals("*")) {
+            return false;
+        }
+
+        // Look for qualified column references (identifier.identifier)
+        Matcher matcher = QUALIFIED_COLUMN_PATTERN.matcher(selectClause);
+        while (matcher.find()) {
+            String qualifier = matcher.group(1);
+            // Make sure it's not a SQL keyword
+            if (!isSqlKeyword(qualifier)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Extract SELECT clause content (between SELECT and FROM)
+     */
+    private String extractSelectClause(String sql) {
+        Matcher matcher = SELECT_CLAUSE_PATTERN.matcher(sql);
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        }
+        return null;
+    }
+
+    /**
+     * Analyze SELECT with qualified columns (e.g., a.column_name)
+     * Only marks tables whose aliases are actually referenced in SELECT clause
+     * 
+     * @return true if analysis was successful, false if should fall back to conservative
+     */
+    private boolean analyzeQualifiedSelect(String sql, Map<String, Set<String>> tableOperations) {
+        try {
+            log.debug("=== Analyzing qualified SELECT ===");
+            log.debug("SQL: {}", sql.substring(0, Math.min(100, sql.length())));
+            
+            // Step 1: Extract table-to-alias mappings
+            Map<String, String> aliasToTable = extractTableAliasMapping(sql);
+            if (aliasToTable.isEmpty()) {
+                log.debug("No aliases found, falling back");
+                return false; // No aliases found, fall back
+            }
+            log.debug("Alias mappings: {}", aliasToTable);
+
+            // Step 2: Find which aliases are referenced in SELECT clause
+            Set<String> referencedAliases = extractReferencedAliases(sql);
+            if (referencedAliases.isEmpty()) {
+                log.debug("No qualified references found, falling back");
+                return false; // No qualified references found, fall back
+            }
+            log.debug("Referenced aliases: {}", referencedAliases);
+
+            // Step 3: Only mark tables whose aliases are used
+            for (String alias : referencedAliases) {
+                String tableName = aliasToTable.get(alias.toLowerCase());
+                if (tableName != null && !isSqlKeyword(tableName)) {
+                    tableOperations.computeIfAbsent(tableName, k -> new LinkedHashSet<>()).add("R");
+                    log.debug("Marked table '{}' as R (via alias '{}')", tableName, alias);
+                } else {
+                    log.debug("Alias '{}' not found in mapping", alias);
+                }
+            }
+
+            log.debug("=== Qualified SELECT analysis successful ===");
+            return true; // Success
+        } catch (Exception e) {
+            log.warn("Error in qualified select analysis, falling back: {}", e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Extract table-to-alias mapping from FROM and JOIN clauses
+     * Returns map of: alias (lowercase) → table name
+     * Handles both JOIN syntax and comma-separated tables
+     */
+    private Map<String, String> extractTableAliasMapping(String sql) {
+        Map<String, String> aliasToTable = new HashMap<>();
+
+        // Handle FROM/JOIN syntax (e.g., FROM table1 a JOIN table2 b)
+        Matcher matcher = TABLE_WITH_ALIAS_PATTERN.matcher(sql);
+        while (matcher.find()) {
+            String tableName = matcher.group(1);
+            String alias = matcher.group(2);
+
+            if (!isSqlKeyword(tableName)) {
+                if (alias != null && !alias.isEmpty() && !isSqlKeyword(alias)) {
+                    // Map alias to table name (use lowercase for case-insensitive matching)
+                    aliasToTable.put(alias.toLowerCase(), tableName);
+                    log.debug("Mapped alias '{}' → table '{}'", alias, tableName);
+                } else {
+                    // No alias, use table name as its own alias
+                    aliasToTable.put(tableName.toLowerCase(), tableName);
+                }
+            }
+        }
+
+        // Handle comma-separated tables (e.g., FROM table1 a, table2 b, table3 c)
+        // Extract the FROM clause content first
+        Pattern fromClausePattern = Pattern.compile(
+                "FROM\\s+(.+?)(?:WHERE|GROUP|HAVING|ORDER|LIMIT|$)",
+                Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher fromMatcher = fromClausePattern.matcher(sql);
+        
+        if (fromMatcher.find()) {
+            String fromClause = fromMatcher.group(1).trim();
+            
+            // Pattern to match table with optional alias in comma-separated list
+            // Matches: table_name [alias],
+            Pattern commaTablePattern = Pattern.compile(
+                    "([A-Z_][A-Z0-9_]*)(?:\\s+(?:AS\\s+)?([A-Z_][A-Z0-9_]*))?(?:\\s*,|\\s*$)",
+                    Pattern.CASE_INSENSITIVE);
+            
+            Matcher commaMatcher = commaTablePattern.matcher(fromClause);
+            while (commaMatcher.find()) {
+                String tableName = commaMatcher.group(1);
+                String alias = commaMatcher.group(2);
+                
+                if (!isSqlKeyword(tableName)) {
+                    if (alias != null && !alias.isEmpty() && !isSqlKeyword(alias)) {
+                        // Only add if not already present (FROM/JOIN has priority)
+                        aliasToTable.putIfAbsent(alias.toLowerCase(), tableName);
+                        log.debug("Mapped comma-separated alias '{}' → table '{}'", alias, tableName);
+                    } else {
+                        aliasToTable.putIfAbsent(tableName.toLowerCase(), tableName);
+                    }
+                }
+            }
+        }
+
+        return aliasToTable;
+    }
+
+    /**
+     * Find which aliases/qualifiers are referenced in SELECT clause
+     * Returns set of aliases (lowercase) that appear before a dot (qualifier.column)
+     */
+    private Set<String> extractReferencedAliases(String sql) {
+        Set<String> aliases = new HashSet<>();
+        String selectClause = extractSelectClause(sql);
+
+        if (selectClause != null) {
+            Matcher matcher = QUALIFIED_COLUMN_PATTERN.matcher(selectClause);
+            while (matcher.find()) {
+                String qualifier = matcher.group(1);
+                if (!isSqlKeyword(qualifier)) {
+                    aliases.add(qualifier.toLowerCase());
+                    log.debug("Found referenced alias/qualifier: '{}'", qualifier);
+                }
+            }
+        }
+
+        return aliases;
     }
 
     /**

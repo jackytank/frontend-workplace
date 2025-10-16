@@ -3,7 +3,7 @@
 <mapper namespace="com.example.mapper.SampleMapper">
 
   <!-- SQL Fragment for column list -->
-  <sql id="Entity_Column_List">
+  <sql id="Existed_Entity_Column_List">
       COLUMN_1,
       COLUMN_2,
       COLUMN_3,
@@ -30,16 +30,16 @@
       TO_CHAR(UPDATED_DATE,'yyyyMMdd')
   </sql>
 
-  <!-- Example SELECT with include - should mark MASTER_TABLE as R if <include> is present even if present or not present in this file  -->
+  <!-- Example SELECT with existed include - should mark all tables as R if <include> is present even if present or not present in this file  -->
   <select id="select01" resultType="map">
     select
-      <include refid="Entity_Column_List" />
+      <include refid="Existed_Entity_Column_List" />
     from
-      MASTER_TABLE
+      FIRST_TABLE A, SECOND_TABLE, THIRD_TABLE C, FOURTH_TABLE, FIFTH_TABLE E
     where ID = #{id}
   </select>
 
-  <!-- Example SELECT with include that does NOT exist in this file - still should mark all tables as R -->
+  <!-- Example SELECT with nonexisted include - still should mark all tables as R -->
   <select id="select02" resultType="map">
     select
       <include refid="Not_Exist_In_This_File_Maybe_In_Parent_Or_Java_Class" />
@@ -80,5 +80,49 @@
     )
     ]]>
   </update>
+
+  <!-- should only mark TEST_TABLE_1 as R (because TEST_TABLE_1 is the only table that a column is selected from) -->
+  <select id="select04" resultType="String">
+    select a.some_col
+    from TEST_TABLE_1 a
+    join TEST_TABLE_2 b
+      on a.id = b.id
+    where a.some_col = #{id}
+  </select>
+
+  <!-- should not mark all tables as R because COUNT(*) not referring any specific column -->
+  <!-- same thing for other functions like AVG, SUM... -->
+  <select id="select05" resultType="String">
+    select COUNT(*)
+    from TEST_TABLE_1, TEST_TABLE_2
+  </select>
+
+  <!-- should mark TEST_TABLE_1 as R because COUNT(a.*) is referring columns from TEST_TABLE_1 -->
+  <!-- same thing for other functions like AVG, SUM... -->
+  <select id="select06" resultType="String">
+    select COUNT(a.*)
+    from TEST_TABLE_1 a
+  </select>
+
+  <!-- similar to select05, should not mark any table as R -->
+  <select id="select07" resultType="String">
+    select AVG(*)
+    from TEST_TABLE_1, TEST_TABLE_2
+  </select>
+
+  <!-- should only mark TEST_TABLE_1 as R because SUM(a.*) is referring columns from TEST_TABLE_1 -->
+  <select id="select08" resultType="String">
+    select SUM(a.*)
+    from TEST_TABLE_1 a, TEST_TABLE_2 b
+  </select>
+
+  <!-- should mark both TEST_TABLE_1 and TEST_TABLE_2 as R 
+   because SUM(a.*) is referring columns from TEST_TABLE_1 
+   and b.OT_SOME_COLUMN_LALALA is referring column from TEST_TABLE_2 -->
+  <select id="select09" resultType="String">
+    select SUM(a.*), b.OT_SOME_COLUMN_LALALA, b.simpleCOL
+    from TEST_TABLE_1 a
+    , TEST_TABLE_2 b
+  </select>
 
 </mapper>

@@ -80,6 +80,8 @@
 			<artifactId>spring-shell-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- AssertJ for fluent assertions (already included in spring-boot-starter-test) -->
+		<!-- JUnit 5 with Parameterized Tests (already included in spring-boot-starter-test) -->
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

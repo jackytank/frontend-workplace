@@ -1,12 +1,24 @@
 [
   {
-    "file": "C:\\Users\\tminhto\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\mybatis_1.xml",
+    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\mybatis_1.xml",
     "methods": [
       {
         "name": "select01",
         "analysis": [
           {
-            "MASTER_TABLE": "R"
+            "FIRST_TABLE": "R"
+          },
+          {
+            "SECOND_TABLE": "R"
+          },
+          {
+            "THIRD_TABLE": "R"
+          },
+          {
+            "FOURTH_TABLE": "R"
+          },
+          {
+            "FIFTH_TABLE": "R"
           }
         ]
       },
@@ -27,6 +39,41 @@
           },
           {
             "FIFTH_TABLE": "R"
+          }
+        ]
+      },
+      {
+        "name": "select04",
+        "analysis": [
+          {
+            "TEST_TABLE_1": "R"
+          }
+        ]
+      },
+      {
+        "name": "select06",
+        "analysis": [
+          {
+            "TEST_TABLE_1": "R"
+          }
+        ]
+      },
+      {
+        "name": "select08",
+        "analysis": [
+          {
+            "TEST_TABLE_1": "R"
+          }
+        ]
+      },
+      {
+        "name": "select09",
+        "analysis": [
+          {
+            "TEST_TABLE_1": "R"
+          },
+          {
+            "TEST_TABLE_2": "R"
           }
         ]
       },
@@ -61,7 +108,7 @@
     ]
   },
   {
-    "file": "C:\\Users\\tminhto\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\mybatis_2.xml",
+    "file": "C:\\Users\\user\\Desktop\\frontend-workplace\\spring-boot-learn-projects\\research-sql-analyzer\\target\\classes\\mybatis_2.xml",
     "methods": [
       {
         "name": "update01",
@@ -99,12 +146,6 @@
           },
           {
             "DETAIL_TABLE": "R"
-          },
-          {
-            "A": "R"
-          },
-          {
-            "B": "R"
           }
         ]
       }
