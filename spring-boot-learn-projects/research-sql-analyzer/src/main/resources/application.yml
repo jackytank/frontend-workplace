@@ -1,21 +1,36 @@
+# spring config
+spring:
+  application:
+    name: research-sql-analyzer
+  main:
+    web-application-type: none
+logging:
+  level:
+    '[com.research.sql_analyzer]': INFO
+
+
+
+# custom config
 app:
   analyze-config:
-    - filename: 'mybatis_1.xml'
-      methodsToFind:
-        - 'select01'
-        - 'select02'
-        - 'select03'
-        - 'select04'
-        - 'select05'
-        - 'select06'
-        - 'select07'
-        - 'select08'
-        - 'select09'
-        - 'insert01'
-        - 'update01'
-    - filename: 'mybatis_2.xml'
-      methodsToFind:
-        - 'update01'
-        - 'update02'
-        - 'select01'
-        - 'select02'
+    - filename: "mybatis_1.xml"
+      methodsToFind: [
+        "select01",
+        "select02",
+        "select03",
+        "select04",
+        "select05",
+        "select06",
+        "select07",
+        "select08",
+        "select09",
+        "insert01",
+        "update01"
+      ]
+    - filename: "mybatis_2.xml"
+      methodsToFind: [
+        "update01",
+        "update02",
+        "select01",
+        "select02"
+      ]
