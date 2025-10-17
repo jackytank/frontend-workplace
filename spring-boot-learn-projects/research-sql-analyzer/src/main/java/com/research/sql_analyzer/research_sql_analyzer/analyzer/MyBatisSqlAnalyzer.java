@@ -17,12 +17,9 @@ import java.util.regex.Pattern;
 @Component
 public class MyBatisSqlAnalyzer {
 
-    // Pattern to detect existence checks (SELECT 1, SELECT 'X', SELECT COUNT(*))
-    // Pattern to detect existence checks or aggregate queries without qualified column references
-    // Matches: SELECT 1, SELECT COUNT(*), SELECT AVG(*), SELECT SUM(*), etc.
-    // Note: Intentionally excludes SELECT 'X' pattern as it's Oracle-specific and not universally understood
+    // Pattern to detect existence checks (SELECT 1)
     private static final Pattern EXISTENCE_CHECK_PATTERN = Pattern.compile(
-            "^\\s*SELECT\\s+(?:1|(?:COUNT|AVG|SUM|MIN|MAX)\\s*\\(\\s*\\*\\s*\\))\\s+FROM\\s+",
+            "^\\s*SELECT\\s+['\"]?1['\"]?\\s+FROM\\s+",
             Pattern.CASE_INSENSITIVE);
 
     // Pattern to extract table names from SQL statements
@@ -121,36 +118,38 @@ public class MyBatisSqlAnalyzer {
     /**
      * Extract SQL text from element, resolving <include> references
      */
-    private String extractSqlText(Element sqlElement, Document doc) {
-        // Get the raw text content (this handles CDATA automatically)
-        String rawText = sqlElement.text();
+    private String extractSqlText(Element sqlElement, Document doc, Map<String, String> sqlFragments) {
+        // Clone the element to avoid modifying the original
+        Element clonedElement = sqlElement.clone();
 
         // Check for <set> tag and add SET keyword if missing
-        Elements setElements = sqlElement.select("set");
+        Elements setElements = clonedElement.select("set");
         if (!setElements.isEmpty()) {
-            // JSoup removes the <set> tag but keeps content
-            // We need to add back the SET keyword
-            String setContent = setElements.first().text();
-            if (rawText.contains(setContent) && !rawText.toUpperCase().contains("SET")) {
-                rawText = rawText.replace(setContent, " SET " + setContent);
+            Element setElement = setElements.first();
+            if (!setElement.text().trim().isEmpty()) {
+                setElement.before(" SET ");
             }
         }
 
-        // Check for <include> elements and resolve them
-        Elements includes = sqlElement.select("include");
-        String sqlText = rawText;
-
+        // Resolve <include> elements by replacing them with their fragment content
+        Elements includes = clonedElement.select("include");
         for (Element include : includes) {
             String refId = include.attr("refid");
-            Element sqlFragment = doc.selectFirst(String.format("sql[id=%s]", refId));
-            if (sqlFragment != null) {
-                // Replace the include placeholder with actual columns
-                sqlText = sqlText.replace(include.text(), sqlFragment.text());
+            String fragmentContent = sqlFragments.get(refId);
+
+            if (fragmentContent != null) {
+                // Replace the <include> element with the actual fragment content
+                include.replaceWith(new org.jsoup.nodes.TextNode(" " + fragmentContent + " "));
+                log.debug("Resolved <include refid='{}'>", refId);
             } else {
-                // Include not found - mark as column selection with placeholder
-                sqlText = sqlText.replace(include.text(), " COL1, COL2, COL3 ");
+                // Include not found - use placeholder
+                include.replaceWith(new org.jsoup.nodes.TextNode(" COL1, COL2, COL3 "));
+                log.debug("SQL fragment '{}' not found, using placeholder", refId);
             }
         }
+
+        // Get the final text content
+        String sqlText = clonedElement.text();
 
         return cleanSql(sqlText);
     }
@@ -162,9 +161,6 @@ public class MyBatisSqlAnalyzer {
         // Remove MyBatis parameter syntax like #{param} and ${param}
         sql = sql.replaceAll("#\\{[^}]+\\}", "'VALUE'");
         sql = sql.replaceAll("\\$\\{[^}]+\\}", "'VALUE'");
-
-        // Remove SQL comments (-- style)
-        sql = sql.replaceAll("--[^\\n]*", "");
 
         // Normalize whitespace
         sql = sql.replaceAll("\\s+", " ").trim();
@@ -180,6 +176,14 @@ public class MyBatisSqlAnalyzer {
 
         // Determine operation type based on SQL statement type
         String upperSql = sql.toUpperCase().trim();
+
+        // Handle BEGIN...END blocks (Oracle PL/SQL, etc.)
+        // Strip BEGIN and END keywords to get to the actual SQL statement
+        if (upperSql.startsWith("BEGIN")) {
+            sql = sql.replaceFirst("(?i)^\\s*BEGIN\\s*", "").trim();
+            sql = sql.replaceFirst("(?i);?\\s*END\\s*;?\\s*$", "").trim();
+            upperSql = sql.toUpperCase().trim();
+        }
 
         if (upperSql.startsWith("SELECT")) {
             analyzeSelectStatement(sql, tableOperations);
